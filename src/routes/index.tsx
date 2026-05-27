@@ -66,6 +66,11 @@ function Index() {
 
         {country && (
           <>
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-muted-foreground">
+              ⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי —
+              יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.
+            </div>
+
             {/* Step 2: TIN name + source */}
             <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-3">
@@ -76,15 +81,39 @@ function Index() {
                   <p className="text-xs text-muted-foreground">{country.tinNameEn}</p>
                 </div>
               </div>
-              <a
-                href={country.officialSource}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-              >
-                מקור רשמי
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm font-medium">
+                <a
+                  href={country.officialSource}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1 text-primary hover:underline"
+                >
+                  רשות המס המקומית
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+                {country.oecdSource && (
+                  <a
+                    href={country.oecdSource}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-1 text-primary hover:underline"
+                  >
+                    OECD TIN
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {country.euTinSource && (
+                  <a
+                    href={country.euTinSource}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-1 text-primary hover:underline"
+                  >
+                    EU TIN
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
             </section>
 
             {/* Step 3: Individual / Entity toggle */}
@@ -153,9 +182,38 @@ function Index() {
           </>
         )}
 
-        <footer className="pt-4 pb-8 text-center text-xs text-muted-foreground">
-          המידע להתמצאות בלבד ואינו תחליף לייעוץ מקצועי. הנתונים מבוססים על
-          OECD AEOI ורשויות המס המקומיות.
+        <footer className="pt-4 pb-8 space-y-2 text-center text-xs text-muted-foreground">
+          <p className="font-semibold text-foreground/80">
+            הבהרה משפטית
+          </p>
+          <p>
+            אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס,
+            ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג
+            "AS IS" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין
+            להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל
+            פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע
+            מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.
+          </p>
+          <p>
+            מקורות עיקריים:{" "}
+            <a
+              href="https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-primary hover:underline"
+            >
+              OECD AEOI Portal
+            </a>
+            {" · "}
+            <a
+              href="https://ec.europa.eu/taxation_customs/tin/tinByCountry.html"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-primary hover:underline"
+            >
+              EU TIN On-the-Web
+            </a>
+          </p>
         </footer>
       </main>
     </div>
