@@ -121,7 +121,7 @@ function Index() {
                     <span className="flex items-start gap-2">
                       <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                       <span>
-                        איפה ניתן למצוא את ה-{country.tinNameHe} שלי ב{country.flag} {country.nameHe}?
+                        איפה ניתן למצוא את ה-{country.tinNameHe} שלי ב{country.nameHe}?
                       </span>
                     </span>
                   </AccordionTrigger>
