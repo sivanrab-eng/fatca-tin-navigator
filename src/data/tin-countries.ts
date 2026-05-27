@@ -199,7 +199,4 @@ COUNTRIES.push(
       { label: "ב-Mina sidor", url: "https://www.skatteverket.se/" }
     ],
     officialSource: "https://www.skatteverket.se/" },
-  { code: "NO", nameHe: "נורווגיה", nameEn: "Norway", flag: "🇳🇴",
-    tinNameHe: "Fødselsnummer / Organisasjonsnummer", tinNameEn: "National ID / Organisation Number",
-    individual: { name: "Fødselsnummer", format: "11 ספרות: DDMMYY-NNNNN", example: "30078512345" },
-    entity: { name: "Organisasj
+);
