@@ -81,15 +81,39 @@ function Index() {
                   <p className="text-xs text-muted-foreground">{country.tinNameEn}</p>
                 </div>
               </div>
-              <a
-                href={country.officialSource}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-              >
-                מקור רשמי
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm font-medium">
+                <a
+                  href={country.officialSource}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1 text-primary hover:underline"
+                >
+                  רשות המס המקומית
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+                {country.oecdSource && (
+                  <a
+                    href={country.oecdSource}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-1 text-primary hover:underline"
+                  >
+                    OECD TIN
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {country.euTinSource && (
+                  <a
+                    href={country.euTinSource}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-1 text-primary hover:underline"
+                  >
+                    EU TIN
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
             </section>
 
             {/* Step 3: Individual / Entity toggle */}
