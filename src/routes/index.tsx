@@ -66,6 +66,11 @@ function Index() {
 
         {country && (
           <>
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-muted-foreground">
+              ⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי —
+              יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.
+            </div>
+
             {/* Step 2: TIN name + source */}
             <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-3">
