@@ -92,4 +92,4 @@ export const COUNTRIES: CountryTin[] = [
       note: "ITIN מתחיל תמיד ב-9.",
     },
     entity: {
-      name
+      name: "EIN (Employer Identification Number)",
