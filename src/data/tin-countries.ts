@@ -160,4 +160,46 @@ export const COUNTRIES: CountryTin[] = [
     ],
     officialSource: "https://www.agenziaentrate.gov.it/"
   }
-];
+
+// Insert more countries before closing bracket
+COUNTRIES.push(
+  { code: "IE", nameHe: "אירלנד", nameEn: "Ireland", flag: "🇮🇪",
+    tinNameHe: "PPSN / TRN", tinNameEn: "PPS Number / Tax Reference Number",
+    individual: { name: "PPSN", format: "7 ספרות + 1-2 אותיות", example: "1234567T" },
+    entity: { name: "TRN", format: "7 ספרות + אות", example: "1234567A" },
+    whereToFind: [
+      { label: "בכרטיס Public Services" },
+      { label: "ב-Revenue myAccount", url: "https://www.revenue.ie/" }
+    ],
+    officialSource: "https://www.revenue.ie/" },
+  { code: "BE", nameHe: "בלגיה", nameEn: "Belgium", flag: "🇧🇪",
+    tinNameHe: "Numéro National", tinNameEn: "National Number / Enterprise Number",
+    individual: { name: "Numéro National", format: "11 ספרות: YY.MM.DD-NNN.NN", example: "85.07.30-033.28" },
+    entity: { name: "Enterprise Number", format: "10 ספרות: 0NNN.NNN.NNN", example: "0123.456.749" },
+    whereToFind: [
+      { label: "בכרטיס הזהות הבלגי" },
+      { label: "ב-MyMinfin", url: "https://finances.belgium.be/" }
+    ],
+    officialSource: "https://finances.belgium.be/" },
+  { code: "AT", nameHe: "אוסטריה", nameEn: "Austria", flag: "🇦🇹",
+    tinNameHe: "Steuernummer / UID", tinNameEn: "Tax Number / UID",
+    individual: { name: "Steuernummer", format: "9 ספרות", example: "12-345/6789" },
+    entity: { name: "UID-Nummer", format: "ATU + 8 ספרות", example: "ATU12345678" },
+    whereToFind: [
+      { label: "במכתבים מ-Finanzamt" },
+      { label: "ב-FinanzOnline", url: "https://finanzonline.bmf.gv.at/" }
+    ],
+    officialSource: "https://www.bmf.gv.at/" },
+  { code: "SE", nameHe: "שוודיה", nameEn: "Sweden", flag: "🇸🇪",
+    tinNameHe: "Personnummer / Organisationsnummer", tinNameEn: "Personal / Organisation Number",
+    individual: { name: "Personnummer", format: "YYMMDD-NNNN", example: "850730-1234" },
+    entity: { name: "Organisationsnummer", format: "10 ספרות: NNNNNN-NNNN", example: "556677-8899" },
+    whereToFind: [
+      { label: "בכרטיס Skatteverket" },
+      { label: "ב-Mina sidor", url: "https://www.skatteverket.se/" }
+    ],
+    officialSource: "https://www.skatteverket.se/" },
+  { code: "NO", nameHe: "נורווגיה", nameEn: "Norway", flag: "🇳🇴",
+    tinNameHe: "Fødselsnummer / Organisasjonsnummer", tinNameEn: "National ID / Organisation Number",
+    individual: { name: "Fødselsnummer", format: "11 ספרות: DDMMYY-NNNNN", example: "30078512345" },
+    entity: { name: "Organisasj
