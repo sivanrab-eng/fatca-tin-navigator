@@ -1,29 +1,187 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ExternalLink, MapPin, FileText, Building2, User } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "מאתר TIN לצורכי FATCA/CRS" },
+      { name: "description", content: "מצא את שם ומבנה מספר זיהוי המס (TIN) לצורכי FATCA/CRS בכל מדינה — ליחיד ולחברה, ואיפה ניתן למצוא אותו." },
+      { property: "og:title", content: "מאתר TIN לצורכי FATCA/CRS" },
+      { property: "og:description", content: "מצא את שם ומבנה ה-TIN בכל מדינה — ליחיד ולחברה." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [code, setCode] = useState<string>("");
+  const country: CountryTin | undefined = COUNTRIES.find((c) => c.code === code);
+
+  // Sort countries Hebrew alphabetically
+  const sorted = [...COUNTRIES].sort((a, b) => a.nameHe.localeCompare(b.nameHe, "he"));
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div dir="rtl" className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border bg-card">
+        <div className="mx-auto max-w-2xl px-5 py-5">
+          <h1 className="text-xl font-bold tracking-tight">מאתר TIN — FATCA/CRS</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.
+          </p>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-2xl px-5 py-6 space-y-6">
+        {/* Step 1: Country picker */}
+        <section className="space-y-2">
+          <label htmlFor="country" className="block text-sm font-semibold">
+            1. בחר מדינה
+          </label>
+          <Select value={code} onValueChange={setCode}>
+            <SelectTrigger id="country" className="h-12 text-base">
+              <SelectValue placeholder="לחץ לבחירת מדינה" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[60vh]">
+              {sorted.map((c) => (
+                <SelectItem key={c.code} value={c.code} className="text-base">
+                  <span className="ml-2">{c.flag}</span>
+                  {c.nameHe}{" "}
+                  <span className="text-muted-foreground text-xs">({c.nameEn})</span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </section>
+
+        {!country && (
+          <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+            התוצאות יופיעו כאן לאחר בחירת מדינה.
+          </div>
+        )}
+
+        {country && (
+          <>
+            {/* Step 2: TIN name + source */}
+            <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl leading-none">{country.flag}</span>
+                <div>
+                  <p className="text-xs text-muted-foreground">שם המזהה המקומי</p>
+                  <h2 className="text-lg font-bold leading-tight">{country.tinNameHe}</h2>
+                  <p className="text-xs text-muted-foreground">{country.tinNameEn}</p>
+                </div>
+              </div>
+              <a
+                href={country.officialSource}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              >
+                מקור רשמי
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </section>
+
+            {/* Step 3: Individual / Entity toggle */}
+            <section className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <h3 className="text-sm font-semibold">2. בחר סוג</h3>
+              <Tabs defaultValue="individual">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="individual" className="gap-1.5">
+                    <User className="h-4 w-4" />
+                    יחיד
+                  </TabsTrigger>
+                  <TabsTrigger value="entity" className="gap-1.5">
+                    <Building2 className="h-4 w-4" />
+                    חברה / ישות
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="individual">
+                  <TinBlock entry={country.individual} />
+                </TabsContent>
+                <TabsContent value="entity">
+                  <TinBlock entry={country.entity} />
+                </TabsContent>
+              </Tabs>
+            </section>
+
+            {/* Step 4: Where to find — collapsible */}
+            <section className="animate-in fade-in slide-in-from-bottom-2 duration-700">
+              <Accordion type="single" collapsible>
+                <AccordionItem
+                  value="where"
+                  className="rounded-xl border border-border bg-card px-4"
+                >
+                  <AccordionTrigger className="text-base font-semibold hover:no-underline">
+                    <span className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      איפה ניתן למצוא את ה-Tax ID שלי?
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="space-y-3 pb-2">
+                      {country.whereToFind.map((w, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm">
+                          <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                          {w.url ? (
+                            <a
+                              href={w.url}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="inline-flex items-center gap-1 text-primary hover:underline"
+                            >
+                              {w.label}
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          ) : (
+                            <span>{w.label}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </section>
+          </>
+        )}
+
+        <footer className="pt-4 pb-8 text-center text-xs text-muted-foreground">
+          המידע להתמצאות בלבד ואינו תחליף לייעוץ מקצועי. הנתונים מבוססים על
+          OECD AEOI ורשויות המס המקומיות.
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+function TinBlock({ entry }: { entry: CountryTin["individual"] }) {
+  return (
+    <div className="mt-2 space-y-3 rounded-xl border border-border bg-card p-5">
+      <div>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">שם</p>
+        <p className="font-semibold">{entry.name}</p>
+      </div>
+      <div>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">מבנה</p>
+        <p className="text-sm">{entry.format}</p>
+      </div>
+      <div>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">דוגמה</p>
+        <code dir="ltr" className="mt-1 inline-block rounded-md bg-muted px-2.5 py-1.5 font-mono text-sm">
+          {entry.example}
+        </code>
+      </div>
+      {entry.note && (
+        <p className="rounded-md bg-muted/50 p-3 text-xs text-muted-foreground">
+          {entry.note}
+        </p>
+      )}
     </div>
   );
 }
