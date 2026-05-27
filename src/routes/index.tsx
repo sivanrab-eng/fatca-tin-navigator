@@ -153,9 +153,38 @@ function Index() {
           </>
         )}
 
-        <footer className="pt-4 pb-8 text-center text-xs text-muted-foreground">
-          המידע להתמצאות בלבד ואינו תחליף לייעוץ מקצועי. הנתונים מבוססים על
-          OECD AEOI ורשויות המס המקומיות.
+        <footer className="pt-4 pb-8 space-y-2 text-center text-xs text-muted-foreground">
+          <p className="font-semibold text-foreground/80">
+            הבהרה משפטית
+          </p>
+          <p>
+            אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס,
+            ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג
+            "AS IS" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין
+            להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל
+            פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע
+            מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.
+          </p>
+          <p>
+            מקורות עיקריים:{" "}
+            <a
+              href="https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-primary hover:underline"
+            >
+              OECD AEOI Portal
+            </a>
+            {" · "}
+            <a
+              href="https://ec.europa.eu/taxation_customs/tin/tinByCountry.html"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-primary hover:underline"
+            >
+              EU TIN On-the-Web
+            </a>
+          </p>
         </footer>
       </main>
     </div>
