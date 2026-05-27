@@ -160,8 +160,9 @@ export const COUNTRIES: CountryTin[] = [
     ],
     officialSource: "https://www.agenziaentrate.gov.it/"
   }
+];
 
-// Insert more countries before closing bracket
+
 COUNTRIES.push(
   { code: "IE", nameHe: "אירלנד", nameEn: "Ireland", flag: "🇮🇪",
     tinNameHe: "PPSN / TRN", tinNameEn: "PPS Number / Tax Reference Number",
