@@ -106,3 +106,58 @@ export const COUNTRIES: CountryTin[] = [
       { label: "במכתב מה-ATO" },
       { label: "ב-myGov / ATO online", url: "https://my.gov.au/" },
       { label: "ב-ABN Lookup (לחברות)", url: "https://abr.business.gov.au/" }
+    ],
+    officialSource: "https://www.ato.gov.au/"
+  },
+  {
+    code: "CH", nameHe: "שווייץ", nameEn: "Switzerland", flag: "🇨🇭",
+    tinNameHe: "AHV/AVS / UID",
+    tinNameEn: "AHV/AVS Number / UID",
+    individual: { name: "AHV/AVS", format: "13 ספרות: 756.NNNN.NNNN.NN", example: "756.1234.5678.97" },
+    entity: { name: "UID", format: "CHE-NNN.NNN.NNN", example: "CHE-123.456.789" },
+    whereToFind: [
+      { label: "בכרטיס AHV/AVS" },
+      { label: "בתלוש שכר ובמסמכי קרן פנסיה" },
+      { label: "ב-UID Register (לחברות)", url: "https://www.uid.admin.ch/" }
+    ],
+    officialSource: "https://www.estv.admin.ch/"
+  },
+  {
+    code: "NL", nameHe: "הולנד", nameEn: "Netherlands", flag: "🇳🇱",
+    tinNameHe: "BSN / RSIN",
+    tinNameEn: "Burgerservicenummer / RSIN",
+    individual: { name: "BSN", format: "9 ספרות", example: "123456782" },
+    entity: { name: "RSIN", format: "9 ספרות", example: "123456789" },
+    whereToFind: [
+      { label: "בדרכון/ת.ז. הולנדית" },
+      { label: "במכתבי Belastingdienst" },
+      { label: "ב-Mijn Belastingdienst", url: "https://www.belastingdienst.nl/" },
+      { label: "ב-KVK (לחברות)", url: "https://www.kvk.nl/" }
+    ],
+    officialSource: "https://www.belastingdienst.nl/"
+  },
+  {
+    code: "ES", nameHe: "ספרד", nameEn: "Spain", flag: "🇪🇸",
+    tinNameHe: "DNI/NIE / NIF",
+    tinNameEn: "DNI/NIE / NIF",
+    individual: { name: "DNI (תושב) / NIE (זר)", format: "8 ספרות + אות (DNI) · X/Y/Z + 7 ספרות + אות (NIE)", example: "12345678Z · X1234567L" },
+    entity: { name: "NIF", format: "אות + 7 ספרות + תו ביקורת", example: "A12345674" },
+    whereToFind: [
+      { label: "בכרטיס ה-DNI/NIE" },
+      { label: "באזור האישי של Agencia Tributaria", url: "https://www.agenciatributaria.gob.es/" }
+    ],
+    officialSource: "https://www.agenciatributaria.gob.es/"
+  },
+  {
+    code: "IT", nameHe: "איטליה", nameEn: "Italy", flag: "🇮🇹",
+    tinNameHe: "Codice Fiscale / Partita IVA",
+    tinNameEn: "Codice Fiscale / Partita IVA",
+    individual: { name: "Codice Fiscale", format: "16 תווים אלפאנומריים", example: "RSSMRA80A01H501U" },
+    entity: { name: "Partita IVA", format: "11 ספרות", example: "12345678901" },
+    whereToFind: [
+      { label: "בכרטיס Tessera Sanitaria" },
+      { label: "באזור האישי של Agenzia delle Entrate", url: "https://www.agenziaentrate.gov.it/" }
+    ],
+    officialSource: "https://www.agenziaentrate.gov.it/"
+  }
+];
