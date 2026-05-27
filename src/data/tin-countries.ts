@@ -55,5 +55,54 @@ export const COUNTRIES: CountryTin[] = [
       { label: "במכתב CP 575 (EIN)" }
     ],
     officialSource: "https://www.irs.gov/individuals/international-taxpayers/taxpayer-identification-numbers-tin"
-  }
-];
+  ,
+  {
+    code: "DE", nameHe: "גרמניה", nameEn: "Germany", flag: "🇩🇪",
+    tinNameHe: "Steuerliche Identifikationsnummer",
+    tinNameEn: "Tax Identification Number (IdNr)",
+    individual: { name: "IdNr", format: "11 ספרות", example: "12345678901" },
+    entity: { name: "Steuernummer / W-IdNr", format: "10–13 ספרות, או DE + 9 ספרות", example: "12/345/67890 או DE123456789" },
+    whereToFind: [
+      { label: "במכתב מ-Bundeszentralamt für Steuern" },
+      { label: "בשומת מס (Steuerbescheid)" },
+      { label: "בתלוש שכר (Lohnsteuerbescheinigung)" },
+      { label: "באתר ה-BZSt", url: "https://www.bzst.de/" }
+    ],
+    officialSource: "https://www.bzst.de/EN/Private_individuals/Tax_identification_number/tax_identification_number_node.html"
+  },
+  {
+    code: "FR", nameHe: "צרפת", nameEn: "France", flag: "🇫🇷",
+    tinNameHe: "Numéro Fiscal de Référence",
+    tinNameEn: "Numéro SPI",
+    individual: { name: "SPI", format: "13 ספרות, מתחיל ב-0/1/2/3", example: "1234567890123" },
+    entity: { name: "SIREN / SIRET", format: "SIREN: 9 ספרות · SIRET: 14 ספרות", example: "SIREN: 123456789 · SIRET: 12345678900012" },
+    whereToFind: [
+      { label: "בשומת המס (Avis d'imposition)" },
+      { label: "באזור האישי impots.gouv.fr", url: "https://www.impots.gouv.fr/" },
+      { label: "ב-Infogreffe (SIREN/SIRET לחברות)", url: "https://www.infogreffe.fr/" }
+    ],
+    officialSource: "https://www.impots.gouv.fr/"
+  },
+  {
+    code: "CA", nameHe: "קנדה", nameEn: "Canada", flag: "🇨🇦",
+    tinNameHe: "SIN / BN",
+    tinNameEn: "Social Insurance Number / Business Number",
+    individual: { name: "SIN", format: "9 ספרות: NNN-NNN-NNN", example: "123-456-789" },
+    entity: { name: "Business Number (BN)", format: "9 ספרות (+ סיומת תוכנית)", example: "123456789RC0001" },
+    whereToFind: [
+      { label: "בכרטיס ה-SIN או במכתב Service Canada" },
+      { label: "ב-CRA My Account", url: "https://www.canada.ca/en/revenue-agency/services/e-services/cra-my-account.html" },
+      { label: "בטופס T4 או בהחזרי מס" }
+    ],
+    officialSource: "https://www.canada.ca/en/revenue-agency.html"
+  },
+  {
+    code: "AU", nameHe: "אוסטרליה", nameEn: "Australia", flag: "🇦🇺",
+    tinNameHe: "TFN / ABN",
+    tinNameEn: "Tax File Number / Australian Business Number",
+    individual: { name: "TFN", format: "8 או 9 ספרות", example: "123 456 782" },
+    entity: { name: "ABN", format: "11 ספרות", example: "12 345 678 901" },
+    whereToFind: [
+      { label: "במכתב מה-ATO" },
+      { label: "ב-myGov / ATO online", url: "https://my.gov.au/" },
+      { label: "ב-ABN Lookup (לחברות)", url: "https://abr.business.gov.au/" }
