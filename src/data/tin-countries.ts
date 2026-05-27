@@ -55,7 +55,7 @@ export const COUNTRIES: CountryTin[] = [
       { label: "במכתב CP 575 (EIN)" }
     ],
     officialSource: "https://www.irs.gov/individuals/international-taxpayers/taxpayer-identification-numbers-tin"
-  ,
+  },
   {
     code: "DE", nameHe: "גרמניה", nameEn: "Germany", flag: "🇩🇪",
     tinNameHe: "Steuerliche Identifikationsnummer",
