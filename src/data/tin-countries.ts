@@ -24,6 +24,8 @@ export const COUNTRIES: CountryTin[] = [
       { label: "בתעודת הזהות הביומטרית או בספח" },
       { label: "באזור האישי ברשות המסים", url: "https://www.misim.gov.il/" },
       { label: "בתלוש שכר או בטופס 106" },
+      { label: "בדרכון ישראלי" },
+      { label: "באישור ניכוי מס במקור" },
       { label: "ברשם החברות (לחברות)", url: "https://www.gov.il/he/departments/israel_corporations_authority" }
     ],
     officialSource: "https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
@@ -38,6 +40,8 @@ export const COUNTRIES: CountryTin[] = [
       { label: "באזור האישי ב-HMRC", url: "https://www.gov.uk/personal-tax-account" },
       { label: "במכתבי HMRC (SA250, SA316)" },
       { label: "בטופס P60, P45 או בתלוש שכר (NINO)" },
+      { label: "באפליקציית HMRC" },
+      { label: "במכתב Statement of Account" },
       { label: "ב-Companies House (CRN)", url: "https://find-and-update.company-information.service.gov.uk/" }
     ],
     officialSource: "https://www.gov.uk/find-utr-number"
@@ -52,7 +56,9 @@ export const COUNTRIES: CountryTin[] = [
       { label: "בכרטיס Social Security" },
       { label: "בטפסי 1040 / W-2 / 1099" },
       { label: "באזור האישי ב-IRS", url: "https://www.irs.gov/payments/your-online-account" },
-      { label: "במכתב CP 575 (EIN)" }
+      { label: "במכתב CP 565 (ITIN) או CP 575 (EIN)" },
+      { label: "ב-Social Security Statement", url: "https://www.ssa.gov/myaccount/" },
+      { label: "בטופס SS-4 שהוגש לעסק (EIN)" }
     ],
     officialSource: "https://www.irs.gov/individuals/international-taxpayers/taxpayer-identification-numbers-tin"
   },
@@ -66,7 +72,9 @@ export const COUNTRIES: CountryTin[] = [
       { label: "במכתב מ-Bundeszentralamt für Steuern" },
       { label: "בשומת מס (Steuerbescheid)" },
       { label: "בתלוש שכר (Lohnsteuerbescheinigung)" },
-      { label: "באתר ה-BZSt", url: "https://www.bzst.de/" }
+      { label: "בטופס Einkommensteuererklärung" },
+      { label: "באתר ה-BZSt — בקשה מקוונת", url: "https://www.bzst.de/" },
+      { label: "ב-ELSTER (אזור אישי)", url: "https://www.elster.de/" }
     ],
     officialSource: "https://www.bzst.de/EN/Private_individuals/Tax_identification_number/tax_identification_number_node.html"
   },
@@ -78,8 +86,11 @@ export const COUNTRIES: CountryTin[] = [
     entity: { name: "SIREN / SIRET", format: "SIREN: 9 ספרות · SIRET: 14 ספרות", example: "SIREN: 123456789 · SIRET: 12345678900012" },
     whereToFind: [
       { label: "בשומת המס (Avis d'imposition)" },
+      { label: "בהצהרת המס (Déclaration de revenus)" },
       { label: "באזור האישי impots.gouv.fr", url: "https://www.impots.gouv.fr/" },
-      { label: "ב-Infogreffe (SIREN/SIRET לחברות)", url: "https://www.infogreffe.fr/" }
+      { label: "במכתבי DGFiP" },
+      { label: "ב-Infogreffe (SIREN/SIRET לחברות)", url: "https://www.infogreffe.fr/" },
+      { label: "ב-INSEE Sirene", url: "https://www.sirene.fr/" }
     ],
     officialSource: "https://www.impots.gouv.fr/"
   },
@@ -87,12 +98,15 @@ export const COUNTRIES: CountryTin[] = [
     code: "CA", nameHe: "קנדה", nameEn: "Canada", flag: "🇨🇦",
     tinNameHe: "SIN / BN",
     tinNameEn: "Social Insurance Number / Business Number",
-    individual: { name: "SIN", format: "9 ספרות: NNN-NNN-NNN", example: "123-456-789" },
+    individual: { name: "SIN", format: "9 ספרות: NNN-NN-NNNN", example: "123-456-789" },
     entity: { name: "Business Number (BN)", format: "9 ספרות (+ סיומת תוכנית)", example: "123456789RC0001" },
     whereToFind: [
       { label: "בכרטיס ה-SIN או במכתב Service Canada" },
       { label: "ב-CRA My Account", url: "https://www.canada.ca/en/revenue-agency/services/e-services/cra-my-account.html" },
-      { label: "בטופס T4 או בהחזרי מס" }
+      { label: "בטופס T4 או בהחזרי מס (Notice of Assessment)" },
+      { label: "בטופס RC151 / RC66" },
+      { label: "ב-My Business Account (BN לחברות)", url: "https://www.canada.ca/en/revenue-agency/services/e-services/digital-services-businesses/business-account.html" },
+      { label: "במכתב פתיחת תיק עוסק" }
     ],
     officialSource: "https://www.canada.ca/en/revenue-agency.html"
   },
@@ -105,6 +119,9 @@ export const COUNTRIES: CountryTin[] = [
     whereToFind: [
       { label: "במכתב מה-ATO" },
       { label: "ב-myGov / ATO online", url: "https://my.gov.au/" },
+      { label: "בהחזרי מס (Notice of Assessment)" },
+      { label: "בתלוש שכר ובטופס PAYG Summary" },
+      { label: "בהודעת Superannuation" },
       { label: "ב-ABN Lookup (לחברות)", url: "https://abr.business.gov.au/" }
     ],
     officialSource: "https://www.ato.gov.au/"
@@ -118,6 +135,9 @@ export const COUNTRIES: CountryTin[] = [
     whereToFind: [
       { label: "בכרטיס AHV/AVS" },
       { label: "בתלוש שכר ובמסמכי קרן פנסיה" },
+      { label: "בכרטיס ביטוח בריאות" },
+      { label: "בשומת מס קנטונלית" },
+      { label: "בחשבון אישי מול קופת הפיצויים" },
       { label: "ב-UID Register (לחברות)", url: "https://www.uid.admin.ch/" }
     ],
     officialSource: "https://www.estv.admin.ch/"
@@ -130,8 +150,10 @@ export const COUNTRIES: CountryTin[] = [
     entity: { name: "RSIN", format: "9 ספרות", example: "123456789" },
     whereToFind: [
       { label: "בדרכון/ת.ז. הולנדית" },
+      { label: "ברישיון נהיגה הולנדי" },
       { label: "במכתבי Belastingdienst" },
       { label: "ב-Mijn Belastingdienst", url: "https://www.belastingdienst.nl/" },
+      { label: "בתלוש שכר" },
       { label: "ב-KVK (לחברות)", url: "https://www.kvk.nl/" }
     ],
     officialSource: "https://www.belastingdienst.nl/"
@@ -144,7 +166,11 @@ export const COUNTRIES: CountryTin[] = [
     entity: { name: "NIF", format: "אות + 7 ספרות + תו ביקורת", example: "A12345674" },
     whereToFind: [
       { label: "בכרטיס ה-DNI/NIE" },
-      { label: "באזור האישי של Agencia Tributaria", url: "https://www.agenciatributaria.gob.es/" }
+      { label: "באישור התושבות (Certificado de Registro)" },
+      { label: "באזור האישי של Agencia Tributaria", url: "https://www.agenciatributaria.gob.es/" },
+      { label: "בהצהרת מס (Declaración de la Renta)" },
+      { label: "במכתבי Hacienda" },
+      { label: "ב-Registro Mercantil (לחברות)", url: "https://www.rmc.es/" }
     ],
     officialSource: "https://www.agenciatributaria.gob.es/"
   },
@@ -156,7 +182,11 @@ export const COUNTRIES: CountryTin[] = [
     entity: { name: "Partita IVA", format: "11 ספרות", example: "12345678901" },
     whereToFind: [
       { label: "בכרטיס Tessera Sanitaria" },
-      { label: "באזור האישי של Agenzia delle Entrate", url: "https://www.agenziaentrate.gov.it/" }
+      { label: "בכרטיס Codice Fiscale הפלסטיק" },
+      { label: "באזור האישי של Agenzia delle Entrate", url: "https://www.agenziaentrate.gov.it/" },
+      { label: "בהצהרת המס (Modello 730 / Modello Redditi)" },
+      { label: "בתלוש שכר (Busta paga)" },
+      { label: "ב-Registro Imprese (לחברות)", url: "https://www.registroimprese.it/" }
     ],
     officialSource: "https://www.agenziaentrate.gov.it/"
   }
@@ -170,7 +200,10 @@ COUNTRIES.push(
     entity: { name: "TRN", format: "7 ספרות + אות", example: "1234567A" },
     whereToFind: [
       { label: "בכרטיס Public Services" },
-      { label: "ב-Revenue myAccount", url: "https://www.revenue.ie/" }
+      { label: "ב-Revenue myAccount", url: "https://www.revenue.ie/" },
+      { label: "במכתבי Revenue Commissioners" },
+      { label: "בתלוש שכר ובטופס P60" },
+      { label: "במכתבי Department of Social Protection" }
     ],
     officialSource: "https://www.revenue.ie/" },
   { code: "BE", nameHe: "בלגיה", nameEn: "Belgium", flag: "🇧🇪",
@@ -178,8 +211,11 @@ COUNTRIES.push(
     individual: { name: "Numéro National", format: "11 ספרות: YY.MM.DD-NNN.NN", example: "85.07.30-033.28" },
     entity: { name: "Enterprise Number", format: "10 ספרות: 0NNN.NNN.NNN", example: "0123.456.749" },
     whereToFind: [
-      { label: "בכרטיס הזהות הבלגי" },
-      { label: "ב-MyMinfin", url: "https://finances.belgium.be/" }
+      { label: "בכרטיס הזהות הבלגי (eID)" },
+      { label: "ב-MyMinfin", url: "https://finances.belgium.be/" },
+      { label: "בשומת המס (Avertissement-Extrait de rôle)" },
+      { label: "בתלוש שכר ובטופס 281.10" },
+      { label: "ב-Crossroads Bank for Enterprises (לחברות)", url: "https://kbopub.economie.fgov.be/" }
     ],
     officialSource: "https://finances.belgium.be/" },
   { code: "AT", nameHe: "אוסטריה", nameEn: "Austria", flag: "🇦🇹",
@@ -188,7 +224,10 @@ COUNTRIES.push(
     entity: { name: "UID-Nummer", format: "ATU + 8 ספרות", example: "ATU12345678" },
     whereToFind: [
       { label: "במכתבים מ-Finanzamt" },
-      { label: "ב-FinanzOnline", url: "https://finanzonline.bmf.gv.at/" }
+      { label: "ב-FinanzOnline", url: "https://finanzonline.bmf.gv.at/" },
+      { label: "בשומת מס (Einkommensteuerbescheid)" },
+      { label: "בתלוש שכר (Lohnzettel)" },
+      { label: "ב-Firmenbuch (לחברות)", url: "https://justizonline.gv.at/" }
     ],
     officialSource: "https://www.bmf.gv.at/" },
   { code: "SE", nameHe: "שוודיה", nameEn: "Sweden", flag: "🇸🇪",
@@ -196,8 +235,11 @@ COUNTRIES.push(
     individual: { name: "Personnummer", format: "YYMMDD-NNNN", example: "850730-1234" },
     entity: { name: "Organisationsnummer", format: "10 ספרות: NNNNNN-NNNN", example: "556677-8899" },
     whereToFind: [
-      { label: "בכרטיס Skatteverket" },
-      { label: "ב-Mina sidor", url: "https://www.skatteverket.se/" }
+      { label: "בכרטיס Skatteverket / ID-kort" },
+      { label: "ב-Mina sidor", url: "https://www.skatteverket.se/" },
+      { label: "ברישיון נהיגה שוודי" },
+      { label: "בתלוש שכר ובטופס Kontrolluppgift" },
+      { label: "ב-Bolagsverket (לחברות)", url: "https://www.bolagsverket.se/" }
     ],
     officialSource: "https://www.skatteverket.se/" },
 );
