@@ -36,8 +36,9 @@ jobs:
       - name: Locate build output
         id: out
         run: |
-          if [ -d ".output/public" ]; then echo "dir=.output/public" >> $GITHUB_OUTPUT;
-          elif [ -d "dist" ]; then echo "dir=dist" >> $GITHUB_OUTPUT;
+          if [ -f ".output/public/index.html" ]; then echo "dir=.output/public" >> $GITHUB_OUTPUT;
+          elif [ -f "dist/client/index.html" ]; then echo "dir=dist/client" >> $GITHUB_OUTPUT;
+          elif [ -f "dist/index.html" ]; then echo "dir=dist" >> $GITHUB_OUTPUT;
           else echo "::error::No build output found"; ls -la; exit 1; fi
 
       - name: Verify build output
