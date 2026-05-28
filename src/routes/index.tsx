@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ExternalLink, MapPin, FileText, Building2, User } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/")({
   head: () => {
@@ -50,6 +51,28 @@ function Index() {
   const [code, setCode] = useState<string>("");
   const country: CountryTin | undefined = COUNTRIES.find((c) => c.code === code);
 
+  const handleCountryChange = (value: string) => {
+    setCode(value);
+    const selected = COUNTRIES.find((c) => c.code === value);
+    trackEvent("country_select", {
+      country_code: value,
+      country_name: selected?.nameEn ?? value,
+    });
+  };
+
+  const handleResultClick = (
+    linkType: "official" | "oecd" | "eu_tin" | "where_to_find",
+    label: string,
+    url: string
+  ) => {
+    trackEvent("result_click", {
+      link_type: linkType,
+      country_code: country?.code ?? "",
+      label,
+      url,
+    });
+  };
+
   // Sort countries Hebrew alphabetically
   const sorted = [...COUNTRIES].sort((a, b) => a.nameHe.localeCompare(b.nameHe, "he"));
 
@@ -70,7 +93,7 @@ function Index() {
           <label htmlFor="country" className="block text-sm font-semibold">
             1. בחר מדינה
           </label>
-          <Select value={code} onValueChange={setCode}>
+          <Select value={code} onValueChange={handleCountryChange}>
             <SelectTrigger id="country" className="h-12 text-base">
               <SelectValue placeholder="לחץ לבחירת מדינה" />
             </SelectTrigger>

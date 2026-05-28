@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { GA_MEASUREMENT_ID, analyticsEnabled } from "@/lib/analytics";
 
 function NotFoundComponent() {
   return (
@@ -94,6 +95,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           inLanguage: "he",
         }),
       },
+      ...(analyticsEnabled
+        ? [
+            {
+              src: `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`,
+              async: true,
+            },
+            {
+              children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}',{anonymize_ip:true});`,
+            },
+          ]
+        : []),
     ],
   }),
   shellComponent: RootShell,
