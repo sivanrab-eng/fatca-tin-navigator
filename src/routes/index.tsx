@@ -7,14 +7,42 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ExternalLink, MapPin, FileText, Building2, User } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "מאתר TIN לצורכי FATCA/CRS" },
-      { name: "description", content: "מצא את שם ומבנה מספר זיהוי המס (TIN) לצורכי FATCA/CRS בכל מדינה — ליחיד ולחברה, ואיפה ניתן למצוא אותו." },
-      { property: "og:title", content: "מאתר TIN לצורכי FATCA/CRS" },
-      { property: "og:description", content: "מצא את שם ומבנה ה-TIN בכל מדינה — ליחיד ולחברה." },
-    ],
-  }),
+  head: () => {
+    const url = "https://fatca-tin-navigator.lovable.app/";
+    const title = "מאתר TIN לצורכי FATCA/CRS — חיפוש מספר זיהוי מס לפי מדינה";
+    const description = "כלי חינמי לאיתור שם ומבנה מספר זיהוי המס (TIN) בכל מדינה — ליחיד ולחברה, כולל היכן ניתן למצוא אותו, לצורכי דיווח FATCA ו-CRS.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { name: "keywords", content: "TIN, FATCA, CRS, מספר זיהוי מס, Tax Identification Number, דיווח מס בינלאומי" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "website" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [
+        { rel: "canonical", href: url },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "מאתר TIN — FATCA/CRS",
+            url,
+            inLanguage: "he",
+            applicationCategory: "FinanceApplication",
+            description,
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          }),
+        },
+      ],
+    };
+  },
   component: Index,
 });
 
