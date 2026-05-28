@@ -137,6 +137,7 @@ function Index() {
                   href={country.officialSource}
                   target="_blank"
                   rel="noreferrer noopener"
+                  onClick={() => handleResultClick("official", "רשות המס המקומית", country.officialSource)}
                   className="inline-flex items-center gap-1 text-primary hover:underline"
                 >
                   רשות המס המקומית
@@ -147,6 +148,7 @@ function Index() {
                     href={country.oecdSource}
                     target="_blank"
                     rel="noreferrer noopener"
+                    onClick={() => handleResultClick("oecd", "OECD TIN", country.oecdSource!)}
                     className="inline-flex items-center gap-1 text-primary hover:underline"
                   >
                     OECD TIN
@@ -158,6 +160,7 @@ function Index() {
                     href={country.euTinSource}
                     target="_blank"
                     rel="noreferrer noopener"
+                    onClick={() => handleResultClick("eu_tin", "EU TIN", country.euTinSource!)}
                     className="inline-flex items-center gap-1 text-primary hover:underline"
                   >
                     EU TIN
@@ -215,6 +218,7 @@ function Index() {
                               href={w.url}
                               target="_blank"
                               rel="noreferrer noopener"
+                              onClick={() => handleResultClick("where_to_find", w.label, w.url!)}
                               className="inline-flex items-center gap-1 text-primary hover:underline"
                             >
                               {w.label}
