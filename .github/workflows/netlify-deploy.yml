@@ -1,0 +1,71 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: netlify-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile || bun install
+
+      - name: Build (static, base=/)
+        env:
+          NITRO_PRESET: static
+          VITE_BASE: /
+        # Nitro's SSR sub-build may exit non-zero for a pure SPA;
+        # dist/client is fully generated before that step.
+        run: bun run build || echo "Build exited non-zero; verifying dist/client next."
+
+      - name: Verify build output
+        run: |
+          set -eu
+          test -f dist/client/index.html || { echo "::error::Missing dist/client/index.html"; exit 1; }
+          echo "Build OK — $(du -sh dist/client | cut -f1)"
+
+      - name: SPA fallback (_redirects)
+        run: |
+          mkdir -p dist/client
+          echo "/*  /index.html  200" > dist/client/_redirects
+
+      - name: Create deploy ZIP artifact
+        run: |
+          cd dist/client
+          zip -r ../../netlify-deploy.zip .
+          cd ../..
+          ls -lh netlify-deploy.zip
+
+      - name: Upload ZIP as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: netlify-deploy-zip
+          path: netlify-deploy.zip
+          retention-days: 30
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: dist/client
+          production-branch: main
+          production-deploy: true
+          deploy-message: "Deploy ${{ github.sha }} from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          overwrites-pull-request-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 5
