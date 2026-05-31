@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { GA_MEASUREMENT_ID, analyticsEnabled } from "@/lib/analytics";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
