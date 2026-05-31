@@ -1,13 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+
+type Lang = "he" | "en";
+const T = {
+  he: {
+    title: "מאתר TIN — FATCA/CRS", subtitle: "בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.",
+    step1: "1. בחר מדינה", placeholder: "לחץ לבחירת מדינה",
+    empty: "התוצאות יופיעו כאן לאחר בחירת מדינה.",
+    disclaimer: "⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי — יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.",
+    localName: "שם המזהה המקומי", localAuth: "רשות המס המקומית",
+    step2: "2. בחר סוג", individual: "יחיד", entity: "חברה / ישות",
+    name: "שם", format: "מבנה", example: "דוגמה",
+    whereTitle: (tin: string, country: string) => `איפה ניתן למצוא את ה-${tin} שלי ב${country}? לחץ על החץ לפירוט`,
+    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)",
+    copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
+    downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
+    pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF",
+    legal: "הבהרה משפטית", langBtn: "English",
+  },
+  en: {
+    title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
+    step1: "1. Select a country", placeholder: "Click to choose a country",
+    empty: "Results will appear here after selecting a country.",
+    disclaimer: "⚠️ Informational only. Not tax/legal advice and not an official source — verify with the relevant authority before using for FATCA/CRS.",
+    localName: "Local identifier name", localAuth: "Local tax authority",
+    step2: "2. Choose type", individual: "Individual", entity: "Company / Entity",
+    name: "Name", format: "Format", example: "Example",
+    whereTitle: (tin: string, country: string) => `Where can I find my ${tin} in ${country}? Click the arrow for details`,
+    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)",
+    copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
+    downloaded: "File downloaded", dlErr: "Download error",
+    pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error",
+    legal: "Legal disclaimer", langBtn: "עברית",
+  },
+};
 
 function buildExportText(country: CountryTin): string {
   const lines: string[] = [];
