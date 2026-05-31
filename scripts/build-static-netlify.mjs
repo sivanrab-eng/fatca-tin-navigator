@@ -391,9 +391,91 @@ const appJs = `(function () {
   const searchInput = document.getElementById('country-search');
   const select = document.getElementById('country-select');
   const result = document.getElementById('result');
+  const langBtn = document.getElementById('lang-toggle');
+
+  const I18N = {
+    he: {
+      eyebrow: 'FATCA / CRS',
+      title: 'מאתר TIN לפי מדינה',
+      subtitle: 'בחרי מדינה כדי לראות את שם המזהה, המבנה, דוגמאות, ומקורות רשמיים.',
+      searchLabel: 'חיפוש מדינה',
+      searchPlaceholder: 'הקלידי ישראל, United States, Germany...',
+      selectLabel: 'בחירת מדינה',
+      selectPlaceholder: 'בחרי מדינה מהרשימה',
+      helper: 'הרשימה מסתננת לפי החיפוש למעלה.',
+      emptyTitle: 'עדיין לא נבחרה מדינה',
+      emptyBody: 'אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.',
+      notFoundTitle: 'לא נמצאה מדינה',
+      notFoundBody: 'נסי חיפוש אחר או בחרי מדינה מהרשימה.',
+      warning: 'המידע מיועד להתמצאות בלבד ואינו מהווה ייעוץ מס או ייעוץ משפטי. יש לאמת מול הרשות המוסמכת לפני שימוש בפועל.',
+      tinLocal: 'שם המזהה המקומי',
+      forIndividual: 'ליחיד',
+      forEntity: 'לחברה / ישות',
+      format: 'מבנה', example: 'דוגמה', note: 'הערה',
+      whereTitle: 'איפה אפשר למצוא את המספר',
+      sourcesTitle: 'מקורות רשמיים',
+      localAuthority: 'רשות המס המקומית',
+      copy: 'העתקה', downloadTxt: 'הורדת TXT', print: 'הדפסה / PDF',
+      toastDownloaded: 'קובץ הטקסט ירד בהצלחה',
+      toastCopied: 'התוכן הועתק ללוח',
+      toastCopyFail: 'לא ניתן היה להעתיק אוטומטית',
+      toastPrintBlocked: 'הדפדפן חסם את חלון ההדפסה',
+      langBtn: 'EN',
+    },
+    en: {
+      eyebrow: 'FATCA / CRS',
+      title: 'TIN Finder by Country',
+      subtitle: 'Select a country to see the local TIN name, format, examples, and official sources.',
+      searchLabel: 'Search country',
+      searchPlaceholder: 'Type Israel, United States, Germany...',
+      selectLabel: 'Select country',
+      selectPlaceholder: 'Choose a country',
+      helper: 'The list filters by the search above.',
+      emptyTitle: 'No country selected yet',
+      emptyBody: 'Once selected, you will see the TIN structure for individuals and entities, with official links.',
+      notFoundTitle: 'Country not found',
+      notFoundBody: 'Try another search or pick from the list.',
+      warning: 'This information is for orientation only and does not constitute tax or legal advice. Verify with the competent authority before use.',
+      tinLocal: 'Local TIN name',
+      forIndividual: 'Individual',
+      forEntity: 'Entity / Company',
+      format: 'Format', example: 'Example', note: 'Note',
+      whereTitle: 'Where to find the number',
+      sourcesTitle: 'Official sources',
+      localAuthority: 'Local tax authority',
+      copy: 'Copy', downloadTxt: 'Download TXT', print: 'Print / PDF',
+      toastDownloaded: 'Text file downloaded',
+      toastCopied: 'Copied to clipboard',
+      toastCopyFail: 'Could not copy automatically',
+      toastPrintBlocked: 'The browser blocked the print window',
+      langBtn: 'עב',
+    },
+  };
+
+  let lang = (localStorage.getItem('tin_lang') === 'en') ? 'en' : 'he';
+  function t(k) { return I18N[lang][k] || k; }
+  function countryName(c) { return lang === 'en' ? c.nameEn : c.nameHe; }
+  function countrySecondary(c) { return lang === 'en' ? c.nameHe : c.nameEn; }
+  function tinName(c) { return lang === 'en' ? c.tinNameEn : c.tinNameHe; }
+  function tinSecondary(c) { return lang === 'en' ? c.tinNameHe : c.tinNameEn; }
+
+  function applyI18nStatic() {
+    document.documentElement.lang = lang === 'en' ? 'en' : 'he';
+    document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+    document.title = t('title');
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
+      const pair = el.getAttribute('data-i18n-attr').split(':');
+      if (pair.length === 2) el.setAttribute(pair[0], t(pair[1]));
+    });
+    if (langBtn) langBtn.textContent = t('langBtn');
+  }
 
   let filtered = countries.slice();
   let selectedCode = '';
+
 
   function escapeHtml(value) {
     return String(value)
