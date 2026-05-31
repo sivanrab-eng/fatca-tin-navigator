@@ -1,13 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+
+type Lang = "he" | "en";
+const T = {
+  he: {
+    title: "מאתר TIN — FATCA/CRS", subtitle: "בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.",
+    step1: "1. בחר מדינה", placeholder: "לחץ לבחירת מדינה",
+    empty: "התוצאות יופיעו כאן לאחר בחירת מדינה.",
+    disclaimer: "⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי — יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.",
+    localName: "שם המזהה המקומי", localAuth: "רשות המס המקומית",
+    step2: "2. בחר סוג", individual: "יחיד", entity: "חברה / ישות",
+    name: "שם", format: "מבנה", example: "דוגמה",
+    whereTitle: (tin: string, country: string) => `איפה ניתן למצוא את ה-${tin} שלי ב${country}? לחץ על החץ לפירוט`,
+    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)",
+    copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
+    downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
+    pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF",
+    legal: "הבהרה משפטית", langBtn: "English",
+  },
+  en: {
+    title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
+    step1: "1. Select a country", placeholder: "Click to choose a country",
+    empty: "Results will appear here after selecting a country.",
+    disclaimer: "⚠️ Informational only. Not tax/legal advice and not an official source — verify with the relevant authority before using for FATCA/CRS.",
+    localName: "Local identifier name", localAuth: "Local tax authority",
+    step2: "2. Choose type", individual: "Individual", entity: "Company / Entity",
+    name: "Name", format: "Format", example: "Example",
+    whereTitle: (tin: string, country: string) => `Where can I find my ${tin} in ${country}? Click the arrow for details`,
+    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)",
+    copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
+    downloaded: "File downloaded", dlErr: "Download error",
+    pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error",
+    legal: "Legal disclaimer", langBtn: "עברית",
+  },
+};
 
 function buildExportText(country: CountryTin): string {
   const lines: string[] = [];
@@ -173,7 +207,24 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [code, setCode] = useState<string>("");
+  const [lang, setLang] = useState<Lang>("he");
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("tin_lang");
+      if (saved === "en" || saved === "he") setLang(saved);
+    } catch {}
+  }, []);
+  const t = T[lang];
+  const dir = lang === "he" ? "rtl" : "ltr";
+  const toggleLang = () => {
+    const next: Lang = lang === "he" ? "en" : "he";
+    setLang(next);
+    try { localStorage.setItem("tin_lang", next); } catch {}
+    trackEvent("lang_toggle", { lang: next });
+  };
   const country: CountryTin | undefined = COUNTRIES.find((c) => c.code === code);
+  const cName = (c: CountryTin) => (lang === "he" ? c.nameHe : c.nameEn);
+  const cTin = (c: CountryTin) => (lang === "he" ? c.tinNameHe : c.tinNameEn);
 
   const handleCountryChange = (value: string) => {
     setCode(value);
@@ -197,17 +248,23 @@ function Index() {
     });
   };
 
-  // Sort countries Hebrew alphabetically
-  const sorted = [...COUNTRIES].sort((a, b) => a.nameHe.localeCompare(b.nameHe, "he"));
+  // Sort countries alphabetically by active language
+  const sorted = [...COUNTRIES].sort((a, b) =>
+    lang === "he" ? a.nameHe.localeCompare(b.nameHe, "he") : a.nameEn.localeCompare(b.nameEn, "en")
+  );
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground">
+    <div dir={dir} className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-card">
-        <div className="mx-auto max-w-2xl px-5 py-5">
-          <h1 className="text-xl font-bold tracking-tight">מאתר TIN — FATCA/CRS</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.
-          </p>
+        <div className="mx-auto max-w-2xl px-5 py-5 flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">{t.title}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{t.subtitle}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={toggleLang} className="gap-1.5 shrink-0">
+            <Languages className="h-4 w-4" />
+            {t.langBtn}
+          </Button>
         </div>
       </header>
 
@@ -215,18 +272,20 @@ function Index() {
         {/* Step 1: Country picker */}
         <section className="space-y-2">
           <label htmlFor="country" className="block text-sm font-semibold">
-            1. בחר מדינה
+            {t.step1}
           </label>
           <Select value={code} onValueChange={handleCountryChange}>
             <SelectTrigger id="country" className="h-12 text-base">
-              <SelectValue placeholder="לחץ לבחירת מדינה" />
+              <SelectValue placeholder={t.placeholder} />
             </SelectTrigger>
             <SelectContent className="max-h-[60vh]">
               {sorted.map((c) => (
                 <SelectItem key={c.code} value={c.code} className="text-base">
-                  <span className="ml-2">{c.flag}</span>
-                  {c.nameHe}{" "}
-                  <span className="text-muted-foreground text-xs">({c.nameEn})</span>
+                  <span className={lang === "he" ? "ml-2" : "mr-2"}>{c.flag}</span>
+                  {cName(c)}{" "}
+                  <span className="text-muted-foreground text-xs">
+                    ({lang === "he" ? c.nameEn : c.nameHe})
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -235,25 +294,25 @@ function Index() {
 
         {!country && (
           <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-            התוצאות יופיעו כאן לאחר בחירת מדינה.
+            {t.empty}
           </div>
         )}
 
         {country && (
           <>
             <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-muted-foreground">
-              ⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי —
-              יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.
+              {t.disclaimer}
             </div>
+
 
             {/* Step 2: TIN name + source */}
             <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-3">
                 <span className="text-3xl leading-none">{country.flag}</span>
                 <div>
-                  <p className="text-xs text-muted-foreground">שם המזהה המקומי</p>
-                  <h2 className="text-lg font-bold leading-tight">{country.tinNameHe}</h2>
-                  <p className="text-xs text-muted-foreground">{country.tinNameEn}</p>
+                  <p className="text-xs text-muted-foreground">{t.localName}</p>
+                  <h2 className="text-lg font-bold leading-tight">{cTin(country)}</h2>
+                  <p className="text-xs text-muted-foreground">{lang === "he" ? country.tinNameEn : country.tinNameHe}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm font-medium">
@@ -261,10 +320,10 @@ function Index() {
                   href={country.officialSource}
                   target="_blank"
                   rel="noreferrer noopener"
-                  onClick={() => handleResultClick("official", "רשות המס המקומית", country.officialSource)}
+                  onClick={() => handleResultClick("official", t.localAuth, country.officialSource)}
                   className="inline-flex items-center gap-1 text-primary hover:underline"
                 >
-                  רשות המס המקומית
+                  {t.localAuth}
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
                 {country.oecdSource && (
@@ -296,23 +355,23 @@ function Index() {
 
             {/* Step 3: Individual / Entity toggle */}
             <section className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <h3 className="text-sm font-semibold">2. בחר סוג</h3>
+              <h3 className="text-sm font-semibold">{t.step2}</h3>
               <Tabs defaultValue="individual">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="individual" className="gap-1.5">
                     <User className="h-4 w-4" />
-                    יחיד
+                    {t.individual}
                   </TabsTrigger>
                   <TabsTrigger value="entity" className="gap-1.5">
                     <Building2 className="h-4 w-4" />
-                    חברה / ישות
+                    {t.entity}
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="individual">
-                  <TinBlock entry={country.individual} />
+                  <TinBlock entry={country.individual} t={t} />
                 </TabsContent>
                 <TabsContent value="entity">
-                  <TinBlock entry={country.entity} />
+                  <TinBlock entry={country.entity} t={t} />
                 </TabsContent>
               </Tabs>
             </section>
@@ -324,11 +383,11 @@ function Index() {
                   value="where"
                   className="rounded-xl border border-border bg-card px-4"
                 >
-                  <AccordionTrigger className="text-base font-semibold hover:no-underline text-right">
+                  <AccordionTrigger className={`text-base font-semibold hover:no-underline ${lang === "he" ? "text-right" : "text-left"}`}>
                     <span className="flex items-start gap-2">
                       <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <span>
-                      איפה ניתן למצוא את ה-{country.tinNameHe} שלי ב{country.nameHe}? לחץ על החץ לפירוט
+                      {t.whereTitle(cTin(country), cName(country))}
                     </span>
                     </span>
                   </AccordionTrigger>
@@ -371,7 +430,7 @@ function Index() {
                 className="gap-1.5"
               >
                 <Copy className="h-4 w-4" />
-                העתק ללוח
+                {t.copy}
               </Button>
 
               <Button
@@ -384,7 +443,7 @@ function Index() {
                 className="gap-1.5"
               >
                 <Download className="h-4 w-4" />
-                הורד כקובץ טקסט
+                {t.download}
               </Button>
               <Button
                 variant="outline"
@@ -396,7 +455,7 @@ function Index() {
                 className="gap-1.5"
               >
                 <Printer className="h-4 w-4" />
-                ייצא ל-PDF (הדפסה)
+                {t.pdf}
               </Button>
             </section>
           </>
@@ -440,19 +499,19 @@ function Index() {
   );
 }
 
-function TinBlock({ entry }: { entry: CountryTin["individual"] }) {
+function TinBlock({ entry, t }: { entry: CountryTin["individual"]; t: (typeof T)[Lang] }) {
   return (
     <div className="mt-2 space-y-3 rounded-xl border border-border bg-card p-5">
       <div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">שם</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.name}</p>
         <p className="font-semibold">{entry.name}</p>
       </div>
       <div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">מבנה</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.format}</p>
         <p dir="rtl" className="text-sm">{entry.format}</p>
       </div>
       <div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">דוגמה</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.example}</p>
         <code dir="ltr" className="mt-1 inline-block rounded-md bg-muted px-2.5 py-1.5 font-mono text-sm">
           {entry.example}
         </code>
