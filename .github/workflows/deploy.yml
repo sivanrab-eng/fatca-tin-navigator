@@ -36,10 +36,45 @@ jobs:
       - name: Locate build output
         id: out
         run: |
-          if [ -f ".output/public/index.html" ]; then echo "dir=.output/public" >> $GITHUB_OUTPUT;
-          elif [ -f "dist/client/index.html" ]; then echo "dir=dist/client" >> $GITHUB_OUTPUT;
-          elif [ -f "dist/index.html" ]; then echo "dir=dist" >> $GITHUB_OUTPUT;
-          else echo "::error::No build output found"; ls -la; exit 1; fi
+          set -eu
+
+          for dir in .output/public dist/client dist build/client build .vercel/output/static; do
+            if [ -f "$dir/index.html" ]; then
+              ASSETS=$(find "$dir" -type f \( -name "*.js" -o -name "*.css" \) | wc -l | tr -d ' ')
+              if [ "$ASSETS" -ge 1 ]; then
+                echo "dir=$dir" >> "$GITHUB_OUTPUT"
+                echo "Using build output: $dir"
+                exit 0
+              fi
+            fi
+          done
+
+          FOUND_DIR=""
+          for root in .output dist build .vercel/output; do
+            [ -d "$root" ] || continue
+
+            while IFS= read -r index_file; do
+              dir=$(dirname "$index_file")
+              ASSETS=$(find "$dir" -type f \( -name "*.js" -o -name "*.css" \) | wc -l | tr -d ' ')
+              if [ "$ASSETS" -ge 1 ]; then
+                FOUND_DIR="$dir"
+                break 2
+              fi
+            done < <(find "$root" -type f -name "index.html")
+          done
+
+          if [ -n "$FOUND_DIR" ]; then
+            echo "dir=$FOUND_DIR" >> "$GITHUB_OUTPUT"
+            echo "Using discovered build output: $FOUND_DIR"
+            exit 0
+          fi
+
+          echo "::error::No build output found"
+          ls -la
+          for root in .output dist build .vercel/output; do
+            [ -d "$root" ] && echo "--- $root ---" && find "$root" -maxdepth 3 -type f | sort || true
+          done
+          exit 1
 
       - name: Verify build output
         run: |
