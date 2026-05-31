@@ -355,16 +355,16 @@ function Index() {
 
             {/* Step 3: Individual / Entity toggle */}
             <section className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <h3 className="text-sm font-semibold">2. בחר סוג</h3>
+              <h3 className="text-sm font-semibold">{t.step2}</h3>
               <Tabs defaultValue="individual">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="individual" className="gap-1.5">
                     <User className="h-4 w-4" />
-                    יחיד
+                    {t.individual}
                   </TabsTrigger>
                   <TabsTrigger value="entity" className="gap-1.5">
                     <Building2 className="h-4 w-4" />
-                    חברה / ישות
+                    {t.entity}
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="individual">
