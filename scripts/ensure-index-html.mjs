@@ -1,17 +1,13 @@
-// Generates a SPA fallback index.html in dist/client if the build did not
-// prerender one. It scans dist/client/assets for the entry JS and CSS so the
-// browser boots the TanStack Router client which then hydrates the route tree.
-import { readdirSync, existsSync, writeFileSync, statSync } from "node:fs";
+// Generates a SPA fallback index.html in dist/client by detecting the real
+// Vite client entry (a JS file in dist/client/assets that is NOT imported
+// by any other JS file in that folder). Avoids the "largest JS" heuristic
+// which can pick a shared chunk and leave the app un-mounted.
+import { readdirSync, existsSync, writeFileSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const CLIENT_DIR = "dist/client";
 const ASSETS_DIR = join(CLIENT_DIR, "assets");
 const INDEX_HTML = join(CLIENT_DIR, "index.html");
-
-if (existsSync(INDEX_HTML)) {
-  console.log("[ensure-index-html] index.html already exists, skipping.");
-  process.exit(0);
-}
 
 if (!existsSync(ASSETS_DIR)) {
   console.error("[ensure-index-html] dist/client/assets not found. Build may have failed.");
@@ -19,7 +15,6 @@ if (!existsSync(ASSETS_DIR)) {
 }
 
 const files = readdirSync(ASSETS_DIR);
-// Pick the largest .js as the entry (best-effort heuristic for vite output)
 const jsFiles = files.filter((f) => f.endsWith(".js"));
 const cssFiles = files.filter((f) => f.endsWith(".css"));
 
@@ -28,9 +23,29 @@ if (jsFiles.length === 0) {
   process.exit(1);
 }
 
-const entryJs = jsFiles
+// Find files that are imported by other JS files -> those are chunks, not entries.
+const imported = new Set();
+const contents = new Map();
+for (const f of jsFiles) {
+  const src = readFileSync(join(ASSETS_DIR, f), "utf8");
+  contents.set(f, src);
+}
+for (const f of jsFiles) {
+  const src = contents.get(f);
+  for (const other of jsFiles) {
+    if (other === f) continue;
+    if (src.includes(`./${other}`) || src.includes(`/assets/${other}`)) {
+      imported.add(other);
+    }
+  }
+}
+
+let entryCandidates = jsFiles.filter((f) => !imported.has(f));
+if (entryCandidates.length === 0) entryCandidates = jsFiles;
+// Prefer the smallest entry candidate (entries tend to be thin shells).
+const entryJs = entryCandidates
   .map((f) => ({ f, size: statSync(join(ASSETS_DIR, f)).size }))
-  .sort((a, b) => b.size - a.size)[0].f;
+  .sort((a, b) => a.size - b.size)[0].f;
 
 const cssTags = cssFiles
   .map((f) => `    <link rel="stylesheet" href="/assets/${f}">`)
