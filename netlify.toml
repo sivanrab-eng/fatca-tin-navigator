@@ -1,11 +1,8 @@
 [build]
-  # Build the site, then ensure an index.html exists for SPA fallback
-  command = "bun run build && node scripts/ensure-index-html.mjs"
-  publish = "dist/client"
+  command = "bun scripts/build-static-netlify.mjs"
+  publish = "dist/netlify-static"
 
 [build.environment]
-  NITRO_PRESET = "static"
-  VITE_BASE = "/"
   NODE_VERSION = "20"
 
 # SPA fallback — unknown routes serve index.html so the client router can handle them
