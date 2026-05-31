@@ -207,7 +207,24 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [code, setCode] = useState<string>("");
+  const [lang, setLang] = useState<Lang>("he");
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("tin_lang");
+      if (saved === "en" || saved === "he") setLang(saved);
+    } catch {}
+  }, []);
+  const t = T[lang];
+  const dir = lang === "he" ? "rtl" : "ltr";
+  const toggleLang = () => {
+    const next: Lang = lang === "he" ? "en" : "he";
+    setLang(next);
+    try { localStorage.setItem("tin_lang", next); } catch {}
+    trackEvent("lang_toggle", { lang: next });
+  };
   const country: CountryTin | undefined = COUNTRIES.find((c) => c.code === code);
+  const cName = (c: CountryTin) => (lang === "he" ? c.nameHe : c.nameEn);
+  const cTin = (c: CountryTin) => (lang === "he" ? c.tinNameHe : c.tinNameEn);
 
   const handleCountryChange = (value: string) => {
     setCode(value);
@@ -231,17 +248,23 @@ function Index() {
     });
   };
 
-  // Sort countries Hebrew alphabetically
-  const sorted = [...COUNTRIES].sort((a, b) => a.nameHe.localeCompare(b.nameHe, "he"));
+  // Sort countries alphabetically by active language
+  const sorted = [...COUNTRIES].sort((a, b) =>
+    lang === "he" ? a.nameHe.localeCompare(b.nameHe, "he") : a.nameEn.localeCompare(b.nameEn, "en")
+  );
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground">
+    <div dir={dir} className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-card">
-        <div className="mx-auto max-w-2xl px-5 py-5">
-          <h1 className="text-xl font-bold tracking-tight">מאתר TIN — FATCA/CRS</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.
-          </p>
+        <div className="mx-auto max-w-2xl px-5 py-5 flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">{t.title}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{t.subtitle}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={toggleLang} className="gap-1.5 shrink-0">
+            <Languages className="h-4 w-4" />
+            {t.langBtn}
+          </Button>
         </div>
       </header>
 
@@ -249,18 +272,20 @@ function Index() {
         {/* Step 1: Country picker */}
         <section className="space-y-2">
           <label htmlFor="country" className="block text-sm font-semibold">
-            1. בחר מדינה
+            {t.step1}
           </label>
           <Select value={code} onValueChange={handleCountryChange}>
             <SelectTrigger id="country" className="h-12 text-base">
-              <SelectValue placeholder="לחץ לבחירת מדינה" />
+              <SelectValue placeholder={t.placeholder} />
             </SelectTrigger>
             <SelectContent className="max-h-[60vh]">
               {sorted.map((c) => (
                 <SelectItem key={c.code} value={c.code} className="text-base">
-                  <span className="ml-2">{c.flag}</span>
-                  {c.nameHe}{" "}
-                  <span className="text-muted-foreground text-xs">({c.nameEn})</span>
+                  <span className={lang === "he" ? "ml-2" : "mr-2"}>{c.flag}</span>
+                  {cName(c)}{" "}
+                  <span className="text-muted-foreground text-xs">
+                    ({lang === "he" ? c.nameEn : c.nameHe})
+                  </span>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -269,16 +294,16 @@ function Index() {
 
         {!country && (
           <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-            התוצאות יופיעו כאן לאחר בחירת מדינה.
+            {t.empty}
           </div>
         )}
 
         {country && (
           <>
             <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-muted-foreground">
-              ⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי —
-              יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.
+              {t.disclaimer}
             </div>
+
 
             {/* Step 2: TIN name + source */}
             <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
