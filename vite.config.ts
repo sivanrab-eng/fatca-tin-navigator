@@ -17,4 +17,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Force-enable Nitro outside the Lovable sandbox (e.g. GitHub Actions) so the
+  // build emits dist/client/. The preset is taken from NITRO_PRESET (set to
+  // "static" in the GitHub Pages workflow).
+  nitro: true,
 });
