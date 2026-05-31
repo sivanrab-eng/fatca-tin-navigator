@@ -449,7 +449,7 @@ function TinBlock({ entry }: { entry: CountryTin["individual"] }) {
       </div>
       <div>
         <p className="text-xs uppercase tracking-wide text-muted-foreground">מבנה</p>
-        <p className="text-sm">{entry.format}</p>
+        <p dir="rtl" className="text-sm">{entry.format}</p>
       </div>
       <div>
         <p className="text-xs uppercase tracking-wide text-muted-foreground">דוגמה</p>
