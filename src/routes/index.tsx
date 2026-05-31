@@ -365,6 +365,19 @@ function Index() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
+                  trackEvent("export", { format: "copy", country_code: country.code });
+                  copyToClipboard(country);
+                }}
+                className="gap-1.5"
+              >
+                <Copy className="h-4 w-4" />
+                העתק ללוח
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
                   trackEvent("export", { format: "txt", country_code: country.code });
                   downloadTxt(country);
                 }}
