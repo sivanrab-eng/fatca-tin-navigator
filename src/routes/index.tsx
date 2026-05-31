@@ -301,6 +301,34 @@ function Index() {
                 </AccordionItem>
               </Accordion>
             </section>
+
+            {/* Export buttons */}
+            <section className="flex flex-wrap gap-2 animate-in fade-in duration-700">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  trackEvent("export", { format: "txt", country_code: country.code });
+                  downloadTxt(country);
+                }}
+                className="gap-1.5"
+              >
+                <Download className="h-4 w-4" />
+                הורד כקובץ טקסט
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  trackEvent("export", { format: "pdf", country_code: country.code });
+                  exportPdf(country);
+                }}
+                className="gap-1.5"
+              >
+                <Printer className="h-4 w-4" />
+                ייצא ל-PDF (הדפסה)
+              </Button>
+            </section>
           </>
         )}
 
