@@ -310,9 +310,9 @@ function Index() {
               <div className="flex items-center gap-3">
                 <span className="text-3xl leading-none">{country.flag}</span>
                 <div>
-                  <p className="text-xs text-muted-foreground">שם המזהה המקומי</p>
-                  <h2 className="text-lg font-bold leading-tight">{country.tinNameHe}</h2>
-                  <p className="text-xs text-muted-foreground">{country.tinNameEn}</p>
+                  <p className="text-xs text-muted-foreground">{t.localName}</p>
+                  <h2 className="text-lg font-bold leading-tight">{cTin(country)}</h2>
+                  <p className="text-xs text-muted-foreground">{lang === "he" ? country.tinNameEn : country.tinNameHe}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm font-medium">
