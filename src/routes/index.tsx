@@ -383,11 +383,11 @@ function Index() {
                   value="where"
                   className="rounded-xl border border-border bg-card px-4"
                 >
-                  <AccordionTrigger className="text-base font-semibold hover:no-underline text-right">
+                  <AccordionTrigger className={`text-base font-semibold hover:no-underline ${lang === "he" ? "text-right" : "text-left"}`}>
                     <span className="flex items-start gap-2">
                       <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <span>
-                      איפה ניתן למצוא את ה-{country.tinNameHe} שלי ב{country.nameHe}? לחץ על החץ לפירוט
+                      {t.whereTitle(cTin(country), cName(country))}
                     </span>
                     </span>
                   </AccordionTrigger>
