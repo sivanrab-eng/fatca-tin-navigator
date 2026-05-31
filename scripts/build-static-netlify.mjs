@@ -104,6 +104,33 @@ a { color: var(--primary-strong); }
   font-weight: 700;
 }
 
+.hero__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.hero__top .eyebrow { margin: 0; }
+
+.lang-toggle {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  min-height: 34px;
+}
+
+.lang-toggle:hover { border-color: var(--primary); color: var(--primary); }
+
+
 h1 {
   margin: 0;
   font-size: clamp(32px, 5vw, 56px);
