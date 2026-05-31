@@ -501,32 +501,35 @@ const appJs = `(function () {
 
   function buildExportText(country) {
     const lines = [
-      'מאתר TIN — FATCA/CRS',
-      'מדינה: ' + country.nameHe + ' (' + country.nameEn + ') ' + country.flag,
+      t('title') + ' — FATCA/CRS',
+      (lang === 'en' ? 'Country: ' : 'מדינה: ') + countryName(country) + ' (' + countrySecondary(country) + ') ' + country.flag,
       '',
-      'שם המזהה המקומי: ' + country.tinNameHe + ' / ' + country.tinNameEn,
+      t('tinLocal') + ': ' + tinName(country) + ' / ' + tinSecondary(country),
       '',
-      '— יחיד —',
-      'שם: ' + country.individual.name,
-      'מבנה: ' + country.individual.format,
-      'דוגמה: ' + country.individual.example,
+      '— ' + t('forIndividual') + ' —',
+      (lang === 'en' ? 'Name: ' : 'שם: ') + country.individual.name,
+      t('format') + ': ' + country.individual.format,
+      t('example') + ': ' + country.individual.example,
     ];
 
-    if (country.individual.note) lines.push('הערה: ' + country.individual.note);
+    if (country.individual.note) lines.push(t('note') + ': ' + country.individual.note);
 
-    lines.push('', '— חברה / ישות —', 'שם: ' + country.entity.name, 'מבנה: ' + country.entity.format, 'דוגמה: ' + country.entity.example);
-    if (country.entity.note) lines.push('הערה: ' + country.entity.note);
+    lines.push('', '— ' + t('forEntity') + ' —',
+      (lang === 'en' ? 'Name: ' : 'שם: ') + country.entity.name,
+      t('format') + ': ' + country.entity.format,
+      t('example') + ': ' + country.entity.example);
+    if (country.entity.note) lines.push(t('note') + ': ' + country.entity.note);
 
-    lines.push('', 'איפה ניתן למצוא את ה-' + country.tinNameHe + ':');
+    lines.push('', t('whereTitle') + ':');
     country.whereToFind.forEach(function (item) {
       lines.push('• ' + item.label + (item.url ? ' — ' + item.url : ''));
     });
 
-    lines.push('', 'מקורות:');
-    lines.push('רשות המס המקומית: ' + country.officialSource);
+    lines.push('', t('sourcesTitle') + ':');
+    lines.push(t('localAuthority') + ': ' + country.officialSource);
     if (country.oecdSource) lines.push('OECD TIN: ' + country.oecdSource);
     if (country.euTinSource) lines.push('EU TIN: ' + country.euTinSource);
-    lines.push('', 'מידע להתמצאות בלבד. יש לאמת מול הרשות המוסמכת.');
+    lines.push('', t('warning'));
     return lines.join('\n');
   }
 
@@ -540,16 +543,16 @@ const appJs = `(function () {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    showToast('קובץ הטקסט ירד בהצלחה');
+    showToast(t('toastDownloaded'));
   }
 
   function copyText(country) {
     const text = buildExportText(country);
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
-        showToast('התוכן הועתק ללוח');
+        showToast(t('toastCopied'));
       }).catch(function () {
-        showToast('לא ניתן היה להעתיק אוטומטית');
+        showToast(t('toastCopyFail'));
       });
       return;
     }
@@ -561,14 +564,15 @@ const appJs = `(function () {
     area.select();
     document.execCommand('copy');
     area.remove();
-    showToast('התוכן הועתק ללוח');
+    showToast(t('toastCopied'));
   }
 
   function printCountry(country) {
-    const html = '<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-' + escapeHtml(country.code) + '</title><style>body{font-family:Arial,sans-serif;padding:24px;line-height:1.7;color:#111}pre{white-space:pre-wrap;font:inherit}</style></head><body><pre>' + escapeHtml(buildExportText(country)) + '</pre></body></html>';
+    const dir = lang === 'en' ? 'ltr' : 'rtl';
+    const html = '<!doctype html><html lang="' + lang + '" dir="' + dir + '"><head><meta charset="utf-8"><title>TIN-' + escapeHtml(country.code) + '</title><style>body{font-family:Arial,sans-serif;padding:24px;line-height:1.7;color:#111}pre{white-space:pre-wrap;font:inherit}</style></head><body><pre>' + escapeHtml(buildExportText(country)) + '</pre></body></html>';
     const win = window.open('', '_blank', 'noopener,noreferrer,width=900,height=700');
     if (!win) {
-      showToast('הדפדפן חסם את חלון ההדפסה');
+      showToast(t('toastPrintBlocked'));
       return;
     }
     win.document.open();
@@ -580,11 +584,11 @@ const appJs = `(function () {
 
   function renderOptions(list) {
     const current = selectedCode;
-    select.innerHTML = '<option value="">בחרי מדינה מהרשימה</option>';
+    select.innerHTML = '<option value="">' + escapeHtml(t('selectPlaceholder')) + '</option>';
     list.forEach(function (country) {
       const option = document.createElement('option');
       option.value = country.code;
-      option.textContent = country.flag + ' ' + country.nameHe + ' (' + country.nameEn + ')';
+      option.textContent = country.flag + ' ' + countryName(country) + ' (' + countrySecondary(country) + ')';
       select.appendChild(option);
     });
     if (current && list.some(function (country) { return country.code === current; })) {
@@ -592,9 +596,13 @@ const appJs = `(function () {
     }
   }
 
+  function renderEmpty() {
+    result.innerHTML = '<div class="empty-state"><h2>' + escapeHtml(t('emptyTitle')) + '</h2><p>' + escapeHtml(t('emptyBody')) + '</p></div>';
+  }
+
   function renderCountry(country) {
     if (!country) {
-      result.innerHTML = '<div class="empty-state"><h2>לא נמצאה מדינה</h2><p>נסי חיפוש אחר או בחרי מדינה מהרשימה.</p></div>';
+      result.innerHTML = '<div class="empty-state"><h2>' + escapeHtml(t('notFoundTitle')) + '</h2><p>' + escapeHtml(t('notFoundBody')) + '</p></div>';
       return;
     }
 
@@ -605,7 +613,7 @@ const appJs = `(function () {
     }).join('');
 
     const metaLinks = [
-      { label: 'רשות המס המקומית', url: country.officialSource },
+      { label: t('localAuthority'), url: country.officialSource },
       country.oecdSource ? { label: 'OECD TIN', url: country.oecdSource } : null,
       country.euTinSource ? { label: 'EU TIN', url: country.euTinSource } : null,
     ].filter(Boolean).map(function (item) {
@@ -613,53 +621,53 @@ const appJs = `(function () {
     }).join('');
 
     result.innerHTML = [
-      '<p class="warning">המידע מיועד להתמצאות בלבד ואינו מהווה ייעוץ מס או ייעוץ משפטי. יש לאמת מול הרשות המוסמכת לפני שימוש בפועל.</p>',
+      '<p class="warning">' + escapeHtml(t('warning')) + '</p>',
       '<div class="country-head">',
       '<div class="flag">' + escapeHtml(country.flag) + '</div>',
       '<div>',
-      '<h2 class="country-title">' + escapeHtml(country.nameHe) + '</h2>',
-      '<div class="country-subtitle">' + escapeHtml(country.nameEn) + '</div>',
+      '<h2 class="country-title">' + escapeHtml(countryName(country)) + '</h2>',
+      '<div class="country-subtitle">' + escapeHtml(countrySecondary(country)) + '</div>',
       '</div>',
       '</div>',
       '<section class="tin-overview">',
-      '<div class="tin-subtitle">שם המזהה המקומי</div>',
-      '<h3 class="tin-title">' + escapeHtml(country.tinNameHe) + '</h3>',
-      '<div class="tin-subtitle">' + escapeHtml(country.tinNameEn) + '</div>',
+      '<div class="tin-subtitle">' + escapeHtml(t('tinLocal')) + '</div>',
+      '<h3 class="tin-title">' + escapeHtml(tinName(country)) + '</h3>',
+      '<div class="tin-subtitle">' + escapeHtml(tinSecondary(country)) + '</div>',
       '</section>',
       '<section class="cards-grid">',
       '<article class="info-card">',
-      '<p class="card-label">ליחיד</p>',
+      '<p class="card-label">' + escapeHtml(t('forIndividual')) + '</p>',
       '<h3 class="card-title">' + escapeHtml(country.individual.name) + '</h3>',
       '<dl class="detail-list">',
-      '<div class="detail-row"><dt>מבנה</dt><dd>' + escapeHtml(country.individual.format) + '</dd></div>',
-      '<div class="detail-row"><dt>דוגמה</dt><dd>' + escapeHtml(country.individual.example) + '</dd></div>',
-      (country.individual.note ? '<div class="detail-row"><dt>הערה</dt><dd>' + escapeHtml(country.individual.note) + '</dd></div>' : ''),
+      '<div class="detail-row"><dt>' + escapeHtml(t('format')) + '</dt><dd>' + escapeHtml(country.individual.format) + '</dd></div>',
+      '<div class="detail-row"><dt>' + escapeHtml(t('example')) + '</dt><dd>' + escapeHtml(country.individual.example) + '</dd></div>',
+      (country.individual.note ? '<div class="detail-row"><dt>' + escapeHtml(t('note')) + '</dt><dd>' + escapeHtml(country.individual.note) + '</dd></div>' : ''),
       '</dl>',
       '</article>',
       '<article class="info-card">',
-      '<p class="card-label">לחברה / ישות</p>',
+      '<p class="card-label">' + escapeHtml(t('forEntity')) + '</p>',
       '<h3 class="card-title">' + escapeHtml(country.entity.name) + '</h3>',
       '<dl class="detail-list">',
-      '<div class="detail-row"><dt>מבנה</dt><dd>' + escapeHtml(country.entity.format) + '</dd></div>',
-      '<div class="detail-row"><dt>דוגמה</dt><dd>' + escapeHtml(country.entity.example) + '</dd></div>',
-      (country.entity.note ? '<div class="detail-row"><dt>הערה</dt><dd>' + escapeHtml(country.entity.note) + '</dd></div>' : ''),
+      '<div class="detail-row"><dt>' + escapeHtml(t('format')) + '</dt><dd>' + escapeHtml(country.entity.format) + '</dd></div>',
+      '<div class="detail-row"><dt>' + escapeHtml(t('example')) + '</dt><dd>' + escapeHtml(country.entity.example) + '</dd></div>',
+      (country.entity.note ? '<div class="detail-row"><dt>' + escapeHtml(t('note')) + '</dt><dd>' + escapeHtml(country.entity.note) + '</dd></div>' : ''),
       '</dl>',
       '</article>',
       '</section>',
       '<section class="sources-grid">',
       '<article class="info-card">',
-      '<p class="card-label">איפה אפשר למצוא את המספר</p>',
+      '<p class="card-label">' + escapeHtml(t('whereTitle')) + '</p>',
       '<ul class="link-list">' + whereLinks + '</ul>',
       '</article>',
       '<article class="info-card">',
-      '<p class="card-label">מקורות רשמיים</p>',
+      '<p class="card-label">' + escapeHtml(t('sourcesTitle')) + '</p>',
       '<ul class="meta-list">' + metaLinks + '</ul>',
       '</article>',
       '</section>',
       '<div class="actions">',
-      '<button class="action-btn action-btn--primary" type="button" data-action="copy">העתקה</button>',
-      '<button class="action-btn" type="button" data-action="txt">הורדת TXT</button>',
-      '<button class="action-btn" type="button" data-action="print">הדפסה / PDF</button>',
+      '<button class="action-btn action-btn--primary" type="button" data-action="copy">' + escapeHtml(t('copy')) + '</button>',
+      '<button class="action-btn" type="button" data-action="txt">' + escapeHtml(t('downloadTxt')) + '</button>',
+      '<button class="action-btn" type="button" data-action="print">' + escapeHtml(t('print')) + '</button>',
       '</div>'
     ].join('');
 
@@ -676,7 +684,7 @@ const appJs = `(function () {
       renderCountry(country);
     } else {
       history.replaceState(null, '', location.pathname + location.search);
-      result.innerHTML = '<div class="empty-state"><h2>עדיין לא נבחרה מדינה</h2><p>אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.</p></div>';
+      renderEmpty();
     }
   }
 
@@ -697,6 +705,25 @@ const appJs = `(function () {
     }
   }
 
+  function setLang(next) {
+    lang = next === 'en' ? 'en' : 'he';
+    try { localStorage.setItem('tin_lang', lang); } catch (e) {}
+    applyI18nStatic();
+    renderOptions(filtered);
+    if (selectedCode) {
+      const c = countries.find(function (item) { return item.code === selectedCode; });
+      if (c) renderCountry(c); else renderEmpty();
+    } else {
+      renderEmpty();
+    }
+  }
+
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      setLang(lang === 'he' ? 'en' : 'he');
+    });
+  }
+
   searchInput.addEventListener('input', function (event) {
     filterCountries(event.target.value || '');
   });
@@ -705,6 +732,7 @@ const appJs = `(function () {
     updateFromSelection(event.target.value || '');
   });
 
+  applyI18nStatic();
   renderOptions(filtered);
 
   const initialCode = decodeURIComponent((location.hash || '').replace('#', '')).toUpperCase();
@@ -714,6 +742,7 @@ const appJs = `(function () {
     renderCountry(countries.find(function (country) { return country.code === initialCode; }));
   }
 })();`;
+
 
 const siteDataJs = `window.__TIN_COUNTRIES__ = ${JSON.stringify(countries, null, 2)};\n`;
 
