@@ -320,10 +320,10 @@ function Index() {
                   href={country.officialSource}
                   target="_blank"
                   rel="noreferrer noopener"
-                  onClick={() => handleResultClick("official", "רשות המס המקומית", country.officialSource)}
+                  onClick={() => handleResultClick("official", t.localAuth, country.officialSource)}
                   className="inline-flex items-center gap-1 text-primary hover:underline"
                 >
-                  רשות המס המקומית
+                  {t.localAuth}
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
                 {country.oecdSource && (
