@@ -24,28 +24,31 @@ const html = `<!doctype html>
     <div class="page-shell">
       <header class="hero">
         <div class="hero__inner">
-          <p class="eyebrow">FATCA / CRS</p>
-          <h1>מאתר TIN לפי מדינה</h1>
-          <p class="hero__text">בחרי מדינה כדי לראות את שם המזהה, המבנה, דוגמאות, ומקורות רשמיים.</p>
+          <div class="hero__top">
+            <p class="eyebrow" data-i18n="eyebrow">FATCA / CRS</p>
+            <button id="lang-toggle" type="button" class="lang-toggle" aria-label="Switch language">EN</button>
+          </div>
+          <h1 data-i18n="title">מאתר TIN לפי מדינה</h1>
+          <p class="hero__text" data-i18n="subtitle">בחרי מדינה כדי לראות את שם המזהה, המבנה, דוגמאות, ומקורות רשמיים.</p>
         </div>
       </header>
 
       <main class="layout">
-        <section class="panel panel--controls" aria-label="בחירת מדינה">
-          <label class="field-label" for="country-search">חיפוש מדינה</label>
-          <input id="country-search" class="text-input" type="search" placeholder="הקלידי ישראל, United States, Germany..." autocomplete="off">
+        <section class="panel panel--controls" aria-label="Country selection">
+          <label class="field-label" for="country-search" data-i18n="searchLabel">חיפוש מדינה</label>
+          <input id="country-search" class="text-input" type="search" data-i18n-attr="placeholder:searchPlaceholder" placeholder="הקלידי ישראל, United States, Germany..." autocomplete="off">
 
-          <label class="field-label" for="country-select">בחירת מדינה</label>
+          <label class="field-label" for="country-select" data-i18n="selectLabel">בחירת מדינה</label>
           <select id="country-select" class="select-input" aria-describedby="selection-help">
-            <option value="">בחרי מדינה מהרשימה</option>
+            <option value="" data-i18n="selectPlaceholder">בחרי מדינה מהרשימה</option>
           </select>
-          <p id="selection-help" class="helper-text">הרשימה מסתננת לפי החיפוש למעלה.</p>
+          <p id="selection-help" class="helper-text" data-i18n="helper">הרשימה מסתננת לפי החיפוש למעלה.</p>
         </section>
 
         <section id="result" class="panel panel--result" aria-live="polite">
           <div class="empty-state">
-            <h2>עדיין לא נבחרה מדינה</h2>
-            <p>אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.</p>
+            <h2 data-i18n="emptyTitle">עדיין לא נבחרה מדינה</h2>
+            <p data-i18n="emptyBody">אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.</p>
           </div>
         </section>
       </main>
