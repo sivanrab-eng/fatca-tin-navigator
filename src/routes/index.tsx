@@ -499,19 +499,19 @@ function Index() {
   );
 }
 
-function TinBlock({ entry }: { entry: CountryTin["individual"] }) {
+function TinBlock({ entry, t }: { entry: CountryTin["individual"]; t: (typeof T)[Lang] }) {
   return (
     <div className="mt-2 space-y-3 rounded-xl border border-border bg-card p-5">
       <div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">שם</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.name}</p>
         <p className="font-semibold">{entry.name}</p>
       </div>
       <div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">מבנה</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.format}</p>
         <p dir="rtl" className="text-sm">{entry.format}</p>
       </div>
       <div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">דוגמה</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.example}</p>
         <code dir="ltr" className="mt-1 inline-block rounded-md bg-muted px-2.5 py-1.5 font-mono text-sm">
           {entry.example}
         </code>
