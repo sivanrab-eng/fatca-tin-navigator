@@ -9,7 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/")({
   head: () => {
-    const url = "https://fatca-tin-navigator.lovable.app/";
+    const url = "https://tin-navigator.netlify.app/";
     const title = "מאתר TIN לצורכי FATCA/CRS — חיפוש מספר זיהוי מס לפי מדינה";
     const description = "כלי חינמי לאיתור שם ומבנה מספר זיהוי המס (TIN) בכל מדינה — ליחיד ולחברה, כולל היכן ניתן למצוא אותו, לצורכי דיווח FATCA ו-CRS.";
     return {

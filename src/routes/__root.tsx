@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "מאתר TIN — FATCA/CRS",
-          url: "https://fatca-tin-navigator.lovable.app",
+          url: "https://tin-navigator.netlify.app",
           inLanguage: "he",
         }),
       },
