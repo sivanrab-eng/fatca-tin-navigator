@@ -1,5 +1,6 @@
 [build]
-  command = "bun run build || echo 'Nitro SSR step may exit non-zero; dist/client is what we publish.'"
+  # Build the site, then ensure an index.html exists for SPA fallback
+  command = "bun run build && node scripts/ensure-index-html.mjs"
   publish = "dist/client"
 
 [build.environment]
@@ -7,7 +8,7 @@
   VITE_BASE = "/"
   NODE_VERSION = "20"
 
-# SPA fallback — every unknown route serves index.html so the client router can handle it
+# SPA fallback — unknown routes serve index.html so the client router can handle them
 [[redirects]]
   from = "/*"
   to = "/index.html"
