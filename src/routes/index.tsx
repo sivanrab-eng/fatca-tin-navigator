@@ -4,9 +4,10 @@ import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 function buildExportText(country: CountryTin): string {
   const lines: string[] = [];
@@ -42,36 +43,92 @@ function buildExportText(country: CountryTin): string {
 }
 
 function downloadTxt(country: CountryTin) {
+  try {
+    const text = buildExportText(country);
+    const blob = new Blob(["\uFEFF" + text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `TIN-${country.code}.txt`;
+    a.rel = "noopener";
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      a.remove();
+      URL.revokeObjectURL(url);
+    }, 1000);
+    toast.success("הקובץ הורד");
+  } catch (e) {
+    console.error(e);
+    toast.error("שגיאה בהורדת הקובץ");
+  }
+}
+
+async function copyToClipboard(country: CountryTin) {
   const text = buildExportText(country);
-  const blob = new Blob(["\uFEFF" + text], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `TIN-${country.code}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    toast.success("התוצאות הועתקו ללוח");
+  } catch (e) {
+    console.error(e);
+    toast.error("לא ניתן להעתיק — בחר ידנית");
+  }
 }
 
 function exportPdf(country: CountryTin) {
   const text = buildExportText(country);
-  const w = window.open("", "_blank");
-  if (!w) return;
   const esc = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  w.document.write(`<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
+  const html = `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
 <style>
   body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.6;color:#111;max-width:720px;margin:0 auto}
   pre{white-space:pre-wrap;word-wrap:break-word;font-family:inherit;font-size:14px}
   h1{font-size:20px;margin:0 0 12px}
-  @media print{button{display:none}}
 </style></head><body>
 <h1>מאתר TIN — ${esc(country.nameHe)} ${esc(country.flag)}</h1>
 <pre>${esc(text)}</pre>
-<script>window.onload=()=>{window.print()}</script>
-</body></html>`);
-  w.document.close();
+</body></html>`;
+
+  // Use a hidden iframe so it works inside sandboxed previews too
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.right = "0";
+  iframe.style.bottom = "0";
+  iframe.style.width = "0";
+  iframe.style.height = "0";
+  iframe.style.border = "0";
+  document.body.appendChild(iframe);
+  const doc = iframe.contentDocument;
+  if (!doc) {
+    toast.error("שגיאה בייצוא ל-PDF");
+    return;
+  }
+  doc.open();
+  doc.write(html);
+  doc.close();
+  setTimeout(() => {
+    try {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      toast.success("נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'");
+    } catch (e) {
+      console.error(e);
+      toast.error("שגיאה בייצוא ל-PDF");
+    }
+    setTimeout(() => iframe.remove(), 2000);
+  }, 200);
 }
 
 export const Route = createFileRoute("/")({
@@ -304,6 +361,19 @@ function Index() {
 
             {/* Export buttons */}
             <section className="flex flex-wrap gap-2 animate-in fade-in duration-700">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  trackEvent("export", { format: "copy", country_code: country.code });
+                  copyToClipboard(country);
+                }}
+                className="gap-1.5"
+              >
+                <Copy className="h-4 w-4" />
+                העתק ללוח
+              </Button>
+
               <Button
                 variant="outline"
                 size="sm"
