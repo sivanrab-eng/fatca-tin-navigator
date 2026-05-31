@@ -455,7 +455,7 @@ function Index() {
                 className="gap-1.5"
               >
                 <Printer className="h-4 w-4" />
-                ייצא ל-PDF (הדפסה)
+                {t.pdf}
               </Button>
             </section>
           </>
