@@ -9,7 +9,7 @@ mkdirSync(outDir, { recursive: true });
 
 const countries = [...COUNTRIES].sort((a, b) => a.nameHe.localeCompare(b.nameHe, "he"));
 
-const html = String.raw`<!doctype html>
+const html = `<!doctype html>
 <html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8">
@@ -57,7 +57,7 @@ const html = String.raw`<!doctype html>
   </body>
 </html>`;
 
-const css = String.raw`:root {
+const css = `:root {
   --background: #f3f6fb;
   --foreground: #102033;
   --surface: #ffffff;
@@ -356,7 +356,7 @@ h1 {
 }
 `;
 
-const appJs = String.raw`(function () {
+const appJs = `(function () {
   const countries = Array.isArray(window.__TIN_COUNTRIES__) ? window.__TIN_COUNTRIES__ : [];
   const searchInput = document.getElementById('country-search');
   const select = document.getElementById('country-select');
