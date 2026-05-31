@@ -4,8 +4,75 @@ import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { Button } from "@/components/ui/button";
+
+function buildExportText(country: CountryTin): string {
+  const lines: string[] = [];
+  lines.push(`מאתר TIN — FATCA/CRS`);
+  lines.push(`מדינה: ${country.nameHe} (${country.nameEn}) ${country.flag}`);
+  lines.push(``);
+  lines.push(`שם המזהה המקומי: ${country.tinNameHe} / ${country.tinNameEn}`);
+  lines.push(``);
+  lines.push(`— יחיד —`);
+  lines.push(`שם: ${country.individual.name}`);
+  lines.push(`מבנה: ${country.individual.format}`);
+  lines.push(`דוגמה: ${country.individual.example}`);
+  if (country.individual.note) lines.push(`הערה: ${country.individual.note}`);
+  lines.push(``);
+  lines.push(`— חברה / ישות —`);
+  lines.push(`שם: ${country.entity.name}`);
+  lines.push(`מבנה: ${country.entity.format}`);
+  lines.push(`דוגמה: ${country.entity.example}`);
+  if (country.entity.note) lines.push(`הערה: ${country.entity.note}`);
+  lines.push(``);
+  lines.push(`איפה ניתן למצוא את ה-${country.tinNameHe}:`);
+  country.whereToFind.forEach((w) => {
+    lines.push(`• ${w.label}${w.url ? ` — ${w.url}` : ""}`);
+  });
+  lines.push(``);
+  lines.push(`מקורות:`);
+  lines.push(`רשות המס המקומית: ${country.officialSource}`);
+  if (country.oecdSource) lines.push(`OECD TIN: ${country.oecdSource}`);
+  if (country.euTinSource) lines.push(`EU TIN: ${country.euTinSource}`);
+  lines.push(``);
+  lines.push(`מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי. יש לאמת מול הרשות המוסמכת.`);
+  return lines.join("\n");
+}
+
+function downloadTxt(country: CountryTin) {
+  const text = buildExportText(country);
+  const blob = new Blob(["\uFEFF" + text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `TIN-${country.code}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportPdf(country: CountryTin) {
+  const text = buildExportText(country);
+  const w = window.open("", "_blank");
+  if (!w) return;
+  const esc = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  w.document.write(`<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.6;color:#111;max-width:720px;margin:0 auto}
+  pre{white-space:pre-wrap;word-wrap:break-word;font-family:inherit;font-size:14px}
+  h1{font-size:20px;margin:0 0 12px}
+  @media print{button{display:none}}
+</style></head><body>
+<h1>מאתר TIN — ${esc(country.nameHe)} ${esc(country.flag)}</h1>
+<pre>${esc(text)}</pre>
+<script>window.onload=()=>{window.print()}</script>
+</body></html>`);
+  w.document.close();
+}
 
 export const Route = createFileRoute("/")({
   head: () => {
