@@ -24,28 +24,31 @@ const html = `<!doctype html>
     <div class="page-shell">
       <header class="hero">
         <div class="hero__inner">
-          <p class="eyebrow">FATCA / CRS</p>
-          <h1>מאתר TIN לפי מדינה</h1>
-          <p class="hero__text">בחרי מדינה כדי לראות את שם המזהה, המבנה, דוגמאות, ומקורות רשמיים.</p>
+          <div class="hero__top">
+            <p class="eyebrow" data-i18n="eyebrow">FATCA / CRS</p>
+            <button id="lang-toggle" type="button" class="lang-toggle" aria-label="Switch language">EN</button>
+          </div>
+          <h1 data-i18n="title">מאתר TIN לפי מדינה</h1>
+          <p class="hero__text" data-i18n="subtitle">בחרי מדינה כדי לראות את שם המזהה, המבנה, דוגמאות, ומקורות רשמיים.</p>
         </div>
       </header>
 
       <main class="layout">
-        <section class="panel panel--controls" aria-label="בחירת מדינה">
-          <label class="field-label" for="country-search">חיפוש מדינה</label>
-          <input id="country-search" class="text-input" type="search" placeholder="הקלידי ישראל, United States, Germany..." autocomplete="off">
+        <section class="panel panel--controls" aria-label="Country selection">
+          <label class="field-label" for="country-search" data-i18n="searchLabel">חיפוש מדינה</label>
+          <input id="country-search" class="text-input" type="search" data-i18n-attr="placeholder:searchPlaceholder" placeholder="הקלידי ישראל, United States, Germany..." autocomplete="off">
 
-          <label class="field-label" for="country-select">בחירת מדינה</label>
+          <label class="field-label" for="country-select" data-i18n="selectLabel">בחירת מדינה</label>
           <select id="country-select" class="select-input" aria-describedby="selection-help">
-            <option value="">בחרי מדינה מהרשימה</option>
+            <option value="" data-i18n="selectPlaceholder">בחרי מדינה מהרשימה</option>
           </select>
-          <p id="selection-help" class="helper-text">הרשימה מסתננת לפי החיפוש למעלה.</p>
+          <p id="selection-help" class="helper-text" data-i18n="helper">הרשימה מסתננת לפי החיפוש למעלה.</p>
         </section>
 
         <section id="result" class="panel panel--result" aria-live="polite">
           <div class="empty-state">
-            <h2>עדיין לא נבחרה מדינה</h2>
-            <p>אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.</p>
+            <h2 data-i18n="emptyTitle">עדיין לא נבחרה מדינה</h2>
+            <p data-i18n="emptyBody">אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.</p>
           </div>
         </section>
       </main>
@@ -100,6 +103,33 @@ a { color: var(--primary-strong); }
   font-size: 13px;
   font-weight: 700;
 }
+
+.hero__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.hero__top .eyebrow { margin: 0; }
+
+.lang-toggle {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  min-height: 34px;
+}
+
+.lang-toggle:hover { border-color: var(--primary); color: var(--primary); }
+
 
 h1 {
   margin: 0;
@@ -361,9 +391,91 @@ const appJs = `(function () {
   const searchInput = document.getElementById('country-search');
   const select = document.getElementById('country-select');
   const result = document.getElementById('result');
+  const langBtn = document.getElementById('lang-toggle');
+
+  const I18N = {
+    he: {
+      eyebrow: 'FATCA / CRS',
+      title: 'מאתר TIN לפי מדינה',
+      subtitle: 'בחרי מדינה כדי לראות את שם המזהה, המבנה, דוגמאות, ומקורות רשמיים.',
+      searchLabel: 'חיפוש מדינה',
+      searchPlaceholder: 'הקלידי ישראל, United States, Germany...',
+      selectLabel: 'בחירת מדינה',
+      selectPlaceholder: 'בחרי מדינה מהרשימה',
+      helper: 'הרשימה מסתננת לפי החיפוש למעלה.',
+      emptyTitle: 'עדיין לא נבחרה מדינה',
+      emptyBody: 'אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.',
+      notFoundTitle: 'לא נמצאה מדינה',
+      notFoundBody: 'נסי חיפוש אחר או בחרי מדינה מהרשימה.',
+      warning: 'המידע מיועד להתמצאות בלבד ואינו מהווה ייעוץ מס או ייעוץ משפטי. יש לאמת מול הרשות המוסמכת לפני שימוש בפועל.',
+      tinLocal: 'שם המזהה המקומי',
+      forIndividual: 'ליחיד',
+      forEntity: 'לחברה / ישות',
+      format: 'מבנה', example: 'דוגמה', note: 'הערה',
+      whereTitle: 'איפה אפשר למצוא את המספר',
+      sourcesTitle: 'מקורות רשמיים',
+      localAuthority: 'רשות המס המקומית',
+      copy: 'העתקה', downloadTxt: 'הורדת TXT', print: 'הדפסה / PDF',
+      toastDownloaded: 'קובץ הטקסט ירד בהצלחה',
+      toastCopied: 'התוכן הועתק ללוח',
+      toastCopyFail: 'לא ניתן היה להעתיק אוטומטית',
+      toastPrintBlocked: 'הדפדפן חסם את חלון ההדפסה',
+      langBtn: 'EN',
+    },
+    en: {
+      eyebrow: 'FATCA / CRS',
+      title: 'TIN Finder by Country',
+      subtitle: 'Select a country to see the local TIN name, format, examples, and official sources.',
+      searchLabel: 'Search country',
+      searchPlaceholder: 'Type Israel, United States, Germany...',
+      selectLabel: 'Select country',
+      selectPlaceholder: 'Choose a country',
+      helper: 'The list filters by the search above.',
+      emptyTitle: 'No country selected yet',
+      emptyBody: 'Once selected, you will see the TIN structure for individuals and entities, with official links.',
+      notFoundTitle: 'Country not found',
+      notFoundBody: 'Try another search or pick from the list.',
+      warning: 'This information is for orientation only and does not constitute tax or legal advice. Verify with the competent authority before use.',
+      tinLocal: 'Local TIN name',
+      forIndividual: 'Individual',
+      forEntity: 'Entity / Company',
+      format: 'Format', example: 'Example', note: 'Note',
+      whereTitle: 'Where to find the number',
+      sourcesTitle: 'Official sources',
+      localAuthority: 'Local tax authority',
+      copy: 'Copy', downloadTxt: 'Download TXT', print: 'Print / PDF',
+      toastDownloaded: 'Text file downloaded',
+      toastCopied: 'Copied to clipboard',
+      toastCopyFail: 'Could not copy automatically',
+      toastPrintBlocked: 'The browser blocked the print window',
+      langBtn: 'עב',
+    },
+  };
+
+  let lang = (localStorage.getItem('tin_lang') === 'en') ? 'en' : 'he';
+  function t(k) { return I18N[lang][k] || k; }
+  function countryName(c) { return lang === 'en' ? c.nameEn : c.nameHe; }
+  function countrySecondary(c) { return lang === 'en' ? c.nameHe : c.nameEn; }
+  function tinName(c) { return lang === 'en' ? c.tinNameEn : c.tinNameHe; }
+  function tinSecondary(c) { return lang === 'en' ? c.tinNameHe : c.tinNameEn; }
+
+  function applyI18nStatic() {
+    document.documentElement.lang = lang === 'en' ? 'en' : 'he';
+    document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+    document.title = t('title');
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
+      const pair = el.getAttribute('data-i18n-attr').split(':');
+      if (pair.length === 2) el.setAttribute(pair[0], t(pair[1]));
+    });
+    if (langBtn) langBtn.textContent = t('langBtn');
+  }
 
   let filtered = countries.slice();
   let selectedCode = '';
+
 
   function escapeHtml(value) {
     return String(value)
@@ -389,32 +501,35 @@ const appJs = `(function () {
 
   function buildExportText(country) {
     const lines = [
-      'מאתר TIN — FATCA/CRS',
-      'מדינה: ' + country.nameHe + ' (' + country.nameEn + ') ' + country.flag,
+      t('title') + ' — FATCA/CRS',
+      (lang === 'en' ? 'Country: ' : 'מדינה: ') + countryName(country) + ' (' + countrySecondary(country) + ') ' + country.flag,
       '',
-      'שם המזהה המקומי: ' + country.tinNameHe + ' / ' + country.tinNameEn,
+      t('tinLocal') + ': ' + tinName(country) + ' / ' + tinSecondary(country),
       '',
-      '— יחיד —',
-      'שם: ' + country.individual.name,
-      'מבנה: ' + country.individual.format,
-      'דוגמה: ' + country.individual.example,
+      '— ' + t('forIndividual') + ' —',
+      (lang === 'en' ? 'Name: ' : 'שם: ') + country.individual.name,
+      t('format') + ': ' + country.individual.format,
+      t('example') + ': ' + country.individual.example,
     ];
 
-    if (country.individual.note) lines.push('הערה: ' + country.individual.note);
+    if (country.individual.note) lines.push(t('note') + ': ' + country.individual.note);
 
-    lines.push('', '— חברה / ישות —', 'שם: ' + country.entity.name, 'מבנה: ' + country.entity.format, 'דוגמה: ' + country.entity.example);
-    if (country.entity.note) lines.push('הערה: ' + country.entity.note);
+    lines.push('', '— ' + t('forEntity') + ' —',
+      (lang === 'en' ? 'Name: ' : 'שם: ') + country.entity.name,
+      t('format') + ': ' + country.entity.format,
+      t('example') + ': ' + country.entity.example);
+    if (country.entity.note) lines.push(t('note') + ': ' + country.entity.note);
 
-    lines.push('', 'איפה ניתן למצוא את ה-' + country.tinNameHe + ':');
+    lines.push('', t('whereTitle') + ':');
     country.whereToFind.forEach(function (item) {
       lines.push('• ' + item.label + (item.url ? ' — ' + item.url : ''));
     });
 
-    lines.push('', 'מקורות:');
-    lines.push('רשות המס המקומית: ' + country.officialSource);
+    lines.push('', t('sourcesTitle') + ':');
+    lines.push(t('localAuthority') + ': ' + country.officialSource);
     if (country.oecdSource) lines.push('OECD TIN: ' + country.oecdSource);
     if (country.euTinSource) lines.push('EU TIN: ' + country.euTinSource);
-    lines.push('', 'מידע להתמצאות בלבד. יש לאמת מול הרשות המוסמכת.');
+    lines.push('', t('warning'));
     return lines.join('\n');
   }
 
@@ -428,16 +543,16 @@ const appJs = `(function () {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    showToast('קובץ הטקסט ירד בהצלחה');
+    showToast(t('toastDownloaded'));
   }
 
   function copyText(country) {
     const text = buildExportText(country);
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
-        showToast('התוכן הועתק ללוח');
+        showToast(t('toastCopied'));
       }).catch(function () {
-        showToast('לא ניתן היה להעתיק אוטומטית');
+        showToast(t('toastCopyFail'));
       });
       return;
     }
@@ -449,14 +564,15 @@ const appJs = `(function () {
     area.select();
     document.execCommand('copy');
     area.remove();
-    showToast('התוכן הועתק ללוח');
+    showToast(t('toastCopied'));
   }
 
   function printCountry(country) {
-    const html = '<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-' + escapeHtml(country.code) + '</title><style>body{font-family:Arial,sans-serif;padding:24px;line-height:1.7;color:#111}pre{white-space:pre-wrap;font:inherit}</style></head><body><pre>' + escapeHtml(buildExportText(country)) + '</pre></body></html>';
+    const dir = lang === 'en' ? 'ltr' : 'rtl';
+    const html = '<!doctype html><html lang="' + lang + '" dir="' + dir + '"><head><meta charset="utf-8"><title>TIN-' + escapeHtml(country.code) + '</title><style>body{font-family:Arial,sans-serif;padding:24px;line-height:1.7;color:#111}pre{white-space:pre-wrap;font:inherit}</style></head><body><pre>' + escapeHtml(buildExportText(country)) + '</pre></body></html>';
     const win = window.open('', '_blank', 'noopener,noreferrer,width=900,height=700');
     if (!win) {
-      showToast('הדפדפן חסם את חלון ההדפסה');
+      showToast(t('toastPrintBlocked'));
       return;
     }
     win.document.open();
@@ -468,11 +584,11 @@ const appJs = `(function () {
 
   function renderOptions(list) {
     const current = selectedCode;
-    select.innerHTML = '<option value="">בחרי מדינה מהרשימה</option>';
+    select.innerHTML = '<option value="">' + escapeHtml(t('selectPlaceholder')) + '</option>';
     list.forEach(function (country) {
       const option = document.createElement('option');
       option.value = country.code;
-      option.textContent = country.flag + ' ' + country.nameHe + ' (' + country.nameEn + ')';
+      option.textContent = country.flag + ' ' + countryName(country) + ' (' + countrySecondary(country) + ')';
       select.appendChild(option);
     });
     if (current && list.some(function (country) { return country.code === current; })) {
@@ -480,9 +596,13 @@ const appJs = `(function () {
     }
   }
 
+  function renderEmpty() {
+    result.innerHTML = '<div class="empty-state"><h2>' + escapeHtml(t('emptyTitle')) + '</h2><p>' + escapeHtml(t('emptyBody')) + '</p></div>';
+  }
+
   function renderCountry(country) {
     if (!country) {
-      result.innerHTML = '<div class="empty-state"><h2>לא נמצאה מדינה</h2><p>נסי חיפוש אחר או בחרי מדינה מהרשימה.</p></div>';
+      result.innerHTML = '<div class="empty-state"><h2>' + escapeHtml(t('notFoundTitle')) + '</h2><p>' + escapeHtml(t('notFoundBody')) + '</p></div>';
       return;
     }
 
@@ -493,7 +613,7 @@ const appJs = `(function () {
     }).join('');
 
     const metaLinks = [
-      { label: 'רשות המס המקומית', url: country.officialSource },
+      { label: t('localAuthority'), url: country.officialSource },
       country.oecdSource ? { label: 'OECD TIN', url: country.oecdSource } : null,
       country.euTinSource ? { label: 'EU TIN', url: country.euTinSource } : null,
     ].filter(Boolean).map(function (item) {
@@ -501,53 +621,53 @@ const appJs = `(function () {
     }).join('');
 
     result.innerHTML = [
-      '<p class="warning">המידע מיועד להתמצאות בלבד ואינו מהווה ייעוץ מס או ייעוץ משפטי. יש לאמת מול הרשות המוסמכת לפני שימוש בפועל.</p>',
+      '<p class="warning">' + escapeHtml(t('warning')) + '</p>',
       '<div class="country-head">',
       '<div class="flag">' + escapeHtml(country.flag) + '</div>',
       '<div>',
-      '<h2 class="country-title">' + escapeHtml(country.nameHe) + '</h2>',
-      '<div class="country-subtitle">' + escapeHtml(country.nameEn) + '</div>',
+      '<h2 class="country-title">' + escapeHtml(countryName(country)) + '</h2>',
+      '<div class="country-subtitle">' + escapeHtml(countrySecondary(country)) + '</div>',
       '</div>',
       '</div>',
       '<section class="tin-overview">',
-      '<div class="tin-subtitle">שם המזהה המקומי</div>',
-      '<h3 class="tin-title">' + escapeHtml(country.tinNameHe) + '</h3>',
-      '<div class="tin-subtitle">' + escapeHtml(country.tinNameEn) + '</div>',
+      '<div class="tin-subtitle">' + escapeHtml(t('tinLocal')) + '</div>',
+      '<h3 class="tin-title">' + escapeHtml(tinName(country)) + '</h3>',
+      '<div class="tin-subtitle">' + escapeHtml(tinSecondary(country)) + '</div>',
       '</section>',
       '<section class="cards-grid">',
       '<article class="info-card">',
-      '<p class="card-label">ליחיד</p>',
+      '<p class="card-label">' + escapeHtml(t('forIndividual')) + '</p>',
       '<h3 class="card-title">' + escapeHtml(country.individual.name) + '</h3>',
       '<dl class="detail-list">',
-      '<div class="detail-row"><dt>מבנה</dt><dd>' + escapeHtml(country.individual.format) + '</dd></div>',
-      '<div class="detail-row"><dt>דוגמה</dt><dd>' + escapeHtml(country.individual.example) + '</dd></div>',
-      (country.individual.note ? '<div class="detail-row"><dt>הערה</dt><dd>' + escapeHtml(country.individual.note) + '</dd></div>' : ''),
+      '<div class="detail-row"><dt>' + escapeHtml(t('format')) + '</dt><dd>' + escapeHtml(country.individual.format) + '</dd></div>',
+      '<div class="detail-row"><dt>' + escapeHtml(t('example')) + '</dt><dd>' + escapeHtml(country.individual.example) + '</dd></div>',
+      (country.individual.note ? '<div class="detail-row"><dt>' + escapeHtml(t('note')) + '</dt><dd>' + escapeHtml(country.individual.note) + '</dd></div>' : ''),
       '</dl>',
       '</article>',
       '<article class="info-card">',
-      '<p class="card-label">לחברה / ישות</p>',
+      '<p class="card-label">' + escapeHtml(t('forEntity')) + '</p>',
       '<h3 class="card-title">' + escapeHtml(country.entity.name) + '</h3>',
       '<dl class="detail-list">',
-      '<div class="detail-row"><dt>מבנה</dt><dd>' + escapeHtml(country.entity.format) + '</dd></div>',
-      '<div class="detail-row"><dt>דוגמה</dt><dd>' + escapeHtml(country.entity.example) + '</dd></div>',
-      (country.entity.note ? '<div class="detail-row"><dt>הערה</dt><dd>' + escapeHtml(country.entity.note) + '</dd></div>' : ''),
+      '<div class="detail-row"><dt>' + escapeHtml(t('format')) + '</dt><dd>' + escapeHtml(country.entity.format) + '</dd></div>',
+      '<div class="detail-row"><dt>' + escapeHtml(t('example')) + '</dt><dd>' + escapeHtml(country.entity.example) + '</dd></div>',
+      (country.entity.note ? '<div class="detail-row"><dt>' + escapeHtml(t('note')) + '</dt><dd>' + escapeHtml(country.entity.note) + '</dd></div>' : ''),
       '</dl>',
       '</article>',
       '</section>',
       '<section class="sources-grid">',
       '<article class="info-card">',
-      '<p class="card-label">איפה אפשר למצוא את המספר</p>',
+      '<p class="card-label">' + escapeHtml(t('whereTitle')) + '</p>',
       '<ul class="link-list">' + whereLinks + '</ul>',
       '</article>',
       '<article class="info-card">',
-      '<p class="card-label">מקורות רשמיים</p>',
+      '<p class="card-label">' + escapeHtml(t('sourcesTitle')) + '</p>',
       '<ul class="meta-list">' + metaLinks + '</ul>',
       '</article>',
       '</section>',
       '<div class="actions">',
-      '<button class="action-btn action-btn--primary" type="button" data-action="copy">העתקה</button>',
-      '<button class="action-btn" type="button" data-action="txt">הורדת TXT</button>',
-      '<button class="action-btn" type="button" data-action="print">הדפסה / PDF</button>',
+      '<button class="action-btn action-btn--primary" type="button" data-action="copy">' + escapeHtml(t('copy')) + '</button>',
+      '<button class="action-btn" type="button" data-action="txt">' + escapeHtml(t('downloadTxt')) + '</button>',
+      '<button class="action-btn" type="button" data-action="print">' + escapeHtml(t('print')) + '</button>',
       '</div>'
     ].join('');
 
@@ -564,7 +684,7 @@ const appJs = `(function () {
       renderCountry(country);
     } else {
       history.replaceState(null, '', location.pathname + location.search);
-      result.innerHTML = '<div class="empty-state"><h2>עדיין לא נבחרה מדינה</h2><p>אחרי בחירה תראי כאן את מבנה ה-TIN ליחיד ולחברה, יחד עם קישורים רשמיים.</p></div>';
+      renderEmpty();
     }
   }
 
@@ -585,6 +705,25 @@ const appJs = `(function () {
     }
   }
 
+  function setLang(next) {
+    lang = next === 'en' ? 'en' : 'he';
+    try { localStorage.setItem('tin_lang', lang); } catch (e) {}
+    applyI18nStatic();
+    renderOptions(filtered);
+    if (selectedCode) {
+      const c = countries.find(function (item) { return item.code === selectedCode; });
+      if (c) renderCountry(c); else renderEmpty();
+    } else {
+      renderEmpty();
+    }
+  }
+
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      setLang(lang === 'he' ? 'en' : 'he');
+    });
+  }
+
   searchInput.addEventListener('input', function (event) {
     filterCountries(event.target.value || '');
   });
@@ -593,6 +732,7 @@ const appJs = `(function () {
     updateFromSelection(event.target.value || '');
   });
 
+  applyI18nStatic();
   renderOptions(filtered);
 
   const initialCode = decodeURIComponent((location.hash || '').replace('#', '')).toUpperCase();
@@ -602,6 +742,7 @@ const appJs = `(function () {
     renderCountry(countries.find(function (country) { return country.code === initialCode; }));
   }
 })();`;
+
 
 const siteDataJs = `window.__TIN_COUNTRIES__ = ${JSON.stringify(countries, null, 2)};\n`;
 
