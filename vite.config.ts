@@ -12,6 +12,11 @@ export default defineConfig({
   vite: {
     base,
   },
+  tanstackStart: {
+    router: {
+      basepath: base,
+    },
+  },
   // Force-enable Nitro outside the Lovable sandbox (e.g. GitHub Actions) so the
   // build emits dist/client/. The preset is taken from NITRO_PRESET (set to
   // "static" in the GitHub Pages workflow).
