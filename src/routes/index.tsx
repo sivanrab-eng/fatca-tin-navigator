@@ -430,7 +430,7 @@ function Index() {
                 className="gap-1.5"
               >
                 <Copy className="h-4 w-4" />
-                העתק ללוח
+                {t.copy}
               </Button>
 
               <Button
@@ -443,7 +443,7 @@ function Index() {
                 className="gap-1.5"
               >
                 <Download className="h-4 w-4" />
-                הורד כקובץ טקסט
+                {t.download}
               </Button>
               <Button
                 variant="outline"
