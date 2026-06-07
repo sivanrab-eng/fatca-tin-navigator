@@ -660,3 +660,212 @@ COUNTRIES.push(
     officialSource: "https://www.gov.bm/", oecdSource: OECD_TIN },
 );
 
+// ========== Expansion: Balkans, Eastern Europe, Caucasus, Central/South Asia, Microstates ==========
+COUNTRIES.push(
+  { code: "ME", nameHe: "מונטנגרו", nameEn: "Montenegro", flag: "🇲🇪",
+    tinNameHe: "JMBG / PIB", tinNameEn: "JMBG / PIB",
+    individual: { name: "JMBG", format: "13 ספרות", example: "0101990510006" },
+    entity: { name: "PIB", format: "8 ספרות", example: "02016702" },
+    whereToFind: [
+      { label: "בתעודת הזהות המונטנגרית", url: "https://www.mup.gov.me/" },
+      { label: "במכתבי רשות המסים (Poreska uprava)", url: "https://www.poreskauprava.gov.me/" },
+      { label: "ב-CRPS (רשם החברות)", url: "https://www.crps.me/" }
+    ],
+    officialSource: "https://www.poreskauprava.gov.me/", oecdSource: OECD_TIN },
+  { code: "RS", nameHe: "סרביה", nameEn: "Serbia", flag: "🇷🇸",
+    tinNameHe: "JMBG / PIB", tinNameEn: "JMBG / PIB",
+    individual: { name: "JMBG", format: "13 ספרות", example: "0101990710006" },
+    entity: { name: "PIB", format: "9 ספרות", example: "100000000" },
+    whereToFind: [
+      { label: "בתעודת הזהות הסרבית", url: "https://www.mup.gov.rs/" },
+      { label: "ב-Poreska uprava (eporezi)", url: "https://eporezi.purs.gov.rs/" },
+      { label: "ב-APR (רשם החברות)", url: "https://www.apr.gov.rs/" }
+    ],
+    officialSource: "https://www.purs.gov.rs/", oecdSource: OECD_TIN },
+  { code: "AL", nameHe: "אלבניה", nameEn: "Albania", flag: "🇦🇱",
+    tinNameHe: "NID / NIPT", tinNameEn: "Personal ID / NIPT",
+    individual: { name: "NID", format: "10 תווים: ספרות + אות", example: "I85030008N" },
+    entity: { name: "NIPT", format: "אות + 8 ספרות + אות", example: "J91402501L" },
+    whereToFind: [
+      { label: "בתעודת הזהות האלבנית", url: "https://e-albania.al/" },
+      { label: "ב-Tatimet (רשות המסים)", url: "https://www.tatime.gov.al/" },
+      { label: "ב-QKB (רשם החברות)", url: "https://www.qkb.gov.al/" }
+    ],
+    officialSource: "https://www.tatime.gov.al/", oecdSource: OECD_TIN },
+  { code: "MK", nameHe: "צפון מקדוניה", nameEn: "North Macedonia", flag: "🇲🇰",
+    tinNameHe: "EMBG / EDB", tinNameEn: "EMBG / EDB",
+    individual: { name: "EMBG", format: "13 ספרות", example: "0101990450006" },
+    entity: { name: "EDB", format: "13 ספרות, מתחיל ב-MK", example: "MK4030008015718" },
+    whereToFind: [
+      { label: "בתעודת הזהות המקדונית", url: "https://mvr.gov.mk/" },
+      { label: "ב-UJP (רשות המסים)", url: "https://www.ujp.gov.mk/" },
+      { label: "ב-Central Registry", url: "https://www.crm.com.mk/" }
+    ],
+    officialSource: "https://www.ujp.gov.mk/", oecdSource: OECD_TIN },
+  { code: "BA", nameHe: "בוסניה והרצגובינה", nameEn: "Bosnia and Herzegovina", flag: "🇧🇦",
+    tinNameHe: "JMBG / JIB", tinNameEn: "JMBG / JIB",
+    individual: { name: "JMBG", format: "13 ספרות", example: "0101990171234" },
+    entity: { name: "JIB", format: "13 ספרות", example: "4200000000001" },
+    whereToFind: [
+      { label: "בתעודת הזהות", url: "http://www.iddeea.gov.ba/" },
+      { label: "ב-UIO (רשות העקיפה)", url: "https://www.uino.gov.ba/" }
+    ],
+    officialSource: "https://www.uino.gov.ba/", oecdSource: OECD_TIN },
+  { code: "XK", nameHe: "קוסובו", nameEn: "Kosovo", flag: "🇽🇰",
+    tinNameHe: "Personal No / Fiscal No", tinNameEn: "Personal Number / Fiscal Number",
+    individual: { name: "Personal Number", format: "10 ספרות", example: "1234567890" },
+    entity: { name: "Fiscal Number", format: "9 ספרות", example: "600000000" },
+    whereToFind: [
+      { label: "בתעודת הזהות", url: "https://mpb.rks-gov.net/" },
+      { label: "ב-ATK (רשות המסים)", url: "https://www.atk-ks.org/" }
+    ],
+    officialSource: "https://www.atk-ks.org/" },
+  { code: "UA", nameHe: "אוקראינה", nameEn: "Ukraine", flag: "🇺🇦",
+    tinNameHe: "RNOKPP / EDRPOU", tinNameEn: "RNOKPP / EDRPOU",
+    individual: { name: "RNOKPP", format: "10 ספרות", example: "1234567890" },
+    entity: { name: "EDRPOU", format: "8 ספרות", example: "12345678" },
+    whereToFind: [
+      { label: "באישור משלם מסים", url: "https://tax.gov.ua/" },
+      { label: "ב-Diia (אזור אישי)", url: "https://diia.gov.ua/" },
+      { label: "ברשם המאוחד (EDR)", url: "https://usr.minjust.gov.ua/" }
+    ],
+    officialSource: "https://tax.gov.ua/", oecdSource: OECD_TIN },
+  { code: "BY", nameHe: "בלארוס", nameEn: "Belarus", flag: "🇧🇾",
+    tinNameHe: "UNP", tinNameEn: "Payer Account Number (UNP)",
+    individual: { name: "UNP", format: "9 ספרות", example: "123456789" },
+    entity: { name: "UNP", format: "9 ספרות", example: "100000000" },
+    whereToFind: [
+      { label: "באישור רישום משלם מס", url: "http://www.nalog.gov.by/" }
+    ],
+    officialSource: "http://www.nalog.gov.by/" },
+  { code: "MD", nameHe: "מולדובה", nameEn: "Moldova", flag: "🇲🇩",
+    tinNameHe: "IDNP / IDNO", tinNameEn: "IDNP / IDNO",
+    individual: { name: "IDNP", format: "13 ספרות", example: "2002004123456" },
+    entity: { name: "IDNO", format: "13 ספרות", example: "1003600000000" },
+    whereToFind: [
+      { label: "בתעודת הזהות המולדבית", url: "https://asp.gov.md/" },
+      { label: "ב-SFS (שירות המסים)", url: "https://sfs.md/" }
+    ],
+    officialSource: "https://sfs.md/", oecdSource: OECD_TIN },
+  { code: "GE", nameHe: "גאורגיה", nameEn: "Georgia", flag: "🇬🇪",
+    tinNameHe: "Personal No / TIN", tinNameEn: "Personal Number / TIN",
+    individual: { name: "Personal Number", format: "11 ספרות", example: "01001000000" },
+    entity: { name: "TIN", format: "9 ספרות", example: "204000000" },
+    whereToFind: [
+      { label: "בתעודת הזהות הגאורגית", url: "https://sda.gov.ge/" },
+      { label: "ב-Revenue Service (RS.ge)", url: "https://www.rs.ge/" }
+    ],
+    officialSource: "https://www.rs.ge/", oecdSource: OECD_TIN },
+  { code: "AM", nameHe: "ארמניה", nameEn: "Armenia", flag: "🇦🇲",
+    tinNameHe: "PSN / TIN", tinNameEn: "Public Service Number / TIN",
+    individual: { name: "PSN", format: "10 ספרות", example: "1234567890" },
+    entity: { name: "TIN (HVHH)", format: "8 ספרות", example: "00000000" },
+    whereToFind: [
+      { label: "בתעודת זהות / PSN", url: "https://www.police.am/" },
+      { label: "ב-State Revenue Committee", url: "https://www.src.am/" }
+    ],
+    officialSource: "https://www.src.am/" },
+  { code: "AZ", nameHe: "אזרבייג׳ן", nameEn: "Azerbaijan", flag: "🇦🇿",
+    tinNameHe: "VÖEN", tinNameEn: "Taxpayer Identification (VÖEN)",
+    individual: { name: "VÖEN", format: "10 ספרות", example: "1234567890" },
+    entity: { name: "VÖEN", format: "10 ספרות", example: "1234567890" },
+    whereToFind: [
+      { label: "באישור משלם מס", url: "https://www.taxes.gov.az/" },
+      { label: "באזור אישי e-taxes", url: "https://www.e-taxes.gov.az/" }
+    ],
+    officialSource: "https://www.taxes.gov.az/", oecdSource: OECD_TIN },
+  { code: "KZ", nameHe: "קזחסטן", nameEn: "Kazakhstan", flag: "🇰🇿",
+    tinNameHe: "IIN / BIN", tinNameEn: "IIN / BIN",
+    individual: { name: "IIN", format: "12 ספרות", example: "900101300123" },
+    entity: { name: "BIN", format: "12 ספרות", example: "123456789012" },
+    whereToFind: [
+      { label: "בתעודת הזהות הקזחית", url: "https://egov.kz/" },
+      { label: "ב-Kgd (ועדת ההכנסות)", url: "https://kgd.gov.kz/" }
+    ],
+    officialSource: "https://kgd.gov.kz/", oecdSource: OECD_TIN },
+  { code: "UZ", nameHe: "אוזבקיסטן", nameEn: "Uzbekistan", flag: "🇺🇿",
+    tinNameHe: "INN / STIR", tinNameEn: "Taxpayer Identification (INN/STIR)",
+    individual: { name: "STIR/INN", format: "9 ספרות", example: "123456789" },
+    entity: { name: "STIR/INN", format: "9 ספרות", example: "200000000" },
+    whereToFind: [
+      { label: "ב-Soliq (רשות המסים)", url: "https://soliq.uz/" }
+    ],
+    officialSource: "https://soliq.uz/" },
+  { code: "RU", nameHe: "רוסיה", nameEn: "Russia", flag: "🇷🇺",
+    tinNameHe: "INN", tinNameEn: "Taxpayer Identification Number (INN)",
+    individual: { name: "INN", format: "12 ספרות", example: "500100732259" },
+    entity: { name: "INN", format: "10 ספרות", example: "7707083893" },
+    whereToFind: [
+      { label: "באישור INN", url: "https://www.nalog.gov.ru/" },
+      { label: "באזור האישי lkfl2", url: "https://lkfl2.nalog.ru/" }
+    ],
+    officialSource: "https://www.nalog.gov.ru/", oecdSource: OECD_TIN },
+  { code: "PK", nameHe: "פקיסטן", nameEn: "Pakistan", flag: "🇵🇰",
+    tinNameHe: "CNIC / NTN", tinNameEn: "CNIC / National Tax Number",
+    individual: { name: "CNIC", format: "13 ספרות", example: "1234512345671" },
+    entity: { name: "NTN", format: "7 ספרות + ספרת ביקורת", example: "1234567-8" },
+    whereToFind: [
+      { label: "בתעודת ה-CNIC", url: "https://www.nadra.gov.pk/" },
+      { label: "ב-FBR Iris", url: "https://iris.fbr.gov.pk/" }
+    ],
+    officialSource: "https://www.fbr.gov.pk/", oecdSource: OECD_TIN },
+  { code: "BD", nameHe: "בנגלדש", nameEn: "Bangladesh", flag: "🇧🇩",
+    tinNameHe: "TIN / e-TIN", tinNameEn: "Taxpayer Identification Number",
+    individual: { name: "e-TIN", format: "12 ספרות", example: "123456789012" },
+    entity: { name: "e-TIN", format: "12 ספרות", example: "123456789012" },
+    whereToFind: [
+      { label: "באישור e-TIN", url: "https://secure.incometax.gov.bd/" }
+    ],
+    officialSource: "https://nbr.gov.bd/" },
+  { code: "LK", nameHe: "סרי לנקה", nameEn: "Sri Lanka", flag: "🇱🇰",
+    tinNameHe: "TIN", tinNameEn: "Taxpayer Identification Number",
+    individual: { name: "TIN", format: "9 ספרות + V", example: "123456789V" },
+    entity: { name: "TIN", format: "9 ספרות", example: "123456789" },
+    whereToFind: [
+      { label: "באישור TIN של IRD", url: "https://www.ird.gov.lk/" }
+    ],
+    officialSource: "https://www.ird.gov.lk/" },
+  { code: "LI", nameHe: "ליכטנשטיין", nameEn: "Liechtenstein", flag: "🇱🇮",
+    tinNameHe: "AHV / UID", tinNameEn: "AHV Number / UID",
+    individual: { name: "AHV", format: "13 ספרות: 756.NNNN.NNNN.NN", example: "756.1234.5678.97" },
+    entity: { name: "UID", format: "CHE-NNN.NNN.NNN", example: "CHE-123.456.789" },
+    whereToFind: [
+      { label: "בכרטיס AHV", url: "https://www.ahv.li/" },
+      { label: "במכתבי Steuerverwaltung", url: "https://www.stv.llv.li/" }
+    ],
+    officialSource: "https://www.stv.llv.li/", oecdSource: OECD_TIN },
+  { code: "MC", nameHe: "מונקו", nameEn: "Monaco", flag: "🇲🇨",
+    tinNameHe: "אין TIN ליחידים", tinNameEn: "No TIN for individuals",
+    individual: { name: "—", format: "מונקו אינה מנפיקה TIN ליחידים", example: "—", note: "לדיווח CRS משתמשים לרוב במספרי זיהוי חלופיים." },
+    entity: { name: "RCI", format: "מספר רישום בלשכת המסחר", example: "00S00000" },
+    whereToFind: [
+      { label: "ב-Direction des Services Fiscaux", url: "https://service-public-entreprises.gouv.mc/" }
+    ],
+    officialSource: "https://service-public-entreprises.gouv.mc/", oecdSource: OECD_TIN },
+  { code: "SM", nameHe: "סן מרינו", nameEn: "San Marino", flag: "🇸🇲",
+    tinNameHe: "Codice ISS / COE", tinNameEn: "ISS Code / Economic Operator Code",
+    individual: { name: "Codice ISS", format: "מספר ביטוח לאומי", example: "12345" },
+    entity: { name: "COE", format: "5 ספרות", example: "12345" },
+    whereToFind: [
+      { label: "ב-Ufficio Tributario", url: "https://www.tributario.sm/" }
+    ],
+    officialSource: "https://www.tributario.sm/", oecdSource: OECD_TIN },
+  { code: "AD", nameHe: "אנדורה", nameEn: "Andorra", flag: "🇦🇩",
+    tinNameHe: "NRT", tinNameEn: "Número de Registre Tributari",
+    individual: { name: "NRT", format: "אות + 6 ספרות + אות", example: "F-123456-A" },
+    entity: { name: "NRT", format: "אות + 6 ספרות + אות", example: "A-123456-Z" },
+    whereToFind: [
+      { label: "ב-Departament de Tributs", url: "https://www.impostos.ad/" }
+    ],
+    officialSource: "https://www.impostos.ad/", oecdSource: OECD_TIN },
+  { code: "GI", nameHe: "גיברלטר", nameEn: "Gibraltar", flag: "🇬🇮",
+    tinNameHe: "TIN", tinNameEn: "Taxpayer Identification Number",
+    individual: { name: "TIN", format: "עד 6 ספרות", example: "123456" },
+    entity: { name: "Company Number", format: "עד 6 ספרות", example: "123456" },
+    whereToFind: [
+      { label: "ב-Income Tax Office", url: "https://www.gibraltar.gov.gi/finance/income-tax-office" }
+    ],
+    officialSource: "https://www.gibraltar.gov.gi/finance/income-tax-office", oecdSource: OECD_TIN },
+);
+
+
