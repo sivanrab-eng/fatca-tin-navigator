@@ -73,7 +73,10 @@ const T: Record<Lang, Strings> = {
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
     pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error",
-    legal: "Legal disclaimer", languageLabel: "Language",
+    legal: "Legal disclaimer",
+    legalText: "This website is not an official body, is not affiliated with the OECD, the IRS, or any tax authority, and does not constitute tax advice, legal advice, or a professional opinion. The information is provided \"AS IS\" for informational purposes only, may be partial or outdated, and should not be relied upon for FATCA/CRS reporting or any other decision. Please verify every detail with the competent authority in the relevant country and consult a qualified professional. Use of this website is at the user's sole responsibility.",
+    sourcesFooter: "Primary sources:",
+    languageLabel: "Language",
   },
   ar: {
     title: "باحث TIN — FATCA/CRS", subtitle: "اختر دولة لرؤية اسم وتنسيق رقم التعريف الضريبي.",
