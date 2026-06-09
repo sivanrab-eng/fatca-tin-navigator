@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
+import { COUNTRIES, getLastUpdated, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -20,6 +20,12 @@ const T = {
     step2: "2. בחר סוג", individual: "יחיד", entity: "חברה / ישות",
     name: "שם", format: "מבנה", example: "דוגמה",
     whereTitle: (tin: string, country: string) => `איפה ניתן למצוא את ה-${tin} שלי ב${country}? לחץ על החץ לפירוט`,
+    sourcesTitle: "מקורות ועדכון אחרון",
+    sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
+    localAuthLabel: "רשות המס המקומית",
+    oecdLabel: "OECD — מאגר TIN לצורכי CRS",
+    euLabel: "נציבות האיחוד האירופי — TIN on Europa",
+    lastUpdatedLabel: "עודכן לאחרונה",
     copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)",
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
@@ -35,6 +41,12 @@ const T = {
     step2: "2. Choose type", individual: "Individual", entity: "Company / Entity",
     name: "Name", format: "Format", example: "Example",
     whereTitle: (tin: string, country: string) => `Where can I find my ${tin} in ${country}? Click the arrow for details`,
+    sourcesTitle: "Sources & last updated",
+    sourcesIntro: "Data was compiled from the following official sources:",
+    localAuthLabel: "Local tax authority",
+    oecdLabel: "OECD — TIN portal (CRS)",
+    euLabel: "European Commission — TIN on Europa",
+    lastUpdatedLabel: "Last updated",
     copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)",
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
@@ -71,6 +83,7 @@ function buildExportText(country: CountryTin): string {
   lines.push(`רשות המס המקומית: ${country.officialSource}`);
   if (country.oecdSource) lines.push(`OECD TIN: ${country.oecdSource}`);
   if (country.euTinSource) lines.push(`EU TIN: ${country.euTinSource}`);
+  lines.push(`עודכן לאחרונה: ${getLastUpdated(country)}`);
   lines.push(``);
   lines.push(`מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי. יש לאמת מול הרשות המוסמכת.`);
   return lines.join("\n");
