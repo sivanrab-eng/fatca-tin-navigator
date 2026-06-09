@@ -447,7 +447,7 @@ function Index() {
                     href={country.officialSource}
                     target="_blank"
                     rel="noreferrer noopener"
-                    onClick={() => handleResultClick("source_local", t.localAuthLabel, country.officialSource)}
+                    onClick={() => handleResultClick("official", t.localAuthLabel, country.officialSource)}
                     className="inline-flex items-center gap-1 text-primary hover:underline break-all"
                   >
                     {t.localAuthLabel}
@@ -461,7 +461,7 @@ function Index() {
                       href={country.oecdSource}
                       target="_blank"
                       rel="noreferrer noopener"
-                      onClick={() => handleResultClick("source_oecd", t.oecdLabel, country.oecdSource!)}
+                      onClick={() => handleResultClick("oecd", t.oecdLabel, country.oecdSource!)}
                       className="inline-flex items-center gap-1 text-primary hover:underline break-all"
                     >
                       {t.oecdLabel}
@@ -476,7 +476,7 @@ function Index() {
                       href={country.euTinSource}
                       target="_blank"
                       rel="noreferrer noopener"
-                      onClick={() => handleResultClick("source_eu", t.euLabel, country.euTinSource!)}
+                      onClick={() => handleResultClick("eu_tin", t.euLabel, country.euTinSource!)}
                       className="inline-flex items-center gap-1 text-primary hover:underline break-all"
                     >
                       {t.euLabel}
