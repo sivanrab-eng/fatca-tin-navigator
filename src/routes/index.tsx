@@ -9,12 +9,11 @@ import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-type Lang = "he" | "en" | "ar" | "es" | "fr" | "ru" | "zh";
+type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
 
 export const LANGUAGES: { code: Lang; native: string; dir: "rtl" | "ltr" }[] = [
   { code: "he", native: "עברית", dir: "rtl" },
   { code: "en", native: "English", dir: "ltr" },
-  { code: "ar", native: "العربية", dir: "rtl" },
   { code: "es", native: "Español", dir: "ltr" },
   { code: "fr", native: "Français", dir: "ltr" },
   { code: "ru", native: "Русский", dir: "ltr" },
@@ -77,27 +76,6 @@ const T: Record<Lang, Strings> = {
     legalText: "This website is not an official body, is not affiliated with the OECD, the IRS, or any tax authority, and does not constitute tax advice, legal advice, or a professional opinion. The information is provided \"AS IS\" for informational purposes only, may be partial or outdated, and should not be relied upon for FATCA/CRS reporting or any other decision. Please verify every detail with the competent authority in the relevant country and consult a qualified professional. Use of this website is at the user's sole responsibility.",
     sourcesFooter: "Primary sources:",
     languageLabel: "Language",
-  },
-  ar: {
-    title: "باحث TIN — FATCA/CRS", subtitle: "اختر دولة لرؤية اسم وتنسيق رقم التعريف الضريبي.",
-    step1: "1. اختر دولة", placeholder: "اضغط لاختيار دولة",
-    empty: "ستظهر النتائج هنا بعد اختيار دولة.",
-    disclaimer: "⚠️ معلومات إرشادية فقط. ليست استشارة ضريبية/قانونية وليست مصدراً رسمياً — يرجى التحقق من السلطة المختصة قبل الاستخدام لأغراض FATCA/CRS.",
-    localName: "اسم المعرّف المحلي", localAuth: "السلطة الضريبية المحلية",
-    step2: "2. اختر النوع", individual: "فرد", entity: "شركة / كيان",
-    name: "الاسم", format: "التنسيق", example: "مثال",
-    whereTitle: (tin, country) => `أين يمكنني العثور على ${tin} الخاص بي في ${country}؟ اضغط على السهم للتفاصيل`,
-    sourcesTitle: "المصادر وآخر تحديث", sourcesIntro: "تم جمع البيانات من المصادر الرسمية التالية:",
-    localAuthLabel: "السلطة الضريبية المحلية", oecdLabel: "OECD — بوابة TIN لـ CRS",
-    euLabel: "المفوضية الأوروبية — TIN on Europa", lastUpdatedLabel: "آخر تحديث",
-    copy: "نسخ إلى الحافظة", download: "تنزيل كملف نصي", pdf: "تصدير إلى PDF (طباعة)",
-    copied: "تم نسخ النتائج", copyErr: "تعذر النسخ — اختر يدوياً",
-    downloaded: "تم تنزيل الملف", dlErr: "خطأ في التنزيل",
-    pdfOpened: "تم فتح مربع الطباعة — اختر 'حفظ بصيغة PDF'", pdfErr: "خطأ في تصدير PDF",
-    legal: "إخلاء مسؤولية قانوني",
-    legalText: "هذا الموقع ليس هيئة رسمية، ولا ينتمي إلى منظمة التعاون الاقتصادي والتنمية أو مصلحة الضرائب الأمريكية أو أي سلطة ضريبية، ولا يُشكل استشارة ضريبية أو قانونية أو رأياً مهنياً. المعلومات مقدمة \"كما هي\" لأغراض إرشادية فقط، وقد تكون جزئية أو غير محدثة، ولا ينبغي الاعتماد عليها للإبلاغ بموجب FATCA/CRS أو أي قرار آخر. يرجى التحقق من كل تفصيل مع السلطة المختصة في الدولة المعنية واستشارة أخصائي مؤهل. استخدام هذا الموقع هو على مسؤولية المستخدم وحده.",
-    sourcesFooter: "المصادر الرئيسية:",
-    languageLabel: "اللغة",
   },
   es: {
     title: "Buscador de TIN — FATCA/CRS", subtitle: "Seleccione un país para ver el nombre y formato del Número de Identificación Fiscal.",
