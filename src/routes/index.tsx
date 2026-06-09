@@ -333,13 +333,12 @@ function Index() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem("tin_lang");
-      if (saved === "en" || saved === "he") setLang(saved);
+      if (saved && LANGUAGES.some((l) => l.code === saved)) setLang(saved as Lang);
     } catch {}
   }, []);
   const t = T[lang];
-  const dir = lang === "he" ? "rtl" : "ltr";
-  const toggleLang = () => {
-    const next: Lang = lang === "he" ? "en" : "he";
+  const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  const changeLang = (next: Lang) => {
     setLang(next);
     try { localStorage.setItem("tin_lang", next); } catch {}
     trackEvent("lang_toggle", { lang: next });
@@ -371,8 +370,9 @@ function Index() {
   };
 
   // Sort countries alphabetically by active language
+  const sortLocale = lang === "he" ? "he" : lang === "ar" ? "ar" : lang === "zh" ? "zh" : lang === "ru" ? "ru" : "en";
   const sorted = [...COUNTRIES].sort((a, b) =>
-    lang === "he" ? a.nameHe.localeCompare(b.nameHe, "he") : a.nameEn.localeCompare(b.nameEn, "en")
+    lang === "he" ? a.nameHe.localeCompare(b.nameHe, "he") : a.nameEn.localeCompare(b.nameEn, sortLocale)
   );
 
   return (
@@ -383,10 +383,19 @@ function Index() {
             <h1 className="text-xl font-bold tracking-tight">{t.title}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{t.subtitle}</p>
           </div>
-          <Button variant="outline" size="sm" onClick={toggleLang} className="gap-1.5 shrink-0">
-            <Languages className="h-4 w-4" />
-            {t.langBtn}
-          </Button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Languages className="h-4 w-4 text-muted-foreground" aria-label={t.languageLabel} />
+            <Select value={lang} onValueChange={(v) => changeLang(v as Lang)}>
+              <SelectTrigger className="h-9 w-auto min-w-[110px] text-sm" aria-label={t.languageLabel}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {LANGUAGES.map((l) => (
+                  <SelectItem key={l.code} value={l.code}>{l.native}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </header>
 
