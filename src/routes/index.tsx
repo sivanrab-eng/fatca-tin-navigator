@@ -32,7 +32,7 @@ type Strings = {
   localAuthLabel: string; oecdLabel: string; euLabel: string; lastUpdatedLabel: string;
   copy: string; download: string; pdf: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
-  pdfOpened: string; pdfErr: string; legal: string; languageLabel: string;
+  pdfOpened: string; pdfErr: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
 };
 
 const T: Record<Lang, Strings> = {
@@ -52,7 +52,10 @@ const T: Record<Lang, Strings> = {
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
     pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF",
-    legal: "הבהרה משפטית", languageLabel: "שפה",
+    legal: "הבהרה משפטית",
+    legalText: "אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס, ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג \"AS IS\" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.",
+    sourcesFooter: "מקורות עיקריים:",
+    languageLabel: "שפה",
   },
   en: {
     title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
@@ -70,7 +73,10 @@ const T: Record<Lang, Strings> = {
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
     pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error",
-    legal: "Legal disclaimer", languageLabel: "Language",
+    legal: "Legal disclaimer",
+    legalText: "This website is not an official body, is not affiliated with the OECD, the IRS, or any tax authority, and does not constitute tax advice, legal advice, or a professional opinion. The information is provided \"AS IS\" for informational purposes only, may be partial or outdated, and should not be relied upon for FATCA/CRS reporting or any other decision. Please verify every detail with the competent authority in the relevant country and consult a qualified professional. Use of this website is at the user's sole responsibility.",
+    sourcesFooter: "Primary sources:",
+    languageLabel: "Language",
   },
   ar: {
     title: "باحث TIN — FATCA/CRS", subtitle: "اختر دولة لرؤية اسم وتنسيق رقم التعريف الضريبي.",
@@ -88,7 +94,10 @@ const T: Record<Lang, Strings> = {
     copied: "تم نسخ النتائج", copyErr: "تعذر النسخ — اختر يدوياً",
     downloaded: "تم تنزيل الملف", dlErr: "خطأ في التنزيل",
     pdfOpened: "تم فتح مربع الطباعة — اختر 'حفظ بصيغة PDF'", pdfErr: "خطأ في تصدير PDF",
-    legal: "إخلاء مسؤولية قانوني", languageLabel: "اللغة",
+    legal: "إخلاء مسؤولية قانوني",
+    legalText: "هذا الموقع ليس هيئة رسمية، ولا ينتمي إلى منظمة التعاون الاقتصادي والتنمية أو مصلحة الضرائب الأمريكية أو أي سلطة ضريبية، ولا يُشكل استشارة ضريبية أو قانونية أو رأياً مهنياً. المعلومات مقدمة \"كما هي\" لأغراض إرشادية فقط، وقد تكون جزئية أو غير محدثة، ولا ينبغي الاعتماد عليها للإبلاغ بموجب FATCA/CRS أو أي قرار آخر. يرجى التحقق من كل تفصيل مع السلطة المختصة في الدولة المعنية واستشارة أخصائي مؤهل. استخدام هذا الموقع هو على مسؤولية المستخدم وحده.",
+    sourcesFooter: "المصادر الرئيسية:",
+    languageLabel: "اللغة",
   },
   es: {
     title: "Buscador de TIN — FATCA/CRS", subtitle: "Seleccione un país para ver el nombre y formato del Número de Identificación Fiscal.",
@@ -106,7 +115,10 @@ const T: Record<Lang, Strings> = {
     copied: "Resultados copiados", copyErr: "No se puede copiar — seleccione manualmente",
     downloaded: "Archivo descargado", dlErr: "Error de descarga",
     pdfOpened: "Diálogo de impresión abierto — elija 'Guardar como PDF'", pdfErr: "Error al exportar PDF",
-    legal: "Aviso legal", languageLabel: "Idioma",
+    legal: "Aviso legal",
+    legalText: "Este sitio web no es un organismo oficial, no está afiliado a la OCDE, al IRS ni a ninguna autoridad fiscal, y no constituye asesoramiento fiscal, asesoramiento legal ni una opinión profesional. La información se proporciona \"TAL CUAL\" solo con fines informativos, puede ser parcial o estar desactualizada, y no debe utilizarse para la declaración FATCA/CRS ni para ninguna otra decisión. Verifique cada detalle con la autoridad competente del país correspondiente y consulte a un profesional cualificado. El uso de este sitio web es responsabilidad exclusiva del usuario.",
+    sourcesFooter: "Fuentes principales:",
+    languageLabel: "Idioma",
   },
   fr: {
     title: "Recherche TIN — FATCA/CRS", subtitle: "Sélectionnez un pays pour voir le nom et le format du numéro d'identification fiscale.",
@@ -124,7 +136,10 @@ const T: Record<Lang, Strings> = {
     copied: "Résultats copiés", copyErr: "Impossible de copier — sélectionnez manuellement",
     downloaded: "Fichier téléchargé", dlErr: "Erreur de téléchargement",
     pdfOpened: "Boîte d'impression ouverte — choisissez 'Enregistrer en PDF'", pdfErr: "Erreur d'export PDF",
-    legal: "Mentions légales", languageLabel: "Langue",
+    legal: "Mentions légales",
+    legalText: "Ce site web n'est pas un organisme officiel, n'est pas affilié à l'OCDE, à l'IRS ou à aucune autorité fiscale, et ne constitue pas un conseil fiscal, un conseil juridique ou une opinion professionnelle. Les informations sont fournies \"EN L'ÉTAT\" à titre informatif uniquement, peuvent être partielles ou obsolètes, et ne doivent pas être utilisées pour la déclaration FATCA/CRS ou toute autre décision. Veuillez vérifier chaque détail auprès de l'autorité compétente du pays concerné et consulter un professionnel qualifié. L'utilisation de ce site web est sous la seule responsabilité de l'utilisateur.",
+    sourcesFooter: "Sources principales :",
+    languageLabel: "Langue",
   },
   ru: {
     title: "Поиск TIN — FATCA/CRS", subtitle: "Выберите страну, чтобы увидеть название и формат идентификационного номера налогоплательщика.",
@@ -142,7 +157,10 @@ const T: Record<Lang, Strings> = {
     copied: "Результаты скопированы", copyErr: "Не удалось скопировать — выделите вручную",
     downloaded: "Файл загружен", dlErr: "Ошибка загрузки",
     pdfOpened: "Открыт диалог печати — выберите 'Сохранить как PDF'", pdfErr: "Ошибка экспорта PDF",
-    legal: "Юридическая оговорка", languageLabel: "Язык",
+    legal: "Юридическая оговорка",
+    legalText: "Этот веб-сайт не является официальным органом, не аффилирован с ОЭСР, Налоговым управлением США (IRS) или каким-либо налоговым органом, и не является налоговой консультацией, юридической консультацией или профессиональным мнением. Информация предоставляется \"КАК ЕСТЬ\" только в информационных целях, может быть неполной или устаревшей, и не должна использоваться для отчетности FATCA/CRS или любых других решений. Пожалуйста, проверьте каждую деталь у компетентного органа в соответствующей стране и проконсультируйтесь с квалифицированным специалистом. Использование этого веб-сайта осуществляется исключительно на ответственность пользователя.",
+    sourcesFooter: "Основные источники:",
+    languageLabel: "Язык",
   },
   zh: {
     title: "TIN 查询器 — FATCA/CRS", subtitle: "选择国家以查看税号的名称和格式。",
@@ -160,7 +178,10 @@ const T: Record<Lang, Strings> = {
     copied: "结果已复制", copyErr: "无法复制 — 请手动选择",
     downloaded: "文件已下载", dlErr: "下载错误",
     pdfOpened: "打印对话框已打开 — 选择'另存为 PDF'", pdfErr: "PDF 导出错误",
-    legal: "法律声明", languageLabel: "语言",
+    legal: "法律声明",
+    legalText: "本网站并非官方机构，不隶属于经合组织(OECD)、美国国税局(IRS)或任何税务机关，也不构成税务建议、法律建议或专业意见。信息仅以\"现状\"提供，仅供参考，可能不完整或过时，且不应依赖其进行FATCA/CRS申报或任何其他决策。请向相关国家的主管部门核实每个细节，并咨询合格的专业人士。使用本网站的风险由用户自行承担。",
+    sourcesFooter: "主要来源：",
+    languageLabel: "语言",
   },
 };
 
@@ -657,18 +678,13 @@ function Index() {
 
         <footer className="pt-4 pb-8 space-y-2 text-center text-xs text-muted-foreground">
           <p className="font-semibold text-foreground/80">
-            הבהרה משפטית
+            {t.legal}
           </p>
           <p>
-            אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס,
-            ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג
-            "AS IS" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין
-            להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל
-            פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע
-            מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.
+            {t.legalText}
           </p>
           <p>
-            מקורות עיקריים:{" "}
+            {t.sourcesFooter}{" "}
             <a
               href="https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
               target="_blank"
