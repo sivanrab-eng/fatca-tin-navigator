@@ -13,7 +13,16 @@ export type CountryTin = {
   officialSource: string;
   oecdSource?: string;
   euTinSource?: string;
+  /** ISO date (YYYY-MM-DD) when this country's data was last verified */
+  lastUpdated?: string;
 };
+
+/** Default verification date for entries without an explicit `lastUpdated` */
+export const DATA_LAST_UPDATED = "2026-06-09";
+
+export function getLastUpdated(c: CountryTin): string {
+  return c.lastUpdated ?? DATA_LAST_UPDATED;
+}
 
 const OECD_TIN = "https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/";
 const eu = (code: string) => `https://ec.europa.eu/taxation_customs/tin/tinByCountry.html?country=${code}`;

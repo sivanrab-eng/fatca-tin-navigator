@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { COUNTRIES, type CountryTin } from "@/data/tin-countries";
+import { COUNTRIES, getLastUpdated, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -20,6 +20,12 @@ const T = {
     step2: "2. בחר סוג", individual: "יחיד", entity: "חברה / ישות",
     name: "שם", format: "מבנה", example: "דוגמה",
     whereTitle: (tin: string, country: string) => `איפה ניתן למצוא את ה-${tin} שלי ב${country}? לחץ על החץ לפירוט`,
+    sourcesTitle: "מקורות ועדכון אחרון",
+    sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
+    localAuthLabel: "רשות המס המקומית",
+    oecdLabel: "OECD — מאגר TIN לצורכי CRS",
+    euLabel: "נציבות האיחוד האירופי — TIN on Europa",
+    lastUpdatedLabel: "עודכן לאחרונה",
     copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)",
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
@@ -35,6 +41,12 @@ const T = {
     step2: "2. Choose type", individual: "Individual", entity: "Company / Entity",
     name: "Name", format: "Format", example: "Example",
     whereTitle: (tin: string, country: string) => `Where can I find my ${tin} in ${country}? Click the arrow for details`,
+    sourcesTitle: "Sources & last updated",
+    sourcesIntro: "Data was compiled from the following official sources:",
+    localAuthLabel: "Local tax authority",
+    oecdLabel: "OECD — TIN portal (CRS)",
+    euLabel: "European Commission — TIN on Europa",
+    lastUpdatedLabel: "Last updated",
     copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)",
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
@@ -71,6 +83,7 @@ function buildExportText(country: CountryTin): string {
   lines.push(`רשות המס המקומית: ${country.officialSource}`);
   if (country.oecdSource) lines.push(`OECD TIN: ${country.oecdSource}`);
   if (country.euTinSource) lines.push(`EU TIN: ${country.euTinSource}`);
+  lines.push(`עודכן לאחרונה: ${getLastUpdated(country)}`);
   lines.push(``);
   lines.push(`מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי. יש לאמת מול הרשות המוסמכת.`);
   return lines.join("\n");
@@ -417,6 +430,69 @@ function Index() {
                 </AccordionItem>
               </Accordion>
             </section>
+
+            {/* Step 5: Sources & last updated */}
+            <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
+              <div className="flex items-start gap-2">
+                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <div className="space-y-1">
+                  <h3 className="text-base font-semibold leading-tight">{t.sourcesTitle}</h3>
+                  <p className="text-xs text-muted-foreground">{t.sourcesIntro}</p>
+                </div>
+              </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-muted-foreground shrink-0">•</span>
+                  <a
+                    href={country.officialSource}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    onClick={() => handleResultClick("official", t.localAuthLabel, country.officialSource)}
+                    className="inline-flex items-center gap-1 text-primary hover:underline break-all"
+                  >
+                    {t.localAuthLabel}
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                  </a>
+                </li>
+                {country.oecdSource && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-muted-foreground shrink-0">•</span>
+                    <a
+                      href={country.oecdSource}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={() => handleResultClick("oecd", t.oecdLabel, country.oecdSource!)}
+                      className="inline-flex items-center gap-1 text-primary hover:underline break-all"
+                    >
+                      {t.oecdLabel}
+                      <ExternalLink className="h-3 w-3 shrink-0" />
+                    </a>
+                  </li>
+                )}
+                {country.euTinSource && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-muted-foreground shrink-0">•</span>
+                    <a
+                      href={country.euTinSource}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={() => handleResultClick("eu_tin", t.euLabel, country.euTinSource!)}
+                      className="inline-flex items-center gap-1 text-primary hover:underline break-all"
+                    >
+                      {t.euLabel}
+                      <ExternalLink className="h-3 w-3 shrink-0" />
+                    </a>
+                  </li>
+                )}
+              </ul>
+              <div className="pt-2 border-t border-border text-xs text-muted-foreground flex items-center justify-between">
+                <span>{t.lastUpdatedLabel}</span>
+                <time dateTime={getLastUpdated(country)} className="font-mono font-medium text-foreground">
+                  {getLastUpdated(country)}
+                </time>
+              </div>
+            </section>
+
 
             {/* Export buttons */}
             <section className="flex flex-wrap gap-2 animate-in fade-in duration-700">
