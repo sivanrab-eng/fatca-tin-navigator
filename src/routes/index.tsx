@@ -32,7 +32,7 @@ type Strings = {
   localAuthLabel: string; oecdLabel: string; euLabel: string; lastUpdatedLabel: string;
   copy: string; download: string; pdf: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
-  pdfOpened: string; pdfErr: string; legal: string; languageLabel: string;
+  pdfOpened: string; pdfErr: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
 };
 
 const T: Record<Lang, Strings> = {
