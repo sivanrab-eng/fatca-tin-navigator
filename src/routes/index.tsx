@@ -431,6 +431,69 @@ function Index() {
               </Accordion>
             </section>
 
+            {/* Step 5: Sources & last updated */}
+            <section className="rounded-xl border border-border bg-card p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
+              <div className="flex items-start gap-2">
+                <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <div className="space-y-1">
+                  <h3 className="text-base font-semibold leading-tight">{t.sourcesTitle}</h3>
+                  <p className="text-xs text-muted-foreground">{t.sourcesIntro}</p>
+                </div>
+              </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-muted-foreground shrink-0">•</span>
+                  <a
+                    href={country.officialSource}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    onClick={() => handleResultClick("source_local", t.localAuthLabel, country.officialSource)}
+                    className="inline-flex items-center gap-1 text-primary hover:underline break-all"
+                  >
+                    {t.localAuthLabel}
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                  </a>
+                </li>
+                {country.oecdSource && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-muted-foreground shrink-0">•</span>
+                    <a
+                      href={country.oecdSource}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={() => handleResultClick("source_oecd", t.oecdLabel, country.oecdSource!)}
+                      className="inline-flex items-center gap-1 text-primary hover:underline break-all"
+                    >
+                      {t.oecdLabel}
+                      <ExternalLink className="h-3 w-3 shrink-0" />
+                    </a>
+                  </li>
+                )}
+                {country.euTinSource && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-muted-foreground shrink-0">•</span>
+                    <a
+                      href={country.euTinSource}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={() => handleResultClick("source_eu", t.euLabel, country.euTinSource!)}
+                      className="inline-flex items-center gap-1 text-primary hover:underline break-all"
+                    >
+                      {t.euLabel}
+                      <ExternalLink className="h-3 w-3 shrink-0" />
+                    </a>
+                  </li>
+                )}
+              </ul>
+              <div className="pt-2 border-t border-border text-xs text-muted-foreground flex items-center justify-between">
+                <span>{t.lastUpdatedLabel}</span>
+                <time dateTime={getLastUpdated(country)} className="font-mono font-medium text-foreground">
+                  {getLastUpdated(country)}
+                </time>
+              </div>
+            </section>
+
+
             {/* Export buttons */}
             <section className="flex flex-wrap gap-2 animate-in fade-in duration-700">
               <Button
