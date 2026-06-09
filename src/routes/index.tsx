@@ -678,18 +678,13 @@ function Index() {
 
         <footer className="pt-4 pb-8 space-y-2 text-center text-xs text-muted-foreground">
           <p className="font-semibold text-foreground/80">
-            הבהרה משפטית
+            {t.legal}
           </p>
           <p>
-            אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס,
-            ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג
-            "AS IS" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין
-            להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל
-            פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע
-            מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.
+            {t.legalText}
           </p>
           <p>
-            מקורות עיקריים:{" "}
+            {t.sourcesFooter}{" "}
             <a
               href="https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
               target="_blank"
