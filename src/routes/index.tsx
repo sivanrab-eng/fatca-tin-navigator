@@ -369,7 +369,7 @@ function Index() {
   };
 
   // Sort countries alphabetically by active language
-  const sortLocale = lang === "he" ? "he" : lang === "ar" ? "ar" : lang === "zh" ? "zh" : lang === "ru" ? "ru" : "en";
+  const sortLocale = lang === "he" ? "he" : lang === "zh" ? "zh" : lang === "ru" ? "ru" : "en";
   const sorted = [...COUNTRIES].sort((a, b) =>
     lang === "he" ? a.nameHe.localeCompare(b.nameHe, "he") : a.nameEn.localeCompare(b.nameEn, sortLocale)
   );
