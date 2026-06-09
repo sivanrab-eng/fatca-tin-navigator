@@ -412,7 +412,7 @@ function Index() {
             <SelectContent className="max-h-[60vh]">
               {sorted.map((c) => (
                 <SelectItem key={c.code} value={c.code} className="text-base">
-                  <span className={lang === "he" ? "ml-2" : "mr-2"}>{c.flag}</span>
+                  <span className={dir === "rtl" ? "ml-2" : "mr-2"}>{c.flag}</span>
                   {cName(c)}{" "}
                   <span className="text-muted-foreground text-xs">
                     ({lang === "he" ? c.nameEn : c.nameHe})
@@ -514,7 +514,7 @@ function Index() {
                   value="where"
                   className="rounded-xl border border-border bg-card px-4"
                 >
-                  <AccordionTrigger className={`text-base font-semibold hover:no-underline ${lang === "he" ? "text-right" : "text-left"}`}>
+                  <AccordionTrigger className={`text-base font-semibold hover:no-underline ${dir === "rtl" ? "text-right" : "text-left"}`}>
                     <span className="flex items-start gap-2">
                       <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <span>
