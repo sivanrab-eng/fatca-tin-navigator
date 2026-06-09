@@ -9,8 +9,33 @@ import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-type Lang = "he" | "en";
-const T = {
+type Lang = "he" | "en" | "ar" | "es" | "fr" | "ru" | "zh";
+
+export const LANGUAGES: { code: Lang; native: string; dir: "rtl" | "ltr" }[] = [
+  { code: "he", native: "עברית", dir: "rtl" },
+  { code: "en", native: "English", dir: "ltr" },
+  { code: "ar", native: "العربية", dir: "rtl" },
+  { code: "es", native: "Español", dir: "ltr" },
+  { code: "fr", native: "Français", dir: "ltr" },
+  { code: "ru", native: "Русский", dir: "ltr" },
+  { code: "zh", native: "中文", dir: "ltr" },
+];
+
+type Strings = {
+  title: string; subtitle: string;
+  step1: string; placeholder: string; empty: string; disclaimer: string;
+  localName: string; localAuth: string;
+  step2: string; individual: string; entity: string;
+  name: string; format: string; example: string;
+  whereTitle: (tin: string, country: string) => string;
+  sourcesTitle: string; sourcesIntro: string;
+  localAuthLabel: string; oecdLabel: string; euLabel: string; lastUpdatedLabel: string;
+  copy: string; download: string; pdf: string;
+  copied: string; copyErr: string; downloaded: string; dlErr: string;
+  pdfOpened: string; pdfErr: string; legal: string; languageLabel: string;
+};
+
+const T: Record<Lang, Strings> = {
   he: {
     title: "מאתר TIN — FATCA/CRS", subtitle: "בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.",
     step1: "1. בחר מדינה", placeholder: "לחץ לבחירת מדינה",
@@ -19,18 +44,15 @@ const T = {
     localName: "שם המזהה המקומי", localAuth: "רשות המס המקומית",
     step2: "2. בחר סוג", individual: "יחיד", entity: "חברה / ישות",
     name: "שם", format: "מבנה", example: "דוגמה",
-    whereTitle: (tin: string, country: string) => `איפה ניתן למצוא את ה-${tin} שלי ב${country}? לחץ על החץ לפירוט`,
-    sourcesTitle: "מקורות ועדכון אחרון",
-    sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
-    localAuthLabel: "רשות המס המקומית",
-    oecdLabel: "OECD — מאגר TIN לצורכי CRS",
-    euLabel: "נציבות האיחוד האירופי — TIN on Europa",
-    lastUpdatedLabel: "עודכן לאחרונה",
+    whereTitle: (tin, country) => `איפה ניתן למצוא את ה-${tin} שלי ב${country}? לחץ על החץ לפירוט`,
+    sourcesTitle: "מקורות ועדכון אחרון", sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
+    localAuthLabel: "רשות המס המקומית", oecdLabel: "OECD — מאגר TIN לצורכי CRS",
+    euLabel: "נציבות האיחוד האירופי — TIN on Europa", lastUpdatedLabel: "עודכן לאחרונה",
     copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)",
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
     pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF",
-    legal: "הבהרה משפטית", langBtn: "English",
+    legal: "הבהרה משפטית", languageLabel: "שפה",
   },
   en: {
     title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
@@ -40,18 +62,105 @@ const T = {
     localName: "Local identifier name", localAuth: "Local tax authority",
     step2: "2. Choose type", individual: "Individual", entity: "Company / Entity",
     name: "Name", format: "Format", example: "Example",
-    whereTitle: (tin: string, country: string) => `Where can I find my ${tin} in ${country}? Click the arrow for details`,
-    sourcesTitle: "Sources & last updated",
-    sourcesIntro: "Data was compiled from the following official sources:",
-    localAuthLabel: "Local tax authority",
-    oecdLabel: "OECD — TIN portal (CRS)",
-    euLabel: "European Commission — TIN on Europa",
-    lastUpdatedLabel: "Last updated",
+    whereTitle: (tin, country) => `Where can I find my ${tin} in ${country}? Click the arrow for details`,
+    sourcesTitle: "Sources & last updated", sourcesIntro: "Data was compiled from the following official sources:",
+    localAuthLabel: "Local tax authority", oecdLabel: "OECD — TIN portal (CRS)",
+    euLabel: "European Commission — TIN on Europa", lastUpdatedLabel: "Last updated",
     copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)",
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
     pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error",
-    legal: "Legal disclaimer", langBtn: "עברית",
+    legal: "Legal disclaimer", languageLabel: "Language",
+  },
+  ar: {
+    title: "باحث TIN — FATCA/CRS", subtitle: "اختر دولة لرؤية اسم وتنسيق رقم التعريف الضريبي.",
+    step1: "1. اختر دولة", placeholder: "اضغط لاختيار دولة",
+    empty: "ستظهر النتائج هنا بعد اختيار دولة.",
+    disclaimer: "⚠️ معلومات إرشادية فقط. ليست استشارة ضريبية/قانونية وليست مصدراً رسمياً — يرجى التحقق من السلطة المختصة قبل الاستخدام لأغراض FATCA/CRS.",
+    localName: "اسم المعرّف المحلي", localAuth: "السلطة الضريبية المحلية",
+    step2: "2. اختر النوع", individual: "فرد", entity: "شركة / كيان",
+    name: "الاسم", format: "التنسيق", example: "مثال",
+    whereTitle: (tin, country) => `أين يمكنني العثور على ${tin} الخاص بي في ${country}؟ اضغط على السهم للتفاصيل`,
+    sourcesTitle: "المصادر وآخر تحديث", sourcesIntro: "تم جمع البيانات من المصادر الرسمية التالية:",
+    localAuthLabel: "السلطة الضريبية المحلية", oecdLabel: "OECD — بوابة TIN لـ CRS",
+    euLabel: "المفوضية الأوروبية — TIN on Europa", lastUpdatedLabel: "آخر تحديث",
+    copy: "نسخ إلى الحافظة", download: "تنزيل كملف نصي", pdf: "تصدير إلى PDF (طباعة)",
+    copied: "تم نسخ النتائج", copyErr: "تعذر النسخ — اختر يدوياً",
+    downloaded: "تم تنزيل الملف", dlErr: "خطأ في التنزيل",
+    pdfOpened: "تم فتح مربع الطباعة — اختر 'حفظ بصيغة PDF'", pdfErr: "خطأ في تصدير PDF",
+    legal: "إخلاء مسؤولية قانوني", languageLabel: "اللغة",
+  },
+  es: {
+    title: "Buscador de TIN — FATCA/CRS", subtitle: "Seleccione un país para ver el nombre y formato del Número de Identificación Fiscal.",
+    step1: "1. Seleccionar país", placeholder: "Pulse para elegir un país",
+    empty: "Los resultados aparecerán aquí después de seleccionar un país.",
+    disclaimer: "⚠️ Solo informativo. No es asesoramiento fiscal/legal ni una fuente oficial — verifique con la autoridad competente antes de usar para FATCA/CRS.",
+    localName: "Nombre del identificador local", localAuth: "Autoridad fiscal local",
+    step2: "2. Elegir tipo", individual: "Persona física", entity: "Empresa / Entidad",
+    name: "Nombre", format: "Formato", example: "Ejemplo",
+    whereTitle: (tin, country) => `¿Dónde puedo encontrar mi ${tin} en ${country}? Haga clic en la flecha para más detalles`,
+    sourcesTitle: "Fuentes y última actualización", sourcesIntro: "Datos recopilados de las siguientes fuentes oficiales:",
+    localAuthLabel: "Autoridad fiscal local", oecdLabel: "OCDE — Portal TIN (CRS)",
+    euLabel: "Comisión Europea — TIN on Europa", lastUpdatedLabel: "Última actualización",
+    copy: "Copiar al portapapeles", download: "Descargar como texto", pdf: "Exportar a PDF (imprimir)",
+    copied: "Resultados copiados", copyErr: "No se puede copiar — seleccione manualmente",
+    downloaded: "Archivo descargado", dlErr: "Error de descarga",
+    pdfOpened: "Diálogo de impresión abierto — elija 'Guardar como PDF'", pdfErr: "Error al exportar PDF",
+    legal: "Aviso legal", languageLabel: "Idioma",
+  },
+  fr: {
+    title: "Recherche TIN — FATCA/CRS", subtitle: "Sélectionnez un pays pour voir le nom et le format du numéro d'identification fiscale.",
+    step1: "1. Sélectionner un pays", placeholder: "Cliquez pour choisir un pays",
+    empty: "Les résultats apparaîtront ici après la sélection d'un pays.",
+    disclaimer: "⚠️ À titre informatif uniquement. Pas un conseil fiscal/juridique ni une source officielle — vérifiez auprès de l'autorité compétente avant utilisation pour FATCA/CRS.",
+    localName: "Nom de l'identifiant local", localAuth: "Administration fiscale locale",
+    step2: "2. Choisir le type", individual: "Particulier", entity: "Société / Entité",
+    name: "Nom", format: "Format", example: "Exemple",
+    whereTitle: (tin, country) => `Où puis-je trouver mon ${tin} en ${country} ? Cliquez sur la flèche pour les détails`,
+    sourcesTitle: "Sources et dernière mise à jour", sourcesIntro: "Données compilées à partir des sources officielles suivantes :",
+    localAuthLabel: "Administration fiscale locale", oecdLabel: "OCDE — Portail TIN (CRS)",
+    euLabel: "Commission européenne — TIN on Europa", lastUpdatedLabel: "Dernière mise à jour",
+    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)",
+    copied: "Résultats copiés", copyErr: "Impossible de copier — sélectionnez manuellement",
+    downloaded: "Fichier téléchargé", dlErr: "Erreur de téléchargement",
+    pdfOpened: "Boîte d'impression ouverte — choisissez 'Enregistrer en PDF'", pdfErr: "Erreur d'export PDF",
+    legal: "Mentions légales", languageLabel: "Langue",
+  },
+  ru: {
+    title: "Поиск TIN — FATCA/CRS", subtitle: "Выберите страну, чтобы увидеть название и формат идентификационного номера налогоплательщика.",
+    step1: "1. Выберите страну", placeholder: "Нажмите для выбора страны",
+    empty: "Результаты появятся здесь после выбора страны.",
+    disclaimer: "⚠️ Только для справки. Не является налоговой/юридической консультацией или официальным источником — проверьте у компетентного органа перед использованием для FATCA/CRS.",
+    localName: "Название местного идентификатора", localAuth: "Местный налоговый орган",
+    step2: "2. Выберите тип", individual: "Физ. лицо", entity: "Компания / Организация",
+    name: "Название", format: "Формат", example: "Пример",
+    whereTitle: (tin, country) => `Где найти мой ${tin} в ${country}? Нажмите на стрелку для подробностей`,
+    sourcesTitle: "Источники и последнее обновление", sourcesIntro: "Данные собраны из следующих официальных источников:",
+    localAuthLabel: "Местный налоговый орган", oecdLabel: "ОЭСР — портал TIN (CRS)",
+    euLabel: "Европейская комиссия — TIN on Europa", lastUpdatedLabel: "Последнее обновление",
+    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)",
+    copied: "Результаты скопированы", copyErr: "Не удалось скопировать — выделите вручную",
+    downloaded: "Файл загружен", dlErr: "Ошибка загрузки",
+    pdfOpened: "Открыт диалог печати — выберите 'Сохранить как PDF'", pdfErr: "Ошибка экспорта PDF",
+    legal: "Юридическая оговорка", languageLabel: "Язык",
+  },
+  zh: {
+    title: "TIN 查询器 — FATCA/CRS", subtitle: "选择国家以查看税号的名称和格式。",
+    step1: "1. 选择国家", placeholder: "点击选择国家",
+    empty: "选择国家后结果将显示在此处。",
+    disclaimer: "⚠️ 仅供参考。不是税务/法律建议或官方来源 — 在用于 FATCA/CRS 之前请向主管部门核实。",
+    localName: "本地标识符名称", localAuth: "当地税务机关",
+    step2: "2. 选择类型", individual: "个人", entity: "公司 / 实体",
+    name: "名称", format: "格式", example: "示例",
+    whereTitle: (tin, country) => `在${country}哪里可以找到我的 ${tin}？点击箭头查看详情`,
+    sourcesTitle: "来源与最后更新", sourcesIntro: "数据来自以下官方来源:",
+    localAuthLabel: "当地税务机关", oecdLabel: "OECD — TIN 门户(CRS)",
+    euLabel: "欧盟委员会 — TIN on Europa", lastUpdatedLabel: "最后更新",
+    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)",
+    copied: "结果已复制", copyErr: "无法复制 — 请手动选择",
+    downloaded: "文件已下载", dlErr: "下载错误",
+    pdfOpened: "打印对话框已打开 — 选择'另存为 PDF'", pdfErr: "PDF 导出错误",
+    legal: "法律声明", languageLabel: "语言",
   },
 };
 
