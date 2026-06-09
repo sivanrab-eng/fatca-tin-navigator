@@ -52,7 +52,10 @@ const T: Record<Lang, Strings> = {
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
     pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF",
-    legal: "הבהרה משפטית", languageLabel: "שפה",
+    legal: "הבהרה משפטית",
+    legalText: "אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס, ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג \"AS IS\" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.",
+    sourcesFooter: "מקורות עיקריים:",
+    languageLabel: "שפה",
   },
   en: {
     title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
