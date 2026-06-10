@@ -8,6 +8,7 @@ import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Cop
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { tr } from "@/lib/tin-i18n";
 
 type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
 
