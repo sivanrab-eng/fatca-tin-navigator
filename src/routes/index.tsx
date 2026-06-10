@@ -32,6 +32,9 @@ type Strings = {
   copy: string; download: string; pdf: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
   pdfOpened: string; pdfErr: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
+  exportCountry: string; exportNote: string;
+  exportWhere: (tin: string) => string;
+  exportSources: string; exportDisclaimer: string;
 };
 
 const T: Record<Lang, Strings> = {
@@ -55,6 +58,10 @@ const T: Record<Lang, Strings> = {
     legalText: "אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס, ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג \"AS IS\" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.",
     sourcesFooter: "מקורות עיקריים:",
     languageLabel: "שפה",
+    exportCountry: "מדינה", exportNote: "הערה",
+    exportWhere: (tin) => `איפה ניתן למצוא את ה-${tin}:`,
+    exportSources: "מקורות:",
+    exportDisclaimer: "מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי. יש לאמת מול הרשות המוסמכת.",
   },
   en: {
     title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
@@ -76,6 +83,10 @@ const T: Record<Lang, Strings> = {
     legalText: "This website is not an official body, is not affiliated with the OECD, the IRS, or any tax authority, and does not constitute tax advice, legal advice, or a professional opinion. The information is provided \"AS IS\" for informational purposes only, may be partial or outdated, and should not be relied upon for FATCA/CRS reporting or any other decision. Please verify every detail with the competent authority in the relevant country and consult a qualified professional. Use of this website is at the user's sole responsibility.",
     sourcesFooter: "Primary sources:",
     languageLabel: "Language",
+    exportCountry: "Country", exportNote: "Note",
+    exportWhere: (tin) => `Where to find your ${tin}:`,
+    exportSources: "Sources:",
+    exportDisclaimer: "Informational only. Not tax/legal advice. Verify with the competent authority.",
   },
   es: {
     title: "Buscador de TIN — FATCA/CRS", subtitle: "Seleccione un país para ver el nombre y formato del Número de Identificación Fiscal.",
@@ -97,6 +108,10 @@ const T: Record<Lang, Strings> = {
     legalText: "Este sitio web no es un organismo oficial, no está afiliado a la OCDE, al IRS ni a ninguna autoridad fiscal, y no constituye asesoramiento fiscal, asesoramiento legal ni una opinión profesional. La información se proporciona \"TAL CUAL\" solo con fines informativos, puede ser parcial o estar desactualizada, y no debe utilizarse para la declaración FATCA/CRS ni para ninguna otra decisión. Verifique cada detalle con la autoridad competente del país correspondiente y consulte a un profesional cualificado. El uso de este sitio web es responsabilidad exclusiva del usuario.",
     sourcesFooter: "Fuentes principales:",
     languageLabel: "Idioma",
+    exportCountry: "País", exportNote: "Nota",
+    exportWhere: (tin) => `Dónde encontrar su ${tin}:`,
+    exportSources: "Fuentes:",
+    exportDisclaimer: "Solo informativo. No es asesoramiento fiscal/legal. Verifique con la autoridad competente.",
   },
   fr: {
     title: "Recherche TIN — FATCA/CRS", subtitle: "Sélectionnez un pays pour voir le nom et le format du numéro d'identification fiscale.",
@@ -118,6 +133,10 @@ const T: Record<Lang, Strings> = {
     legalText: "Ce site web n'est pas un organisme officiel, n'est pas affilié à l'OCDE, à l'IRS ou à aucune autorité fiscale, et ne constitue pas un conseil fiscal, un conseil juridique ou une opinion professionnelle. Les informations sont fournies \"EN L'ÉTAT\" à titre informatif uniquement, peuvent être partielles ou obsolètes, et ne doivent pas être utilisées pour la déclaration FATCA/CRS ou toute autre décision. Veuillez vérifier chaque détail auprès de l'autorité compétente du pays concerné et consulter un professionnel qualifié. L'utilisation de ce site web est sous la seule responsabilité de l'utilisateur.",
     sourcesFooter: "Sources principales :",
     languageLabel: "Langue",
+    exportCountry: "Pays", exportNote: "Note",
+    exportWhere: (tin) => `Où trouver votre ${tin} :`,
+    exportSources: "Sources :",
+    exportDisclaimer: "À titre informatif uniquement. Pas un conseil fiscal/juridique. Vérifiez auprès de l'autorité compétente.",
   },
   ru: {
     title: "Поиск TIN — FATCA/CRS", subtitle: "Выберите страну, чтобы увидеть название и формат идентификационного номера налогоплательщика.",
@@ -139,6 +158,10 @@ const T: Record<Lang, Strings> = {
     legalText: "Этот веб-сайт не является официальным органом, не аффилирован с ОЭСР, Налоговым управлением США (IRS) или каким-либо налоговым органом, и не является налоговой консультацией, юридической консультацией или профессиональным мнением. Информация предоставляется \"КАК ЕСТЬ\" только в информационных целях, может быть неполной или устаревшей, и не должна использоваться для отчетности FATCA/CRS или любых других решений. Пожалуйста, проверьте каждую деталь у компетентного органа в соответствующей стране и проконсультируйтесь с квалифицированным специалистом. Использование этого веб-сайта осуществляется исключительно на ответственность пользователя.",
     sourcesFooter: "Основные источники:",
     languageLabel: "Язык",
+    exportCountry: "Страна", exportNote: "Примечание",
+    exportWhere: (tin) => `Где найти ваш ${tin}:`,
+    exportSources: "Источники:",
+    exportDisclaimer: "Только для справки. Не является налоговой/юридической консультацией. Проверьте у компетентного органа.",
   },
   zh: {
     title: "TIN 查询器 — FATCA/CRS", subtitle: "选择国家以查看税号的名称和格式。",
@@ -160,51 +183,59 @@ const T: Record<Lang, Strings> = {
     legalText: "本网站并非官方机构，不隶属于经合组织(OECD)、美国国税局(IRS)或任何税务机关，也不构成税务建议、法律建议或专业意见。信息仅以\"现状\"提供，仅供参考，可能不完整或过时，且不应依赖其进行FATCA/CRS申报或任何其他决策。请向相关国家的主管部门核实每个细节，并咨询合格的专业人士。使用本网站的风险由用户自行承担。",
     sourcesFooter: "主要来源：",
     languageLabel: "语言",
+    exportCountry: "国家", exportNote: "备注",
+    exportWhere: (tin) => `在哪里可以找到您的 ${tin}：`,
+    exportSources: "来源：",
+    exportDisclaimer: "仅供参考。不是税务/法律建议。请向主管部门核实。",
   },
 };
 
-function buildExportText(country: CountryTin): string {
+function buildExportText(country: CountryTin, lang: Lang, t: Strings): string {
+  const cName = lang === "he" ? country.nameHe : country.nameEn;
+  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
+  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
   const lines: string[] = [];
-  lines.push(`מאתר TIN — FATCA/CRS`);
-  lines.push(`מדינה: ${country.nameHe} (${country.nameEn}) ${country.flag}`);
+  lines.push(t.title);
+  lines.push(`${t.exportCountry}: ${cName} (${cNameAlt}) ${country.flag}`);
   lines.push(``);
-  lines.push(`שם המזהה המקומי: ${country.tinNameHe} / ${country.tinNameEn}`);
+  lines.push(`${t.localName}: ${cTin} / ${cTinAlt}`);
   lines.push(``);
-  lines.push(`— יחיד —`);
-  lines.push(`שם: ${country.individual.name}`);
-  lines.push(`מבנה: ${country.individual.format}`);
-  lines.push(`דוגמה: ${country.individual.example}`);
-  if (country.individual.note) lines.push(`הערה: ${country.individual.note}`);
+  lines.push(`— ${t.individual} —`);
+  lines.push(`${t.name}: ${country.individual.name}`);
+  lines.push(`${t.format}: ${country.individual.format}`);
+  lines.push(`${t.example}: ${country.individual.example}`);
+  if (country.individual.note) lines.push(`${t.exportNote}: ${country.individual.note}`);
   lines.push(``);
-  lines.push(`— חברה / ישות —`);
-  lines.push(`שם: ${country.entity.name}`);
-  lines.push(`מבנה: ${country.entity.format}`);
-  lines.push(`דוגמה: ${country.entity.example}`);
-  if (country.entity.note) lines.push(`הערה: ${country.entity.note}`);
+  lines.push(`— ${t.entity} —`);
+  lines.push(`${t.name}: ${country.entity.name}`);
+  lines.push(`${t.format}: ${country.entity.format}`);
+  lines.push(`${t.example}: ${country.entity.example}`);
+  if (country.entity.note) lines.push(`${t.exportNote}: ${country.entity.note}`);
   lines.push(``);
-  lines.push(`איפה ניתן למצוא את ה-${country.tinNameHe}:`);
+  lines.push(t.exportWhere(cTin));
   country.whereToFind.forEach((w) => {
     lines.push(`• ${w.label}${w.url ? ` — ${w.url}` : ""}`);
   });
   lines.push(``);
-  lines.push(`מקורות:`);
-  lines.push(`רשות המס המקומית: ${country.officialSource}`);
-  if (country.oecdSource) lines.push(`OECD TIN: ${country.oecdSource}`);
-  if (country.euTinSource) lines.push(`EU TIN: ${country.euTinSource}`);
-  lines.push(`עודכן לאחרונה: ${getLastUpdated(country)}`);
+  lines.push(t.exportSources);
+  lines.push(`${t.localAuthLabel}: ${country.officialSource}`);
+  if (country.oecdSource) lines.push(`${t.oecdLabel}: ${country.oecdSource}`);
+  if (country.euTinSource) lines.push(`${t.euLabel}: ${country.euTinSource}`);
+  lines.push(`${t.lastUpdatedLabel}: ${getLastUpdated(country)}`);
   lines.push(``);
-  lines.push(`מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי. יש לאמת מול הרשות המוסמכת.`);
+  lines.push(t.exportDisclaimer);
   return lines.join("\n");
 }
 
-function downloadTxt(country: CountryTin) {
+function downloadTxt(country: CountryTin, lang: Lang, t: Strings) {
   try {
-    const text = buildExportText(country);
+    const text = buildExportText(country, lang, t);
     const blob = new Blob(["\uFEFF" + text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `TIN-${country.code}.txt`;
+    a.download = `TIN-${country.code}-${lang}.txt`;
     a.rel = "noopener";
     a.target = "_blank";
     document.body.appendChild(a);
@@ -213,15 +244,15 @@ function downloadTxt(country: CountryTin) {
       a.remove();
       URL.revokeObjectURL(url);
     }, 1000);
-    toast.success("הקובץ הורד");
+    toast.success(t.downloaded);
   } catch (e) {
     console.error(e);
-    toast.error("שגיאה בהורדת הקובץ");
+    toast.error(t.dlErr);
   }
 }
 
-async function copyToClipboard(country: CountryTin) {
-  const text = buildExportText(country);
+async function copyToClipboard(country: CountryTin, lang: Lang, t: Strings) {
+  const text = buildExportText(country, lang, t);
   try {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(text);
@@ -235,24 +266,26 @@ async function copyToClipboard(country: CountryTin) {
       document.execCommand("copy");
       ta.remove();
     }
-    toast.success("התוצאות הועתקו ללוח");
+    toast.success(t.copied);
   } catch (e) {
     console.error(e);
-    toast.error("לא ניתן להעתיק — בחר ידנית");
+    toast.error(t.copyErr);
   }
 }
 
-function exportPdf(country: CountryTin) {
-  const text = buildExportText(country);
+function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
+  const text = buildExportText(country, lang, t);
+  const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  const cName = lang === "he" ? country.nameHe : country.nameEn;
   const esc = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const html = `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
+  const html = `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
 <style>
   body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.6;color:#111;max-width:720px;margin:0 auto}
   pre{white-space:pre-wrap;word-wrap:break-word;font-family:inherit;font-size:14px}
   h1{font-size:20px;margin:0 0 12px}
 </style></head><body>
-<h1>מאתר TIN — ${esc(country.nameHe)} ${esc(country.flag)}</h1>
+<h1>${esc(t.title)} — ${esc(cName)} ${esc(country.flag)}</h1>
 <pre>${esc(text)}</pre>
 </body></html>`;
 
@@ -267,7 +300,7 @@ function exportPdf(country: CountryTin) {
   document.body.appendChild(iframe);
   const doc = iframe.contentDocument;
   if (!doc) {
-    toast.error("שגיאה בייצוא ל-PDF");
+    toast.error(t.pdfErr);
     return;
   }
   doc.open();
@@ -277,10 +310,10 @@ function exportPdf(country: CountryTin) {
     try {
       iframe.contentWindow?.focus();
       iframe.contentWindow?.print();
-      toast.success("נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'");
+      toast.success(t.pdfOpened);
     } catch (e) {
       console.error(e);
-      toast.error("שגיאה בייצוא ל-PDF");
+      toast.error(t.pdfErr);
     }
     setTimeout(() => iframe.remove(), 2000);
   }, 200);
@@ -618,7 +651,7 @@ function Index() {
                 size="sm"
                 onClick={() => {
                   trackEvent("export", { format: "copy", country_code: country.code });
-                  copyToClipboard(country);
+                  copyToClipboard(country, lang, t);
                 }}
                 className="gap-1.5"
               >
@@ -631,7 +664,7 @@ function Index() {
                 size="sm"
                 onClick={() => {
                   trackEvent("export", { format: "txt", country_code: country.code });
-                  downloadTxt(country);
+                  downloadTxt(country, lang, t);
                 }}
                 className="gap-1.5"
               >
@@ -643,7 +676,7 @@ function Index() {
                 size="sm"
                 onClick={() => {
                   trackEvent("export", { format: "pdf", country_code: country.code });
-                  exportPdf(country);
+                  exportPdf(country, lang, t);
                 }}
                 className="gap-1.5"
               >
