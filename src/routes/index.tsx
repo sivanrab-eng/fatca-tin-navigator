@@ -183,6 +183,10 @@ const T: Record<Lang, Strings> = {
     legalText: "本网站并非官方机构，不隶属于经合组织(OECD)、美国国税局(IRS)或任何税务机关，也不构成税务建议、法律建议或专业意见。信息仅以\"现状\"提供，仅供参考，可能不完整或过时，且不应依赖其进行FATCA/CRS申报或任何其他决策。请向相关国家的主管部门核实每个细节，并咨询合格的专业人士。使用本网站的风险由用户自行承担。",
     sourcesFooter: "主要来源：",
     languageLabel: "语言",
+    exportCountry: "国家", exportNote: "备注",
+    exportWhere: (tin) => `在哪里可以找到您的 ${tin}：`,
+    exportSources: "来源：",
+    exportDisclaimer: "仅供参考。不是税务/法律建议。请向主管部门核实。",
   },
 };
 
