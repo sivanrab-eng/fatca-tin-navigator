@@ -108,6 +108,10 @@ const T: Record<Lang, Strings> = {
     legalText: "Este sitio web no es un organismo oficial, no está afiliado a la OCDE, al IRS ni a ninguna autoridad fiscal, y no constituye asesoramiento fiscal, asesoramiento legal ni una opinión profesional. La información se proporciona \"TAL CUAL\" solo con fines informativos, puede ser parcial o estar desactualizada, y no debe utilizarse para la declaración FATCA/CRS ni para ninguna otra decisión. Verifique cada detalle con la autoridad competente del país correspondiente y consulte a un profesional cualificado. El uso de este sitio web es responsabilidad exclusiva del usuario.",
     sourcesFooter: "Fuentes principales:",
     languageLabel: "Idioma",
+    exportCountry: "País", exportNote: "Nota",
+    exportWhere: (tin) => `Dónde encontrar su ${tin}:`,
+    exportSources: "Fuentes:",
+    exportDisclaimer: "Solo informativo. No es asesoramiento fiscal/legal. Verifique con la autoridad competente.",
   },
   fr: {
     title: "Recherche TIN — FATCA/CRS", subtitle: "Sélectionnez un pays pour voir le nom et le format du numéro d'identification fiscale.",
