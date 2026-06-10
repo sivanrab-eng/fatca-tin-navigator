@@ -57,7 +57,7 @@ const FOR_ENTITIES: Dict = { en: " (entities)", es: " (entidades)", fr: " (entit
 
 function translateFormat(s: string, lang: NonHe): string {
   // Translate "N ספרות" / "N-M ספרות" / "עד N ספרות"
-  const words = {
+  const words: Record<string, Record<NonHe, string>> = {
     digits: { en: "digits", es: "dígitos", fr: "chiffres", ru: "цифр", zh: "位数字" },
     letters: { en: "letters", es: "letras", fr: "lettres", ru: "букв", zh: "个字母" },
     letter: { en: "letter", es: "letra", fr: "lettre", ru: "буква", zh: "个字母" },
@@ -66,7 +66,6 @@ function translateFormat(s: string, lang: NonHe): string {
     checkDigit: { en: "check digit", es: "dígito de control", fr: "chiffre de contrôle", ru: "контрольная цифра", zh: "校验位" },
     upTo: { en: "up to ", es: "hasta ", fr: "jusqu'à ", ru: "до ", zh: "最多 " },
     starts: { en: "starts with ", es: "empieza con ", fr: "commence par ", ru: "начинается с ", zh: "以 " },
-    startsEnd: { en: "", es: "", fr: "", ru: "", zh: " 开头" },
   };
   let out = s;
   out = out.replace(/עד (\d+(?:-\d+)?)\s*ספרות/g, `${words.upTo[lang]}$1 ${words.digits[lang]}`);
