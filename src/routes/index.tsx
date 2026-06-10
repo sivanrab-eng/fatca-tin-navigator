@@ -190,48 +190,52 @@ const T: Record<Lang, Strings> = {
   },
 };
 
-function buildExportText(country: CountryTin): string {
+function buildExportText(country: CountryTin, lang: Lang, t: Strings): string {
+  const cName = lang === "he" ? country.nameHe : country.nameEn;
+  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
+  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
   const lines: string[] = [];
-  lines.push(`מאתר TIN — FATCA/CRS`);
-  lines.push(`מדינה: ${country.nameHe} (${country.nameEn}) ${country.flag}`);
+  lines.push(t.title);
+  lines.push(`${t.exportCountry}: ${cName} (${cNameAlt}) ${country.flag}`);
   lines.push(``);
-  lines.push(`שם המזהה המקומי: ${country.tinNameHe} / ${country.tinNameEn}`);
+  lines.push(`${t.localName}: ${cTin} / ${cTinAlt}`);
   lines.push(``);
-  lines.push(`— יחיד —`);
-  lines.push(`שם: ${country.individual.name}`);
-  lines.push(`מבנה: ${country.individual.format}`);
-  lines.push(`דוגמה: ${country.individual.example}`);
-  if (country.individual.note) lines.push(`הערה: ${country.individual.note}`);
+  lines.push(`— ${t.individual} —`);
+  lines.push(`${t.name}: ${country.individual.name}`);
+  lines.push(`${t.format}: ${country.individual.format}`);
+  lines.push(`${t.example}: ${country.individual.example}`);
+  if (country.individual.note) lines.push(`${t.exportNote}: ${country.individual.note}`);
   lines.push(``);
-  lines.push(`— חברה / ישות —`);
-  lines.push(`שם: ${country.entity.name}`);
-  lines.push(`מבנה: ${country.entity.format}`);
-  lines.push(`דוגמה: ${country.entity.example}`);
-  if (country.entity.note) lines.push(`הערה: ${country.entity.note}`);
+  lines.push(`— ${t.entity} —`);
+  lines.push(`${t.name}: ${country.entity.name}`);
+  lines.push(`${t.format}: ${country.entity.format}`);
+  lines.push(`${t.example}: ${country.entity.example}`);
+  if (country.entity.note) lines.push(`${t.exportNote}: ${country.entity.note}`);
   lines.push(``);
-  lines.push(`איפה ניתן למצוא את ה-${country.tinNameHe}:`);
+  lines.push(t.exportWhere(cTin));
   country.whereToFind.forEach((w) => {
     lines.push(`• ${w.label}${w.url ? ` — ${w.url}` : ""}`);
   });
   lines.push(``);
-  lines.push(`מקורות:`);
-  lines.push(`רשות המס המקומית: ${country.officialSource}`);
-  if (country.oecdSource) lines.push(`OECD TIN: ${country.oecdSource}`);
-  if (country.euTinSource) lines.push(`EU TIN: ${country.euTinSource}`);
-  lines.push(`עודכן לאחרונה: ${getLastUpdated(country)}`);
+  lines.push(t.exportSources);
+  lines.push(`${t.localAuthLabel}: ${country.officialSource}`);
+  if (country.oecdSource) lines.push(`${t.oecdLabel}: ${country.oecdSource}`);
+  if (country.euTinSource) lines.push(`${t.euLabel}: ${country.euTinSource}`);
+  lines.push(`${t.lastUpdatedLabel}: ${getLastUpdated(country)}`);
   lines.push(``);
-  lines.push(`מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי. יש לאמת מול הרשות המוסמכת.`);
+  lines.push(t.exportDisclaimer);
   return lines.join("\n");
 }
 
-function downloadTxt(country: CountryTin) {
+function downloadTxt(country: CountryTin, lang: Lang, t: Strings) {
   try {
-    const text = buildExportText(country);
+    const text = buildExportText(country, lang, t);
     const blob = new Blob(["\uFEFF" + text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `TIN-${country.code}.txt`;
+    a.download = `TIN-${country.code}-${lang}.txt`;
     a.rel = "noopener";
     a.target = "_blank";
     document.body.appendChild(a);
@@ -240,15 +244,15 @@ function downloadTxt(country: CountryTin) {
       a.remove();
       URL.revokeObjectURL(url);
     }, 1000);
-    toast.success("הקובץ הורד");
+    toast.success(t.downloaded);
   } catch (e) {
     console.error(e);
-    toast.error("שגיאה בהורדת הקובץ");
+    toast.error(t.dlErr);
   }
 }
 
-async function copyToClipboard(country: CountryTin) {
-  const text = buildExportText(country);
+async function copyToClipboard(country: CountryTin, lang: Lang, t: Strings) {
+  const text = buildExportText(country, lang, t);
   try {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(text);
@@ -262,24 +266,26 @@ async function copyToClipboard(country: CountryTin) {
       document.execCommand("copy");
       ta.remove();
     }
-    toast.success("התוצאות הועתקו ללוח");
+    toast.success(t.copied);
   } catch (e) {
     console.error(e);
-    toast.error("לא ניתן להעתיק — בחר ידנית");
+    toast.error(t.copyErr);
   }
 }
 
-function exportPdf(country: CountryTin) {
-  const text = buildExportText(country);
+function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
+  const text = buildExportText(country, lang, t);
+  const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  const cName = lang === "he" ? country.nameHe : country.nameEn;
   const esc = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const html = `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
+  const html = `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
 <style>
   body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.6;color:#111;max-width:720px;margin:0 auto}
   pre{white-space:pre-wrap;word-wrap:break-word;font-family:inherit;font-size:14px}
   h1{font-size:20px;margin:0 0 12px}
 </style></head><body>
-<h1>מאתר TIN — ${esc(country.nameHe)} ${esc(country.flag)}</h1>
+<h1>${esc(t.title)} — ${esc(cName)} ${esc(country.flag)}</h1>
 <pre>${esc(text)}</pre>
 </body></html>`;
 
@@ -294,7 +300,7 @@ function exportPdf(country: CountryTin) {
   document.body.appendChild(iframe);
   const doc = iframe.contentDocument;
   if (!doc) {
-    toast.error("שגיאה בייצוא ל-PDF");
+    toast.error(t.pdfErr);
     return;
   }
   doc.open();
@@ -304,10 +310,10 @@ function exportPdf(country: CountryTin) {
     try {
       iframe.contentWindow?.focus();
       iframe.contentWindow?.print();
-      toast.success("נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'");
+      toast.success(t.pdfOpened);
     } catch (e) {
       console.error(e);
-      toast.error("שגיאה בייצוא ל-PDF");
+      toast.error(t.pdfErr);
     }
     setTimeout(() => iframe.remove(), 2000);
   }, 200);
