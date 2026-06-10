@@ -621,11 +621,11 @@ function Index() {
                               onClick={() => handleResultClick("where_to_find", w.label, w.url!)}
                               className="inline-flex items-center gap-1 text-primary hover:underline"
                             >
-                              {w.label}
+                              {tr(w.label, lang)}
                               <ExternalLink className="h-3 w-3" />
                             </a>
                           ) : (
-                            <span>{w.label}</span>
+                            <span>{tr(w.label, lang)}</span>
                           )}
                         </li>
                       ))}
