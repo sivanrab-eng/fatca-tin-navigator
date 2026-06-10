@@ -278,38 +278,88 @@ async function copyToClipboard(country: CountryTin, lang: Lang, t: Strings) {
 }
 
 function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
-  const text = buildExportText(country, lang, t);
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   const cName = lang === "he" ? country.nameHe : country.nameEn;
+  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
+  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
   const esc = (s: string) =>
-    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const html = `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN-${esc(country.code)}</title>
+    String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const link = (url?: string, label?: string) =>
+    url ? `<a href="${esc(url)}" target="_blank" rel="noreferrer noopener">${esc(label ?? url)}</a>` : esc(label ?? "");
+
+  const block = (title: string, entry: CountryTin["individual"]) => `
+    <section class="card">
+      <h2>${esc(title)}</h2>
+      <dl>
+        <dt>${esc(t.name)}</dt><dd>${esc(tr(entry.name, lang))}</dd>
+        <dt>${esc(t.format)}</dt><dd>${esc(tr(entry.format, lang))}</dd>
+        <dt>${esc(t.example)}</dt><dd><code>${esc(entry.example)}</code></dd>
+        ${entry.note ? `<dt>${esc(t.exportNote)}</dt><dd class="note">${esc(tr(entry.note, lang))}</dd>` : ""}
+      </dl>
+    </section>`;
+
+  const whereItems = country.whereToFind.map((w) => {
+    const label = esc(tr(w.label, lang));
+    return `<li>${w.url ? `<a href="${esc(w.url)}" target="_blank" rel="noreferrer noopener">${label}</a>` : label}</li>`;
+  }).join("");
+
+  const sources: string[] = [];
+  sources.push(`<li><strong>${esc(t.localAuthLabel)}:</strong> ${link(country.officialSource)}</li>`);
+  if (country.oecdSource) sources.push(`<li><strong>${esc(t.oecdLabel)}:</strong> ${link(country.oecdSource)}</li>`);
+  if (country.euTinSource) sources.push(`<li><strong>${esc(t.euLabel)}:</strong> ${link(country.euTinSource)}</li>`);
+
+  const html = `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN — ${esc(cName)}</title>
 <style>
-  body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.6;color:#111;max-width:720px;margin:0 auto}
-  pre{white-space:pre-wrap;word-wrap:break-word;font-family:inherit;font-size:14px}
-  h1{font-size:20px;margin:0 0 12px}
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.55;color:#111;max-width:760px;margin:0 auto;background:#fff}
+  header{border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:18px}
+  h1{font-size:22px;margin:0 0 4px;font-weight:700}
+  .sub{color:#555;font-size:13px}
+  .flag{font-size:28px;vertical-align:middle;margin:0 6px}
+  h2{font-size:14px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.05em;color:#444}
+  .card{border:1px solid #ddd;border-radius:8px;padding:14px 16px;margin:12px 0;background:#fafafa;page-break-inside:avoid}
+  dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0}
+  dt{font-weight:600;color:#555;font-size:12px;text-transform:uppercase;letter-spacing:.04em;align-self:start;padding-top:2px}
+  dd{margin:0;font-size:14px}
+  code{background:#eef;padding:2px 6px;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+  .note{font-size:12px;color:#555;font-style:italic}
+  ul{margin:6px 0 0;padding-${dir === "rtl" ? "right" : "left"}:20px}
+  li{margin:4px 0;font-size:13px}
+  a{color:#0a58ca;text-decoration:underline;word-break:break-word}
+  footer{margin-top:18px;padding-top:10px;border-top:1px solid #ddd;font-size:11px;color:#666;line-height:1.5}
+  .meta{display:flex;justify-content:space-between;font-size:11px;color:#666;margin-top:6px}
+  @media print{ body{padding:0} a{color:#0a58ca} }
 </style></head><body>
-<h1>${esc(t.title)} — ${esc(cName)} ${esc(country.flag)}</h1>
-<pre>${esc(text)}</pre>
+<header>
+  <h1>${esc(t.title)}</h1>
+  <div class="sub"><span class="flag">${esc(country.flag)}</span><strong>${esc(cName)}</strong> <span style="color:#888">(${esc(cNameAlt)})</span></div>
+  <div class="sub" style="margin-top:4px"><strong>${esc(t.localName)}:</strong> ${esc(cTin)} / ${esc(cTinAlt)}</div>
+</header>
+
+${block(t.individual, country.individual)}
+${block(t.entity, country.entity)}
+
+<section class="card">
+  <h2>${esc(t.exportWhere(cTin))}</h2>
+  <ul>${whereItems}</ul>
+</section>
+
+<section class="card">
+  <h2>${esc(t.sourcesTitle)}</h2>
+  <ul>${sources.join("")}</ul>
+  <div class="meta"><span>${esc(t.lastUpdatedLabel)}</span><span>${esc(getLastUpdated(country))}</span></div>
+</section>
+
+<footer>${esc(t.exportDisclaimer)}</footer>
 </body></html>`;
 
-  // Use a hidden iframe so it works inside sandboxed previews too
   const iframe = document.createElement("iframe");
-  iframe.style.position = "fixed";
-  iframe.style.right = "0";
-  iframe.style.bottom = "0";
-  iframe.style.width = "0";
-  iframe.style.height = "0";
-  iframe.style.border = "0";
+  iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0";
   document.body.appendChild(iframe);
   const doc = iframe.contentDocument;
-  if (!doc) {
-    toast.error(t.pdfErr);
-    return;
-  }
-  doc.open();
-  doc.write(html);
-  doc.close();
+  if (!doc) { toast.error(t.pdfErr); return; }
+  doc.open(); doc.write(html); doc.close();
   setTimeout(() => {
     try {
       iframe.contentWindow?.focus();
