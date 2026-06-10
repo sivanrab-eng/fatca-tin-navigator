@@ -83,6 +83,10 @@ const T: Record<Lang, Strings> = {
     legalText: "This website is not an official body, is not affiliated with the OECD, the IRS, or any tax authority, and does not constitute tax advice, legal advice, or a professional opinion. The information is provided \"AS IS\" for informational purposes only, may be partial or outdated, and should not be relied upon for FATCA/CRS reporting or any other decision. Please verify every detail with the competent authority in the relevant country and consult a qualified professional. Use of this website is at the user's sole responsibility.",
     sourcesFooter: "Primary sources:",
     languageLabel: "Language",
+    exportCountry: "Country", exportNote: "Note",
+    exportWhere: (tin) => `Where to find your ${tin}:`,
+    exportSources: "Sources:",
+    exportDisclaimer: "Informational only. Not tax/legal advice. Verify with the competent authority.",
   },
   es: {
     title: "Buscador de TIN — FATCA/CRS", subtitle: "Seleccione un país para ver el nombre y formato del Número de Identificación Fiscal.",
