@@ -651,7 +651,7 @@ function Index() {
                 size="sm"
                 onClick={() => {
                   trackEvent("export", { format: "copy", country_code: country.code });
-                  copyToClipboard(country);
+                  copyToClipboard(country, lang, t);
                 }}
                 className="gap-1.5"
               >
