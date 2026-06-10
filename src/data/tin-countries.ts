@@ -1739,7 +1739,7 @@ COUNTRIES.push(
     officialSource: "https://www.ato.gov.au/", oecdSource: OECD_TIN },
   { code: "VI", nameHe: "איי הבתולה של ארצות הברית", nameEn: "Virgin Islands, U.S.", flag: "🇻🇮",
     tinNameHe: "SSN / EIN", tinNameEn: "SSN / EIN (U.S. system)",
-    individual: { name: "SSN", format: "9 ספרות: NNN-NN-NNNN", example: "123-45-6789", note: "האיים הם טריטוריה אמריקאית; תושבים אזרחי ארה"ב משתמשים ב-SSN." },
+    individual: { name: "SSN", format: "9 ספרות: NNN-NN-NNNN", example: "123-45-6789", note: "האיים הם טריטוריה אמריקאית; תושבים אזרחי ארה\"ב משתמשים ב-SSN." },
     entity: { name: "EIN", format: "9 ספרות: NN-NNNNNNN", example: "12-3456789" },
     whereToFind: [
       { label: "IRS — Taxpayer Identification Numbers", url: "https://www.irs.gov/individuals/international-taxpayers/taxpayer-identification-numbers-tin" },
