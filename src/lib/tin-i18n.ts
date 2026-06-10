@@ -1,8 +1,8 @@
 // Phrase-level translator for Hebrew TIN data (formats, names, notes, where-to-find labels).
 // Covers the most common recurring patterns. Unknown phrases fall back to Hebrew.
-import type { Lang } from "@/lib/types";
-
-type Dict = Partial<Record<Exclude<Lang, "he">, string>>;
+export type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
+type NonHe = Exclude<Lang, "he">;
+type Dict = Partial<Record<NonHe, string>>;
 
 // Whole-string exact translations (cover ~80% of formats/names by frequency)
 const EXACT: Record<string, Dict> = {
