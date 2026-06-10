@@ -664,7 +664,7 @@ function Index() {
                 size="sm"
                 onClick={() => {
                   trackEvent("export", { format: "txt", country_code: country.code });
-                  downloadTxt(country);
+                  downloadTxt(country, lang, t);
                 }}
                 className="gap-1.5"
               >
