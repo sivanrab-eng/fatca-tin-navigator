@@ -32,6 +32,9 @@ type Strings = {
   copy: string; download: string; pdf: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
   pdfOpened: string; pdfErr: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
+  exportCountry: string; exportNote: string;
+  exportWhere: (tin: string) => string;
+  exportSources: string; exportDisclaimer: string;
 };
 
 const T: Record<Lang, Strings> = {
