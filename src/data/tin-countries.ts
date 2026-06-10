@@ -1737,4 +1737,34 @@ COUNTRIES.push(
     entity: { name: "ABN", format: "11 ספרות", example: "12 345 678 901" },
     whereToFind: [{ label: "ב-ATO", url: "https://www.ato.gov.au/" }],
     officialSource: "https://www.ato.gov.au/", oecdSource: OECD_TIN },
+  { code: "VI", nameHe: "איי הבתולה של ארצות הברית", nameEn: "Virgin Islands, U.S.", flag: "🇻🇮",
+    tinNameHe: "SSN / EIN", tinNameEn: "SSN / EIN (U.S. system)",
+    individual: { name: "SSN", format: "9 ספרות: NNN-NN-NNNN", example: "123-45-6789", note: "האיים הם טריטוריה אמריקאית; תושבים אזרחי ארה\"ב משתמשים ב-SSN." },
+    entity: { name: "EIN", format: "9 ספרות: NN-NNNNNNN", example: "12-3456789" },
+    whereToFind: [
+      { label: "IRS — Taxpayer Identification Numbers", url: "https://www.irs.gov/individuals/international-taxpayers/taxpayer-identification-numbers-tin" },
+      { label: "Virgin Islands Bureau of Internal Revenue", url: "https://vi.gov/department/bureau-of-internal-revenue/" },
+      { label: "Social Security Administration", url: "https://www.ssa.gov/" }
+    ],
+    officialSource: "https://www.irs.gov/", oecdSource: OECD_TIN },
+  { code: "BQ", nameHe: "בונייר, סינט אוסטאטיוס וסאבא", nameEn: "Bonaire, Sint Eustatius and Saba", flag: "🇧🇶",
+    tinNameHe: "BSN / TIN", tinNameEn: "BSN / Tax Identification Number",
+    individual: { name: "BSN", format: "9 ספרות", example: "123456782", note: "חלק מהולנד הקריבית; לעיתים משתמשים ב-BSN הולנדי או במספר מקומי של Belastingdienst Caribisch Nederland." },
+    entity: { name: "RSIN / TIN", format: "9 ספרות", example: "123456789" },
+    whereToFind: [
+      { label: "Belastingdienst Caribisch Nederland", url: "https://www.belastingdienst-cn.nl/" },
+      { label: "Rijksdienst Caribisch Nederland", url: "https://www.rijksdienstcn.com/" },
+      { label: "הולנד — BSN", url: "https://www.government.nl/topics/personal-data/citizen-service-number-bsn" }
+    ],
+    officialSource: "https://www.belastingdienst-cn.nl/", oecdSource: OECD_TIN },
+  { code: "GF", nameHe: "גיאנה הצרפתית", nameEn: "French Guiana", flag: "🇬🇫",
+    tinNameHe: "Numéro SPI / SIREN", tinNameEn: "SPI / SIREN (French system)",
+    individual: { name: "SPI", format: "13 ספרות, מתחיל ב-0/1/2/3", example: "1234567890123", note: "מחוז מעבר לים של צרפת; משתמש במערכת המיסוי הצרפתית." },
+    entity: { name: "SIREN / SIRET", format: "SIREN: 9 ספרות · SIRET: 14 ספרות", example: "SIREN: 123456789 · SIRET: 12345678900012" },
+    whereToFind: [
+      { label: "impots.gouv.fr", url: "https://www.impots.gouv.fr/" },
+      { label: "INSEE Sirene", url: "https://www.sirene.fr/" },
+      { label: "EU TIN — French Guiana", url: "https://ec.europa.eu/taxation_customs/tin/tinByCountry.html?country=GF" }
+    ],
+    officialSource: "https://www.impots.gouv.fr/", oecdSource: OECD_TIN, euTinSource: eu("GF") },
 );
