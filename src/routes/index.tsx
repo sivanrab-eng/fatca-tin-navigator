@@ -774,16 +774,17 @@ function Index() {
   );
 }
 
-function TinBlock({ entry, t }: { entry: CountryTin["individual"]; t: (typeof T)[Lang] }) {
+function TinBlock({ entry, t, lang }: { entry: CountryTin["individual"]; t: (typeof T)[Lang]; lang: Lang }) {
+  const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   return (
     <div className="mt-2 space-y-3 rounded-xl border border-border bg-card p-5">
       <div>
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.name}</p>
-        <p className="font-semibold">{entry.name}</p>
+        <p className="font-semibold">{tr(entry.name, lang)}</p>
       </div>
       <div>
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.format}</p>
-        <p dir="rtl" className="text-sm">{entry.format}</p>
+        <p dir={dir} className="text-sm">{tr(entry.format, lang)}</p>
       </div>
       <div>
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{t.example}</p>
@@ -793,7 +794,7 @@ function TinBlock({ entry, t }: { entry: CountryTin["individual"]; t: (typeof T)
       </div>
       {entry.note && (
         <p className="rounded-md bg-muted/50 p-3 text-xs text-muted-foreground">
-          {entry.note}
+          {tr(entry.note, lang)}
         </p>
       )}
     </div>
