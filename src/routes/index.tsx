@@ -585,10 +585,10 @@ function Index() {
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="individual">
-                  <TinBlock entry={country.individual} t={t} />
+                  <TinBlock entry={country.individual} t={t} lang={lang} />
                 </TabsContent>
                 <TabsContent value="entity">
-                  <TinBlock entry={country.entity} t={t} />
+                  <TinBlock entry={country.entity} t={t} lang={lang} />
                 </TabsContent>
               </Tabs>
             </section>
