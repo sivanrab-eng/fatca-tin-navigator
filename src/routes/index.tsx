@@ -676,7 +676,7 @@ function Index() {
                 size="sm"
                 onClick={() => {
                   trackEvent("export", { format: "pdf", country_code: country.code });
-                  exportPdf(country);
+                  exportPdf(country, lang, t);
                 }}
                 className="gap-1.5"
               >
