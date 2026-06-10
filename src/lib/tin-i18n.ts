@@ -55,7 +55,7 @@ const LABEL_REPLACEMENTS: { he: RegExp; t: Dict }[] = [
 const FOR_COMPANIES: Dict = { en: " (for companies)", es: " (para empresas)", fr: " (pour les sociétés)", ru: " (для компаний)", zh: " (适用于公司)" };
 const FOR_ENTITIES: Dict = { en: " (entities)", es: " (entidades)", fr: " (entités)", ru: " (организации)", zh: " (实体)" };
 
-function translateFormat(s: string, lang: Exclude<Lang, "he">): string {
+function translateFormat(s: string, lang: NonHe): string {
   // Translate "N ספרות" / "N-M ספרות" / "עד N ספרות"
   const words = {
     digits: { en: "digits", es: "dígitos", fr: "chiffres", ru: "цифр", zh: "位数字" },
