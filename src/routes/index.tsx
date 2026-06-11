@@ -333,8 +333,8 @@ function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
 </style></head><body>
 <header>
   <h1>${esc(t.title)}</h1>
-  <div class="sub"><span class="flag">${esc(country.flag)}</span><strong>${esc(cName)}</strong> <span style="color:#888">(${esc(cNameAlt)})</span></div>
-  <div class="sub" style="margin-top:4px"><strong>${esc(t.localName)}:</strong> ${esc(cTin)} / ${esc(cTinAlt)}</div>
+  <div class="sub"><span class="flag">${esc(country.flag)}</span><strong>${esc(cName)}</strong>${cNameAlt ? ` <span style="color:#888">(${esc(cNameAlt)})</span>` : ""}</div>
+  <div class="sub" style="margin-top:4px"><strong>${esc(t.localName)}:</strong> ${esc(cTin)}${cTinAlt ? ` / ${esc(cTinAlt)}` : ""}</div>
 </header>
 
 ${block(t.individual, country.individual)}
