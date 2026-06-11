@@ -280,9 +280,9 @@ async function copyToClipboard(country: CountryTin, lang: Lang, t: Strings) {
 function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   const cName = lang === "he" ? country.nameHe : country.nameEn;
-  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cNameAlt = lang === "he" ? country.nameEn : "";
   const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
-  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
+  const cTinAlt = lang === "he" ? country.tinNameEn : "";
   const esc = (s: string) =>
     String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const link = (url?: string, label?: string) =>
