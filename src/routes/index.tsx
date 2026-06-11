@@ -193,15 +193,15 @@ const T: Record<Lang, Strings> = {
 
 function buildExportText(country: CountryTin, lang: Lang, t: Strings): string {
   const cName = lang === "he" ? country.nameHe : country.nameEn;
-  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cNameAlt = lang === "he" ? country.nameEn : "";
   const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
-  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
+  const cTinAlt = lang === "he" ? country.tinNameEn : "";
   const sep = "────────────────────────────────────────";
   const lines: string[] = [];
   lines.push(t.title);
   lines.push(sep);
-  lines.push(`${t.exportCountry}: ${country.flag}  ${cName}  (${cNameAlt})`);
-  lines.push(`${t.localName}: ${cTin}  /  ${cTinAlt}`);
+  lines.push(`${t.exportCountry}: ${country.flag}  ${cName}${cNameAlt ? `  (${cNameAlt})` : ""}`);
+  lines.push(`${t.localName}: ${cTin}${cTinAlt ? `  /  ${cTinAlt}` : ""}`);
   lines.push("");
   lines.push(`▌ ${t.individual}`);
   lines.push(`  • ${t.name}:    ${tr(country.individual.name, lang)}`);
@@ -280,9 +280,9 @@ async function copyToClipboard(country: CountryTin, lang: Lang, t: Strings) {
 function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   const cName = lang === "he" ? country.nameHe : country.nameEn;
-  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cNameAlt = lang === "he" ? country.nameEn : "";
   const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
-  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
+  const cTinAlt = lang === "he" ? country.tinNameEn : "";
   const esc = (s: string) =>
     String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const link = (url?: string, label?: string) =>
@@ -333,8 +333,8 @@ function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
 </style></head><body>
 <header>
   <h1>${esc(t.title)}</h1>
-  <div class="sub"><span class="flag">${esc(country.flag)}</span><strong>${esc(cName)}</strong> <span style="color:#888">(${esc(cNameAlt)})</span></div>
-  <div class="sub" style="margin-top:4px"><strong>${esc(t.localName)}:</strong> ${esc(cTin)} / ${esc(cTinAlt)}</div>
+  <div class="sub"><span class="flag">${esc(country.flag)}</span><strong>${esc(cName)}</strong>${cNameAlt ? ` <span style="color:#888">(${esc(cNameAlt)})</span>` : ""}</div>
+  <div class="sub" style="margin-top:4px"><strong>${esc(t.localName)}:</strong> ${esc(cTin)}${cTinAlt ? ` / ${esc(cTinAlt)}` : ""}</div>
 </header>
 
 ${block(t.individual, country.individual)}
@@ -499,10 +499,10 @@ function Index() {
               {sorted.map((c) => (
                 <SelectItem key={c.code} value={c.code} className="text-base">
                   <span className={dir === "rtl" ? "ml-2" : "mr-2"}>{c.flag}</span>
-                  {cName(c)}{" "}
-                  <span className="text-muted-foreground text-xs">
-                    ({lang === "he" ? c.nameEn : c.nameHe})
-                  </span>
+                  {cName(c)}
+                  {lang === "he" && (
+                    <span className="text-muted-foreground text-xs"> ({c.nameEn})</span>
+                  )}
                 </SelectItem>
               ))}
             </SelectContent>
