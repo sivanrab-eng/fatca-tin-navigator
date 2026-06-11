@@ -239,6 +239,7 @@ function translateFormat(s: string, lang: NonHe): string {
     "האלבנית": { en: "(Albanian)", es: "(albanés)", fr: "(albanaise)", ru: "(албанское)", zh: "(阿尔巴尼亚)" },
     "אלבנית": { en: "(Albanian)", es: "(albanés)", fr: "(albanaise)", ru: "(албанское)", zh: "(阿尔巴尼亚)" },
     "הגאורגית": { en: "(Georgian)", es: "(georgiano)", fr: "(géorgienne)", ru: "(грузинское)", zh: "(格鲁吉亚)" },
+    "גאורגית": { en: "(Georgian)", es: "(georgiano)", fr: "(géorgienne)", ru: "(грузинское)", zh: "(格鲁吉亚)" },
     "המולדבית": { en: "(Moldovan)", es: "(moldavo)", fr: "(moldave)", ru: "(молдавское)", zh: "(摩尔多瓦)" },
     "המונטנגרית": { en: "(Montenegrin)", es: "(montenegrino)", fr: "(monténégrine)", ru: "(черногорское)", zh: "(黑山)" },
     "המקדונית": { en: "(Macedonian)", es: "(macedonio)", fr: "(macédonienne)", ru: "(македонское)", zh: "(北马其顿)" },
