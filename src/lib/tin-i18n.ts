@@ -61,6 +61,9 @@ const EXACT: Record<string, Dict> = {
   "הספרה האחרונה היא ספרת ביקורת.": { en: "The last digit is a check digit.", es: "El último dígito es de control.", fr: "Le dernier chiffre est un chiffre de contrôle.", ru: "Последняя цифра — контрольная.", zh: "最后一位是校验位。" },
   "ITIN מתחיל תמיד ב-9.": { en: "ITIN always begins with 9.", es: "El ITIN siempre empieza por 9.", fr: "L'ITIN commence toujours par 9.", ru: "ITIN всегда начинается с 9.", zh: "ITIN 始终以 9 开头。" },
   "ל-FATCA/CRS משתמשים ב-UTR אם מגישים Self Assessment, אחרת NINO.": { en: "For FATCA/CRS use UTR if filing Self Assessment, otherwise NINO.", es: "Para FATCA/CRS use UTR si presenta Self Assessment, de lo contrario NINO.", fr: "Pour FATCA/CRS, utilisez l'UTR si vous déposez Self Assessment, sinon NINO.", ru: "Для FATCA/CRS используйте UTR при подаче Self Assessment, иначе NINO.", zh: "用于 FATCA/CRS: 提交 Self Assessment 时使用 UTR，否则使用 NINO。" },
+  "האיים הם טריטוריה אמריקאית; תושבים אזרחי ארה\"ב משתמשים ב-SSN.": { en: "The islands are a U.S. territory; residents who are U.S. citizens use an SSN.", es: "Las islas son un territorio de EE. UU.; los residentes ciudadanos estadounidenses usan el SSN.", fr: "Les îles sont un territoire américain ; les résidents citoyens américains utilisent le SSN.", ru: "Острова — территория США; резиденты-граждане США используют SSN.", zh: "这些岛屿是美国领土；具有美国国籍的居民使用 SSN。" },
+  "הולנד — BSN": { en: "Netherlands — BSN", es: "Países Bajos — BSN", fr: "Pays-Bas — BSN", ru: "Нидерланды — BSN", zh: "荷兰 — BSN" },
+  "בכרטיס הזהות הבלגי (eID)": { en: "On the Belgian ID card (eID)", es: "En el DNI belga (eID)", fr: "Sur la carte d'identité belge (eID)", ru: "На бельгийском удостоверении (eID)", zh: "在比利时身份证 (eID)" },
 };
 
 // Common Hebrew "where to find" label prefixes/keywords
@@ -118,9 +121,13 @@ const LABEL_REPLACEMENTS: { he: RegExp; t: Dict }[] = [
   { he: /^באישור /, t: { en: "On the certificate ", es: "En el certificado ", fr: "Sur l'attestation ", ru: "В справке ", zh: "在证明 " } },
   { he: /^באפליקציית /, t: { en: "In the app ", es: "En la aplicación ", fr: "Dans l'application ", ru: "В приложении ", zh: "在应用程序 " } },
   { he: /^ברשם החברות \(לחברות\)$/, t: { en: "At the Companies Registrar (entities)", es: "En el Registro de Empresas (entidades)", fr: "Au Registre des sociétés (entités)", ru: "В реестре компаний (организации)", zh: "在公司注册处 (实体)" } },
+  { he: /^ברשם החברות$/, t: { en: "At the Companies Registrar", es: "En el Registro de Empresas", fr: "Au Registre des sociétés", ru: "В реестре компаний", zh: "在公司注册处" } },
+  { he: /^ברשם החברות /, t: { en: "At the Companies Registrar ", es: "En el Registro de Empresas ", fr: "Au Registre des sociétés ", ru: "В реестре компаний ", zh: "在公司注册处 " } },
   { he: /^ברשם המאוחד /, t: { en: "At the unified registry ", es: "En el registro unificado ", fr: "Au registre unifié ", ru: "В едином реестре ", zh: "在统一登记处 " } },
   { he: /^ברשם /, t: { en: "At the registrar ", es: "En el registro ", fr: "Au registre ", ru: "В реестре ", zh: "在登记处 " } },
-  { he: /^ב-?/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
+  // Only strip leading "ב-" / "ב" when followed by a Latin letter/digit (org name), never when it begins a Hebrew word
+  { he: /^ב-(?=[\p{L}\d])(?![\u0590-\u05FF])/u, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
+  { he: /^ב(?=[A-Za-z\d])/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
 ];
 
 const FOR_COMPANIES: Dict = { en: " (for companies)", es: " (para empresas)", fr: " (pour les sociétés)", ru: " (для компаний)", zh: " (适用于公司)" };
@@ -196,12 +203,68 @@ function translateFormat(s: string, lang: NonHe): string {
   out = out.replace(/\(תושב\)/g, `(${w.resident[lang]})`);
   out = out.replace(/\(אזרח\/תושב\)/g, `(${w.citizenResident[lang]})`);
   out = out.replace(/\(מספר זהות לאומי\)/g, `(${w.nationalId[lang]})`);
-  out = out.replace(/\bאו\b/g, w.or[lang]);
-  out = out.replace(/רשם האוכלוסין/g, w.populationRegistry[lang]);
-  out = out.replace(/רשות המסים/g, w.tax[lang]);
-  out = out.replace(/שירות המסים/g, w.tax[lang]);
-  out = out.replace(/ועדת ההכנסות/g, w.tax[lang]);
-  out = out.replace(/רשות העקיפה/g, w.tax[lang]);
+  // Connectors and bare tokens (no ASCII word boundaries around Hebrew)
+  out = out.replace(/(^|[\s(])או(?=[\s)]|$)/g, `$1${w.or[lang]}`);
+  out = out.replace(/(^|\s)או ב-?(?=[A-Za-z0-9])/g, `$1${w.or[lang]} `);
+  out = out.replace(/(^|\s)או ב/g, `$1${w.or[lang]} `);
+  out = out.replace(/ובטופס /g, ` + ${{ en: "form ", es: "formulario ", fr: "formulaire ", ru: "форма ", zh: "表格 " }[lang]}`);
+  out = out.replace(/ובמכתב /g, ` + ${{ en: "letter ", es: "carta ", fr: "lettre ", ru: "письмо ", zh: "信函 " }[lang]}`);
+  out = out.replace(/ובמסמכי /g, ` + ${{ en: "documents of ", es: "documentos de ", fr: "documents de ", ru: "документы ", zh: "文件 " }[lang]}`);
+  out = out.replace(/בתלוש שכר/g, { en: "on payslip", es: "en la nómina", fr: "sur le bulletin de paie", ru: "в расчётном листке", zh: "在工资单" }[lang]);
+  out = out.replace(/בהחזרי מס/g, { en: "on tax returns", es: "en las declaraciones", fr: "sur les déclarations", ru: "в возвратах налога", zh: "在退税" }[lang]);
+  out = out.replace(/בספח/g, { en: "in appendix", es: "en el anexo", fr: "dans l'annexe", ru: "в приложении", zh: "在附页" }[lang]);
+  out = out.replace(/שהוגש לעסק/g, { en: "filed for the business", es: "presentado para la empresa", fr: "déposé pour l'entreprise", ru: "поданный за бизнес", zh: "为企业提交" }[lang]);
+  out = out.replace(/קופת הפיצויים/g, { en: "severance fund", es: "fondo de indemnización", fr: "caisse d'indemnités", ru: "фонд выходных пособий", zh: "解雇金基金" }[lang]);
+  out = out.replace(/קרן פנסיה/g, { en: "pension fund", es: "fondo de pensiones", fr: "caisse de retraite", ru: "пенсионный фонд", zh: "养老基金" }[lang]);
+  out = out.replace(/קנטונלית/g, { en: "(cantonal)", es: "(cantonal)", fr: "(cantonal)", ru: "(кантональная)", zh: "(州级)" }[lang]);
+  out = out.replace(/של IRD/g, { en: "from IRD", es: "del IRD", fr: "de l'IRD", ru: "от IRD", zh: "由 IRD" }[lang]);
+  out = out.replace(/בקשה מקוונת/g, { en: "online request", es: "solicitud en línea", fr: "demande en ligne", ru: "онлайн-запрос", zh: "在线申请" }[lang]);
+  out = out.replace(/אזור אישי/g, { en: "personal area", es: "área personal", fr: "espace personnel", ru: "личный кабинет", zh: "个人区域" }[lang]);
+  out = out.replace(/רשם החברות/g, { en: "Companies Registrar", es: "Registro de Empresas", fr: "Registre des sociétés", ru: "Реестр компаний", zh: "公司注册处" }[lang]);
+  out = out.replace(/רשם האוכלוסין/g, { en: "population registry", es: "registro de población", fr: "registre de la population", ru: "реестр населения", zh: "人口登记处" }[lang]);
+  out = out.replace(/רשות המסים/g, { en: "tax authority", es: "autoridad fiscal", fr: "administration fiscale", ru: "налоговый орган", zh: "税务机关" }[lang]);
+  out = out.replace(/שירות המסים/g, { en: "tax service", es: "servicio fiscal", fr: "service fiscal", ru: "налоговая служба", zh: "税务服务" }[lang]);
+  out = out.replace(/ועדת ההכנסות/g, { en: "revenue committee", es: "comité de ingresos", fr: "comité des recettes", ru: "комитет доходов", zh: "税务委员会" }[lang]);
+  out = out.replace(/רשות העקיפה/g, { en: "indirect tax authority", es: "autoridad de impuestos indirectos", fr: "autorité des impôts indirects", ru: "управление косвенных налогов", zh: "间接税务机关" }[lang]);
+  out = out.replace(/(^|\s)במכתב /g, `$1${{ en: "on letter ", es: "en la carta ", fr: "sur la lettre ", ru: "в письме ", zh: "在信函 " }[lang]}`);
+  out = out.replace(/(^|\s)מ-?(?=[A-Za-z\u00C0-\u024F])/g, `$1${{ en: "from ", es: "de ", fr: "de ", ru: "от ", zh: "来自 " }[lang]}`);
+  out = out.replace(/(^|\s)מה-?(?=[A-Za-z])/g, `$1${{ en: "from ", es: "del ", fr: "du ", ru: "от ", zh: "来自 " }[lang]}`);
+  out = out.replace(/הפלסטיק/g, { en: "(plastic)", es: "(plástico)", fr: "(plastique)", ru: "(пластиковая)", zh: "(塑料)" }[lang]);
+  out = out.replace(/הזהות הבלגי/g, { en: "Belgian ID", es: "DNI belga", fr: "carte d'identité belge", ru: "бельгийское удостоверение", zh: "比利时身份证" }[lang]);
+  // Bare standalone tokens (after numeric replacements above)
+  out = out.replace(/(^|[\s+(])אות(?=[\s)+]|$)/g, `$1${w.letter[lang]}`);
+  out = out.replace(/(^|[\s+(])אותיות(?=[\s)+]|$)/g, `$1${w.letters[lang]}`);
+  out = out.replace(/(^|[\s+(])ספרות(?=[\s)+]|$)/g, `$1${w.digits[lang]}`);
+  out = out.replace(/(^|\s)סניף(?=\s|$)/g, `$1${w.branch[lang]}`);
+  out = out.replace(/אותיות\/ספרות/g, `${w.letters[lang]}/${w.digits[lang]}`);
+  // Country adjectives following "national ID " / "passport "
+  const adj: Record<string, Record<NonHe, string>> = {
+    "האלבנית": { en: "(Albanian)", es: "(albanés)", fr: "(albanaise)", ru: "(албанское)", zh: "(阿尔巴尼亚)" },
+    "אלבנית": { en: "(Albanian)", es: "(albanés)", fr: "(albanaise)", ru: "(албанское)", zh: "(阿尔巴尼亚)" },
+    "הגאורגית": { en: "(Georgian)", es: "(georgiano)", fr: "(géorgienne)", ru: "(грузинское)", zh: "(格鲁吉亚)" },
+    "גאורגית": { en: "(Georgian)", es: "(georgiano)", fr: "(géorgienne)", ru: "(грузинское)", zh: "(格鲁吉亚)" },
+    "המולדבית": { en: "(Moldovan)", es: "(moldavo)", fr: "(moldave)", ru: "(молдавское)", zh: "(摩尔多瓦)" },
+    "מולדבית": { en: "(Moldovan)", es: "(moldavo)", fr: "(moldave)", ru: "(молдавское)", zh: "(摩尔多瓦)" },
+    "המונטנגרית": { en: "(Montenegrin)", es: "(montenegrino)", fr: "(monténégrine)", ru: "(черногорское)", zh: "(黑山)" },
+    "מונטנגרית": { en: "(Montenegrin)", es: "(montenegrino)", fr: "(monténégrine)", ru: "(черногорское)", zh: "(黑山)" },
+    "המקדונית": { en: "(Macedonian)", es: "(macedonio)", fr: "(macédonienne)", ru: "(македонское)", zh: "(北马其顿)" },
+    "מקדונית": { en: "(Macedonian)", es: "(macedonio)", fr: "(macédonienne)", ru: "(македонское)", zh: "(北马其顿)" },
+    "הסרבית": { en: "(Serbian)", es: "(serbio)", fr: "(serbe)", ru: "(сербское)", zh: "(塞尔维亚)" },
+    "סרבית": { en: "(Serbian)", es: "(serbio)", fr: "(serbe)", ru: "(сербское)", zh: "(塞尔维亚)" },
+    "הקזחית": { en: "(Kazakh)", es: "(kazajo)", fr: "(kazakhe)", ru: "(казахстанское)", zh: "(哈萨克)" },
+    "קזחית": { en: "(Kazakh)", es: "(kazajo)", fr: "(kazakhe)", ru: "(казахстанское)", zh: "(哈萨克)" },
+    "בולגרית": { en: "(Bulgarian)", es: "(búlgaro)", fr: "(bulgare)", ru: "(болгарское)", zh: "(保加利亚)" },
+    "פולנית": { en: "(Polish)", es: "(polaco)", fr: "(polonaise)", ru: "(польское)", zh: "(波兰)" },
+    "צ׳כית": { en: "(Czech)", es: "(checo)", fr: "(tchèque)", ru: "(чешское)", zh: "(捷克)" },
+    "רומנית": { en: "(Romanian)", es: "(rumano)", fr: "(roumaine)", ru: "(румынское)", zh: "(румынское)" },
+    "הולנדית": { en: "(Dutch)", es: "(neerlandés)", fr: "(néerlandaise)", ru: "(голландское)", zh: "(荷兰)" },
+    "הולנדי": { en: "(Dutch)", es: "(neerlandés)", fr: "(néerlandais)", ru: "(голландское)", zh: "(荷兰)" },
+    "שוודי": { en: "(Swedish)", es: "(sueco)", fr: "(suédois)", ru: "(шведское)", zh: "(瑞典)" },
+    "ישראלי": { en: "(Israeli)", es: "(israelí)", fr: "(israélien)", ru: "(израильское)", zh: "(以色列)" },
+  };
+  for (const [he, dict] of Object.entries(adj)) {
+    out = out.replace(new RegExp(`\\s${he}(?=$|[\\s.,)])`, "g"), ` ${dict[lang]}`);
+  }
   return out;
 }
 
