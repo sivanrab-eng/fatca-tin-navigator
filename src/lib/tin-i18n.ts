@@ -218,6 +218,14 @@ function translateFormat(s: string, lang: NonHe): string {
   out = out.replace(/בקשה מקוונת/g, { en: "online request", es: "solicitud en línea", fr: "demande en ligne", ru: "онлайн-запрос", zh: "在线申请" }[lang]);
   out = out.replace(/אזור אישי/g, { en: "personal area", es: "área personal", fr: "espace personnel", ru: "личный кабинет", zh: "个人区域" }[lang]);
   out = out.replace(/רשם החברות/g, { en: "Companies Registrar", es: "Registro de Empresas", fr: "Registre des sociétés", ru: "Реестр компаний", zh: "公司注册处" }[lang]);
+  out = out.replace(/רשם האוכלוסין/g, { en: "population registry", es: "registro de población", fr: "registre de la population", ru: "реестр населения", zh: "人口登记处" }[lang]);
+  out = out.replace(/רשות המסים/g, { en: "tax authority", es: "autoridad fiscal", fr: "administration fiscale", ru: "налоговый орган", zh: "税务机关" }[lang]);
+  out = out.replace(/שירות המסים/g, { en: "tax service", es: "servicio fiscal", fr: "service fiscal", ru: "налоговая служба", zh: "税务服务" }[lang]);
+  out = out.replace(/ועדת ההכנסות/g, { en: "revenue committee", es: "comité de ingresos", fr: "comité des recettes", ru: "комитет доходов", zh: "税务委员会" }[lang]);
+  out = out.replace(/רשות העקיפה/g, { en: "indirect tax authority", es: "autoridad de impuestos indirectos", fr: "autorité des impôts indirects", ru: "управление косвенных налогов", zh: "间接税务机关" }[lang]);
+  out = out.replace(/(^|\s)במכתב /g, `$1${{ en: "on letter ", es: "en la carta ", fr: "sur la lettre ", ru: "в письме ", zh: "在信函 " }[lang]}`);
+  out = out.replace(/(^|\s)מ-?(?=[A-Za-z\u00C0-\u024F])/g, `$1${{ en: "from ", es: "de ", fr: "de ", ru: "от ", zh: "来自 " }[lang]}`);
+  out = out.replace(/(^|\s)מה-?(?=[A-Za-z])/g, `$1${{ en: "from ", es: "del ", fr: "du ", ru: "от ", zh: "来自 " }[lang]}`);
   out = out.replace(/הפלסטיק/g, { en: "(plastic)", es: "(plástico)", fr: "(plastique)", ru: "(пластиковая)", zh: "(塑料)" }[lang]);
   out = out.replace(/הזהות הבלגי/g, { en: "Belgian ID", es: "DNI belga", fr: "carte d'identité belge", ru: "бельгийское удостоверение", zh: "比利时身份证" }[lang]);
   // Bare standalone tokens (after numeric replacements above)
