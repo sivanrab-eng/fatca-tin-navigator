@@ -120,7 +120,9 @@ const LABEL_REPLACEMENTS: { he: RegExp; t: Dict }[] = [
   { he: /^ברשם החברות \(לחברות\)$/, t: { en: "At the Companies Registrar (entities)", es: "En el Registro de Empresas (entidades)", fr: "Au Registre des sociétés (entités)", ru: "В реестре компаний (организации)", zh: "在公司注册处 (实体)" } },
   { he: /^ברשם המאוחד /, t: { en: "At the unified registry ", es: "En el registro unificado ", fr: "Au registre unifié ", ru: "В едином реестре ", zh: "在统一登记处 " } },
   { he: /^ברשם /, t: { en: "At the registrar ", es: "En el registro ", fr: "Au registre ", ru: "В реестре ", zh: "在登记处 " } },
-  { he: /^ב-?/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
+  // Only strip leading "ב-" when followed by a Latin/digit identifier (org name), not when it begins a Hebrew word
+  { he: /^ב-(?=[A-Za-z0-9])/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
+  { he: /^ב(?=[A-Za-z0-9])/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
 ];
 
 const FOR_COMPANIES: Dict = { en: " (for companies)", es: " (para empresas)", fr: " (pour les sociétés)", ru: " (для компаний)", zh: " (适用于公司)" };
