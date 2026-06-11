@@ -499,10 +499,10 @@ function Index() {
               {sorted.map((c) => (
                 <SelectItem key={c.code} value={c.code} className="text-base">
                   <span className={dir === "rtl" ? "ml-2" : "mr-2"}>{c.flag}</span>
-                  {cName(c)}{" "}
-                  <span className="text-muted-foreground text-xs">
-                    ({lang === "he" ? c.nameEn : c.nameHe})
-                  </span>
+                  {cName(c)}
+                  {lang === "he" && (
+                    <span className="text-muted-foreground text-xs"> ({c.nameEn})</span>
+                  )}
                 </SelectItem>
               ))}
             </SelectContent>
