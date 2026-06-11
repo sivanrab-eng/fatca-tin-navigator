@@ -193,9 +193,9 @@ const T: Record<Lang, Strings> = {
 
 function buildExportText(country: CountryTin, lang: Lang, t: Strings): string {
   const cName = lang === "he" ? country.nameHe : country.nameEn;
-  const cNameAlt = lang === "he" ? country.nameEn : country.nameHe;
+  const cNameAlt = lang === "he" ? country.nameEn : "";
   const cTin = lang === "he" ? country.tinNameHe : country.tinNameEn;
-  const cTinAlt = lang === "he" ? country.tinNameEn : country.tinNameHe;
+  const cTinAlt = lang === "he" ? country.tinNameEn : "";
   const sep = "────────────────────────────────────────";
   const lines: string[] = [];
   lines.push(t.title);
