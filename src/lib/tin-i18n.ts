@@ -118,11 +118,13 @@ const LABEL_REPLACEMENTS: { he: RegExp; t: Dict }[] = [
   { he: /^באישור /, t: { en: "On the certificate ", es: "En el certificado ", fr: "Sur l'attestation ", ru: "В справке ", zh: "在证明 " } },
   { he: /^באפליקציית /, t: { en: "In the app ", es: "En la aplicación ", fr: "Dans l'application ", ru: "В приложении ", zh: "在应用程序 " } },
   { he: /^ברשם החברות \(לחברות\)$/, t: { en: "At the Companies Registrar (entities)", es: "En el Registro de Empresas (entidades)", fr: "Au Registre des sociétés (entités)", ru: "В реестре компаний (организации)", zh: "在公司注册处 (实体)" } },
+  { he: /^ברשם החברות$/, t: { en: "At the Companies Registrar", es: "En el Registro de Empresas", fr: "Au Registre des sociétés", ru: "В реестре компаний", zh: "在公司注册处" } },
+  { he: /^ברשם החברות /, t: { en: "At the Companies Registrar ", es: "En el Registro de Empresas ", fr: "Au Registre des sociétés ", ru: "В реестре компаний ", zh: "在公司注册处 " } },
   { he: /^ברשם המאוחד /, t: { en: "At the unified registry ", es: "En el registro unificado ", fr: "Au registre unifié ", ru: "В едином реестре ", zh: "在统一登记处 " } },
   { he: /^ברשם /, t: { en: "At the registrar ", es: "En el registro ", fr: "Au registre ", ru: "В реестре ", zh: "在登记处 " } },
-  // Only strip leading "ב-" when followed by a Latin/digit identifier (org name), not when it begins a Hebrew word
-  { he: /^ב-(?=[A-Za-z0-9])/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
-  { he: /^ב(?=[A-Za-z0-9])/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
+  // Only strip leading "ב-" / "ב" when followed by a Latin letter/digit (org name), never when it begins a Hebrew word
+  { he: /^ב-(?=[\p{L}\d])(?![\u0590-\u05FF])/u, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
+  { he: /^ב(?=[A-Za-z\d])/, t: { en: "At ", es: "En ", fr: "Sur ", ru: "В ", zh: "在 " } },
 ];
 
 const FOR_COMPANIES: Dict = { en: " (for companies)", es: " (para empresas)", fr: " (pour les sociétés)", ru: " (для компаний)", zh: " (适用于公司)" };
