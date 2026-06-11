@@ -63,6 +63,7 @@ const EXACT: Record<string, Dict> = {
   "ל-FATCA/CRS משתמשים ב-UTR אם מגישים Self Assessment, אחרת NINO.": { en: "For FATCA/CRS use UTR if filing Self Assessment, otherwise NINO.", es: "Para FATCA/CRS use UTR si presenta Self Assessment, de lo contrario NINO.", fr: "Pour FATCA/CRS, utilisez l'UTR si vous déposez Self Assessment, sinon NINO.", ru: "Для FATCA/CRS используйте UTR при подаче Self Assessment, иначе NINO.", zh: "用于 FATCA/CRS: 提交 Self Assessment 时使用 UTR，否则使用 NINO。" },
   "האיים הם טריטוריה אמריקאית; תושבים אזרחי ארה\"ב משתמשים ב-SSN.": { en: "The islands are a U.S. territory; residents who are U.S. citizens use an SSN.", es: "Las islas son un territorio de EE. UU.; los residentes ciudadanos estadounidenses usan el SSN.", fr: "Les îles sont un territoire américain ; les résidents citoyens américains utilisent le SSN.", ru: "Острова — территория США; резиденты-граждане США используют SSN.", zh: "这些岛屿是美国领土；具有美国国籍的居民使用 SSN。" },
   "הולנד — BSN": { en: "Netherlands — BSN", es: "Países Bajos — BSN", fr: "Pays-Bas — BSN", ru: "Нидерланды — BSN", zh: "荷兰 — BSN" },
+  "בכרטיס הזהות הבלגי (eID)": { en: "On the Belgian ID card (eID)", es: "En el DNI belga (eID)", fr: "Sur la carte d'identité belge (eID)", ru: "На бельгийском удостоверении (eID)", zh: "在比利时身份证 (eID)" },
 };
 
 // Common Hebrew "where to find" label prefixes/keywords
