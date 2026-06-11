@@ -200,8 +200,8 @@ function buildExportText(country: CountryTin, lang: Lang, t: Strings): string {
   const lines: string[] = [];
   lines.push(t.title);
   lines.push(sep);
-  lines.push(`${t.exportCountry}: ${country.flag}  ${cName}  (${cNameAlt})`);
-  lines.push(`${t.localName}: ${cTin}  /  ${cTinAlt}`);
+  lines.push(`${t.exportCountry}: ${country.flag}  ${cName}${cNameAlt ? `  (${cNameAlt})` : ""}`);
+  lines.push(`${t.localName}: ${cTin}${cTinAlt ? `  /  ${cTinAlt}` : ""}`);
   lines.push("");
   lines.push(`▌ ${t.individual}`);
   lines.push(`  • ${t.name}:    ${tr(country.individual.name, lang)}`);
