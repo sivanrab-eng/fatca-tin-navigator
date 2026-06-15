@@ -381,23 +381,24 @@ ${block(t.entity, country.entity)}
 <footer>${esc(t.exportDisclaimer)}</footer>
 </body></html>`;
 
-  const iframe = document.createElement("iframe");
-  iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0";
-  document.body.appendChild(iframe);
-  const doc = iframe.contentDocument;
-  if (!doc) { toast.error(t.pdfErr); return; }
-  doc.open(); doc.write(html); doc.close();
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, "_blank");
+  if (!win) {
+    toast.error(t.pdfErr);
+    URL.revokeObjectURL(url);
+    return;
+  }
   setTimeout(() => {
     try {
-      iframe.contentWindow?.focus();
-      iframe.contentWindow?.print();
+      win.focus();
+      win.print();
       toast.success(t.pdfOpened);
     } catch (e) {
       console.error(e);
-      toast.error(t.pdfErr);
     }
-    setTimeout(() => iframe.remove(), 2000);
-  }, 200);
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }, 400);
 }
 
 export const Route = createFileRoute("/")({
@@ -443,6 +444,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [code, setCode] = useState<string>("");
   const [lang, setLang] = useState<Lang>("he");
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     try {
       const saved = localStorage.getItem("tin_lang");
@@ -518,22 +520,66 @@ function Index() {
           <label htmlFor="country" className="block text-sm font-semibold">
             {t.step1}
           </label>
-          <Select value={code} onValueChange={handleCountryChange}>
-            <SelectTrigger id="country" className="h-12 text-base">
-              <SelectValue placeholder={t.placeholder} />
-            </SelectTrigger>
-            <SelectContent className="max-h-[60vh]">
-              {sorted.map((c) => (
-                <SelectItem key={c.code} value={c.code} textValue={cName(c)} className="text-base">
-                  <span className={dir === "rtl" ? "ml-2" : "mr-2"}>{c.flag}</span>
-                  {cName(c)}
-                  {lang === "he" && (
-                    <span className="text-muted-foreground text-xs"> ({c.nameEn})</span>
-                  )}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                id="country"
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="h-12 w-full justify-between text-base"
+              >
+                {code ? (
+                  <span className="flex items-center truncate">
+                    <span className={cn("inline-block", dir === "rtl" ? "ml-2" : "mr-2")}>
+                      {country?.flag ?? COUNTRIES.find((c) => c.code === code)?.flag}
+                    </span>
+                    <span className="truncate">
+                      {country ? cName(country) : COUNTRIES.find((c) => c.code === code)?.nameEn}
+                    </span>
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">{t.placeholder}</span>
+                )}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+              <Command>
+                <CommandInput placeholder={t.placeholder} className="h-10" />
+                <CommandList className="max-h-[60vh]">
+                  <CommandEmpty>{t.noResults}</CommandEmpty>
+                  <CommandGroup>
+                    {sorted.map((c) => (
+                      <CommandItem
+                        key={c.code}
+                        value={cName(c) + " " + c.code}
+                        onSelect={() => {
+                          handleCountryChange(c.code);
+                          setOpen(false);
+                        }}
+                        className="text-base"
+                      >
+                        <span className={cn("inline-block", dir === "rtl" ? "ml-2" : "mr-2")}>{c.flag}</span>
+                        <span className="flex-1 truncate">
+                          {highlightMatch(cName(c), "")}
+                          {lang === "he" && (
+                            <span className="text-muted-foreground text-xs"> ({c.nameEn})</span>
+                          )}
+                        </span>
+                        <Check
+                          className={cn(
+                            "ml-auto h-4 w-4 shrink-0",
+                            code === c.code ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </section>
 
         {!country && (
