@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { COUNTRIES, getLastUpdated, type CountryTin } from "@/data/tin-countries";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -857,6 +857,10 @@ function Index() {
             {t.legalText}
           </p>
           <p>
+            <Link to="/faq" className="text-primary hover:underline">
+              שאלות נפוצות
+            </Link>
+            {" · "}
             {t.sourcesFooter}{" "}
             <a
               href="https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
