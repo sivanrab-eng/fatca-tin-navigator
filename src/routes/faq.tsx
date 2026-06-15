@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { HelpCircle, ArrowRight } from "lucide-react";
+import { HelpCircle, ArrowRight, Download } from "lucide-react";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -104,6 +104,23 @@ function FaqPage() {
         <p className="text-sm text-muted-foreground">
           תשובות לשאלות הנפוצות ביותר על TIN, FATCA, CRS ואיך להשתמש במאתר.
         </p>
+
+        <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <Download className="h-5 w-5 text-primary shrink-0" />
+            <h2 className="text-sm font-semibold">רוצה לייצא תוצאות TIN?</h2>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            בחר מדינה בדף הבית וקבל מידע מלא על מספר זיהוי המס — כולל אפשרות להעתיק, להוריד כקובץ טקסט או לייצא ל-PDF.
+          </p>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            <ArrowRight className="h-4 w-4 rotate-180" />
+            מעבר לדף הייצוא
+          </Link>
+        </div>
 
         <Accordion type="multiple" className="space-y-2">
           {faqs.map((faq, i) => (
