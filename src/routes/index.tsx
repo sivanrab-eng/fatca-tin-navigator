@@ -559,6 +559,7 @@ function Index() {
               </Button>
             </PopoverTrigger>
             <PopoverContent
+              ref={popoverRef}
               dir={dir}
               className="w-[--radix-popover-trigger-width] p-0"
               align={dir === "rtl" ? "end" : "start"}
