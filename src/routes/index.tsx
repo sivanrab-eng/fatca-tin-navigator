@@ -497,7 +497,7 @@ function Index() {
             </SelectTrigger>
             <SelectContent className="max-h-[60vh]">
               {sorted.map((c) => (
-                <SelectItem key={c.code} value={c.code} className="text-base">
+                <SelectItem key={c.code} value={c.code} textValue={cName(c)} className="text-base">
                   <span className={dir === "rtl" ? "ml-2" : "mr-2"}>{c.flag}</span>
                   {cName(c)}
                   {lang === "he" && (
