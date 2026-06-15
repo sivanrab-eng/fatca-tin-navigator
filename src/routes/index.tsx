@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { tr } from "@/lib/tin-i18n";
 import { cn } from "@/lib/utils";
 import { InstallButton } from "@/components/InstallButton";
+import { useOverflowCheck } from "@/lib/use-overflow-check";
 
 type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
 
