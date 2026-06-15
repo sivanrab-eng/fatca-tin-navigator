@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { HelpCircle, ArrowRight } from "lucide-react";
+import { HelpCircle, ArrowRight, Download } from "lucide-react";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
