@@ -1,14 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { COUNTRIES, getLastUpdated, type CountryTin } from "@/data/tin-countries";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { tr } from "@/lib/tin-i18n";
+import { cn } from "@/lib/utils";
 
 type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
 
