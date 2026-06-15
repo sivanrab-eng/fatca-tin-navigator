@@ -201,6 +201,23 @@ const T: Record<Lang, Strings> = {
   },
 };
 
+function highlightMatch(text: string, query: string) {
+  if (!query) return text;
+  const lowerText = text.toLowerCase();
+  const lowerQuery = query.toLowerCase();
+  const idx = lowerText.indexOf(lowerQuery);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-primary/20 text-inherit rounded-sm px-0.5 font-semibold">
+        {text.slice(idx, idx + query.length)}
+      </mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+}
+
 function buildExportText(country: CountryTin, lang: Lang, t: Strings): string {
   const cName = lang === "he" ? country.nameHe : country.nameEn;
   const cNameAlt = lang === "he" ? country.nameEn : "";
