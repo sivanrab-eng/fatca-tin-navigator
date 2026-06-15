@@ -561,20 +561,20 @@ function Index() {
             <PopoverContent
               ref={popoverRef}
               dir={dir}
-              className="w-[--radix-popover-trigger-width] p-0"
+              className="w-[min(var(--radix-popover-trigger-width),calc(100vw-16px))] max-w-[calc(100vw-16px)] p-0"
               align={dir === "rtl" ? "end" : "start"}
               side="bottom"
               sideOffset={4}
               collisionPadding={8}
             >
-              <Command dir={dir}>
+              <Command dir={dir} className="w-full overflow-hidden">
                 <CommandInput
                   placeholder={t.placeholder}
-                  className="h-10"
+                  className={cn("h-10 text-base", dir === "rtl" ? "text-right" : "text-left")}
                   value={searchQuery}
                   onValueChange={setSearchQuery}
                 />
-                <CommandList className="max-h-[60vh]">
+                <CommandList className="max-h-[min(50vh,320px)] w-full">
                   <CommandEmpty>{t.noResults}</CommandEmpty>
                   <CommandGroup>
                     {sorted.map((c) => (
@@ -585,18 +585,19 @@ function Index() {
                           handleCountryChange(c.code);
                           setOpen(false);
                         }}
-                        className="text-base"
+                        className={cn("w-full text-base", dir === "rtl" ? "justify-start text-right" : "text-left")}
                       >
                         <span className={cn("inline-block", dir === "rtl" ? "ml-2" : "mr-2")}>{c.flag}</span>
-                        <span className="flex-1 truncate">
+                        <span className="min-w-0 flex-1 truncate">
                           {highlightMatch(cName(c), searchQuery)}
                           {lang === "he" && (
-                            <span className="text-muted-foreground text-xs"> ({c.nameEn})</span>
+                            <span className="text-muted-foreground text-xs break-words"> ({c.nameEn})</span>
                           )}
                         </span>
                         <Check
                           className={cn(
-                            "ml-auto h-4 w-4 shrink-0",
+                            "h-4 w-4 shrink-0",
+                            dir === "rtl" ? "mr-auto" : "ml-auto",
                             code === c.code ? "opacity-100" : "opacity-0"
                           )}
                         />
