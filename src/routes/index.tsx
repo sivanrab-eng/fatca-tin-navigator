@@ -555,7 +555,7 @@ function Index() {
             <PopoverContent
               dir={dir}
               className="w-[--radix-popover-trigger-width] p-0"
-              align="start"
+              align={dir === "rtl" ? "end" : "start"}
               side="bottom"
               sideOffset={4}
               collisionPadding={8}
