@@ -586,12 +586,12 @@ function Index() {
                           setOpen(false);
                         }}
                         className={cn(
-                          "w-full items-start text-base",
-                          dir === "rtl" ? "justify-start text-right" : "text-left"
+                          "grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-2 text-base",
+                          dir === "rtl" ? "text-right" : "text-left"
                         )}
                       >
-                        <span className={cn("inline-block pt-0.5", dir === "rtl" ? "ml-2" : "mr-2")}>{c.flag}</span>
-                        <span className="min-w-0 flex-1">
+                        <span className={cn("inline-block pt-0.5", dir === "rtl" ? "order-3" : "order-1")}>{c.flag}</span>
+                        <span className={cn("min-w-0", dir === "rtl" ? "order-2" : "order-2")}>
                           <span className="block truncate">
                             {highlightMatch(cName(c), searchQuery)}
                           </span>
@@ -604,7 +604,7 @@ function Index() {
                         <Check
                           className={cn(
                             "h-4 w-4 shrink-0 pt-0.5",
-                            dir === "rtl" ? "mr-auto" : "ml-auto",
+                            dir === "rtl" ? "order-1" : "order-3",
                             code === c.code ? "opacity-100" : "opacity-0"
                           )}
                         />
