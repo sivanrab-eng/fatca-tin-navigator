@@ -451,11 +451,6 @@ function Index() {
   useEffect(() => {
     if (!open) setSearchQuery("");
   }, [open]);
-  const popoverRef = useOverflowCheck<HTMLDivElement>({
-    label: "country-popover",
-    when: open,
-    dir,
-  });
   useEffect(() => {
     try {
       const saved = localStorage.getItem("tin_lang");
@@ -464,6 +459,11 @@ function Index() {
   }, []);
   const t = T[lang];
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  const popoverRef = useOverflowCheck<HTMLDivElement>({
+    label: "country-popover",
+    when: open,
+    dir,
+  });
   const changeLang = (next: Lang) => {
     setLang(next);
     try { localStorage.setItem("tin_lang", next); } catch {}
