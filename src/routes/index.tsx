@@ -451,6 +451,11 @@ function Index() {
   useEffect(() => {
     if (!open) setSearchQuery("");
   }, [open]);
+  const popoverRef = useOverflowCheck<HTMLDivElement>({
+    label: "country-popover",
+    when: open,
+    dir,
+  });
   useEffect(() => {
     try {
       const saved = localStorage.getItem("tin_lang");
