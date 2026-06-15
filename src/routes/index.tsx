@@ -33,7 +33,7 @@ export const LANGUAGES: { code: Lang; native: string; dir: "rtl" | "ltr" }[] = [
 
 type Strings = {
   title: string; subtitle: string;
-  step1: string; placeholder: string; empty: string; disclaimer: string;
+  step1: string; placeholder: string; noResults: string; empty: string; disclaimer: string;
   localName: string; localAuth: string;
   step2: string; individual: string; entity: string;
   name: string; format: string; example: string;
@@ -51,7 +51,7 @@ type Strings = {
 const T: Record<Lang, Strings> = {
   he: {
     title: "מאתר TIN — FATCA/CRS", subtitle: "בחר מדינה כדי לראות את שם ומבנה מספר זיהוי המס.",
-    step1: "1. בחר מדינה", placeholder: "לחץ לבחירת מדינה",
+    step1: "1. בחר מדינה", placeholder: "חפש או בחר מדינה", noResults: "לא נמצאו תוצאות",
     empty: "התוצאות יופיעו כאן לאחר בחירת מדינה.",
     disclaimer: "⚠️ מידע להתמצאות בלבד. אינו ייעוץ מס/משפטי ואינו מקור רשמי — יש לאמת מול הרשות המוסמכת לפני שימוש לצרכי FATCA/CRS.",
     localName: "שם המזהה המקומי", localAuth: "רשות המס המקומית",
@@ -76,7 +76,7 @@ const T: Record<Lang, Strings> = {
   },
   en: {
     title: "TIN Finder — FATCA/CRS", subtitle: "Select a country to view the name and format of its Tax Identification Number.",
-    step1: "1. Select a country", placeholder: "Click to choose a country",
+    step1: "1. Select a country", placeholder: "Search or choose a country", noResults: "No results found",
     empty: "Results will appear here after selecting a country.",
     disclaimer: "⚠️ Informational only. Not tax/legal advice and not an official source — verify with the relevant authority before using for FATCA/CRS.",
     localName: "Local identifier name", localAuth: "Local tax authority",
@@ -101,7 +101,7 @@ const T: Record<Lang, Strings> = {
   },
   es: {
     title: "Buscador de TIN — FATCA/CRS", subtitle: "Seleccione un país para ver el nombre y formato del Número de Identificación Fiscal.",
-    step1: "1. Seleccionar país", placeholder: "Pulse para elegir un país",
+    step1: "1. Seleccionar país", placeholder: "Busque o elija un país", noResults: "No se encontraron resultados",
     empty: "Los resultados aparecerán aquí después de seleccionar un país.",
     disclaimer: "⚠️ Solo informativo. No es asesoramiento fiscal/legal ni una fuente oficial — verifique con la autoridad competente antes de usar para FATCA/CRS.",
     localName: "Nombre del identificador local", localAuth: "Autoridad fiscal local",
@@ -126,7 +126,7 @@ const T: Record<Lang, Strings> = {
   },
   fr: {
     title: "Recherche TIN — FATCA/CRS", subtitle: "Sélectionnez un pays pour voir le nom et le format du numéro d'identification fiscale.",
-    step1: "1. Sélectionner un pays", placeholder: "Cliquez pour choisir un pays",
+    step1: "1. Sélectionner un pays", placeholder: "Recherchez ou choisissez un pays", noResults: "Aucun résultat trouvé",
     empty: "Les résultats apparaîtront ici après la sélection d'un pays.",
     disclaimer: "⚠️ À titre informatif uniquement. Pas un conseil fiscal/juridique ni une source officielle — vérifiez auprès de l'autorité compétente avant utilisation pour FATCA/CRS.",
     localName: "Nom de l'identifiant local", localAuth: "Administration fiscale locale",
@@ -176,7 +176,7 @@ const T: Record<Lang, Strings> = {
   },
   zh: {
     title: "TIN 查询器 — FATCA/CRS", subtitle: "选择国家以查看税号的名称和格式。",
-    step1: "1. 选择国家", placeholder: "点击选择国家",
+    step1: "1. 选择国家", placeholder: "搜索或选择国家", noResults: "未找到结果",
     empty: "选择国家后结果将显示在此处。",
     disclaimer: "⚠️ 仅供参考。不是税务/法律建议或官方来源 — 在用于 FATCA/CRS 之前请向主管部门核实。",
     localName: "本地标识符名称", localAuth: "当地税务机关",
