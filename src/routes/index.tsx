@@ -561,7 +561,7 @@ function Index() {
             <PopoverContent
               ref={popoverRef}
               dir={dir}
-              className="w-[min(var(--radix-popover-trigger-width),calc(100vw-16px))] max-w-[calc(100vw-16px)] p-0"
+              className="w-[min(var(--radix-popover-trigger-width),calc(100vw-16px))] max-w-[calc(100vw-16px)] max-h-[min(calc(100dvh-24px),var(--radix-popper-available-height))] overflow-hidden p-0"
               align={dir === "rtl" ? "end" : "start"}
               side="bottom"
               sideOffset={4}
@@ -574,29 +574,36 @@ function Index() {
                   value={searchQuery}
                   onValueChange={setSearchQuery}
                 />
-                <CommandList className="max-h-[min(50vh,320px)] w-full">
+                <CommandList className="w-full max-h-[calc(min(calc(100dvh-24px),var(--radix-popper-available-height))-48px)]">
                   <CommandEmpty>{t.noResults}</CommandEmpty>
                   <CommandGroup>
                     {sorted.map((c) => (
                       <CommandItem
                         key={c.code}
-                        value={cName(c) + " " + c.code}
+                        value={`${cName(c)} ${c.nameEn} ${c.code}`}
                         onSelect={() => {
                           handleCountryChange(c.code);
                           setOpen(false);
                         }}
-                        className={cn("w-full text-base", dir === "rtl" ? "justify-start text-right" : "text-left")}
+                        className={cn(
+                          "w-full items-start text-base",
+                          dir === "rtl" ? "justify-start text-right" : "text-left"
+                        )}
                       >
-                        <span className={cn("inline-block", dir === "rtl" ? "ml-2" : "mr-2")}>{c.flag}</span>
-                        <span className="min-w-0 flex-1 truncate">
-                          {highlightMatch(cName(c), searchQuery)}
+                        <span className={cn("inline-block pt-0.5", dir === "rtl" ? "ml-2" : "mr-2")}>{c.flag}</span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate">
+                            {highlightMatch(cName(c), searchQuery)}
+                          </span>
                           {lang === "he" && (
-                            <span className="text-muted-foreground text-xs break-words"> ({c.nameEn})</span>
+                            <span dir="ltr" className="mt-0.5 block truncate text-left text-xs text-muted-foreground">
+                              {highlightMatch(c.nameEn, searchQuery)}
+                            </span>
                           )}
                         </span>
                         <Check
                           className={cn(
-                            "h-4 w-4 shrink-0",
+                            "h-4 w-4 shrink-0 pt-0.5",
                             dir === "rtl" ? "mr-auto" : "ml-auto",
                             code === c.code ? "opacity-100" : "opacity-0"
                           )}
