@@ -591,12 +591,12 @@ function Index() {
                         )}
                       >
                         <span className={cn("inline-block pt-0.5", dir === "rtl" ? "order-3" : "order-1")}>{c.flag}</span>
-                        <span className={cn("min-w-0", dir === "rtl" ? "order-2" : "order-2")}>
+                        <span className={cn("min-w-0", dir === "rtl" ? "order-2 text-right" : "order-2")}>
                           <span className="block truncate">
                             {highlightMatch(cName(c), searchQuery)}
                           </span>
                           {lang === "he" && (
-                            <span dir="ltr" className="mt-0.5 block truncate text-left text-xs text-muted-foreground">
+                            <span dir="ltr" className="mt-0.5 block w-full truncate text-right text-xs text-muted-foreground">
                               {highlightMatch(c.nameEn, searchQuery)}
                             </span>
                           )}
