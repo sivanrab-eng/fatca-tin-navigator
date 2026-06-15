@@ -445,6 +445,7 @@ function Index() {
   const [code, setCode] = useState<string>("");
   const [lang, setLang] = useState<Lang>("he");
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     try {
       const saved = localStorage.getItem("tin_lang");
@@ -541,12 +542,17 @@ function Index() {
                 ) : (
                   <span className="text-muted-foreground">{t.placeholder}</span>
                 )}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <ChevronsUpDown className={cn("h-4 w-4 shrink-0 opacity-50", dir === "rtl" ? "mr-2" : "ml-2")} />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
               <Command>
-                <CommandInput placeholder={t.placeholder} className="h-10" />
+                <CommandInput
+                  placeholder={t.placeholder}
+                  className="h-10"
+                  value={searchQuery}
+                  onValueChange={setSearchQuery}
+                />
                 <CommandList className="max-h-[60vh]">
                   <CommandEmpty>{t.noResults}</CommandEmpty>
                   <CommandGroup>
@@ -562,7 +568,7 @@ function Index() {
                       >
                         <span className={cn("inline-block", dir === "rtl" ? "ml-2" : "mr-2")}>{c.flag}</span>
                         <span className="flex-1 truncate">
-                          {highlightMatch(cName(c), "")}
+                          {highlightMatch(cName(c), searchQuery)}
                           {lang === "he" && (
                             <span className="text-muted-foreground text-xs"> ({c.nameEn})</span>
                           )}
