@@ -552,8 +552,15 @@ function Index() {
                 <ChevronsUpDown className={cn("h-4 w-4 shrink-0 opacity-50", dir === "rtl" ? "mr-2" : "ml-2")} />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-              <Command>
+            <PopoverContent
+              dir={dir}
+              className="w-[--radix-popover-trigger-width] p-0"
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              collisionPadding={8}
+            >
+              <Command dir={dir}>
                 <CommandInput
                   placeholder={t.placeholder}
                   className="h-10"
