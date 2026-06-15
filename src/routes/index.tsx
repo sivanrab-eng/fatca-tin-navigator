@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { tr } from "@/lib/tin-i18n";
 import { cn } from "@/lib/utils";
 import { InstallButton } from "@/components/InstallButton";
+import { useOverflowCheck } from "@/lib/use-overflow-check";
 
 type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
 
@@ -458,6 +459,11 @@ function Index() {
   }, []);
   const t = T[lang];
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  const popoverRef = useOverflowCheck<HTMLDivElement>({
+    label: "country-popover",
+    when: open,
+    dir,
+  });
   const changeLang = (next: Lang) => {
     setLang(next);
     try { localStorage.setItem("tin_lang", next); } catch {}
@@ -553,6 +559,7 @@ function Index() {
               </Button>
             </PopoverTrigger>
             <PopoverContent
+              ref={popoverRef}
               dir={dir}
               className="w-[--radix-popover-trigger-width] p-0"
               align={dir === "rtl" ? "end" : "start"}
