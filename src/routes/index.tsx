@@ -857,6 +857,10 @@ function Index() {
             {t.legalText}
           </p>
           <p>
+            <Link to="/faq" className="text-primary hover:underline">
+              שאלות נפוצות
+            </Link>
+            {" · "}
             {t.sourcesFooter}{" "}
             <a
               href="https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/"
