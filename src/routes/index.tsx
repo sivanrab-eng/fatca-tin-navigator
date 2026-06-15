@@ -447,6 +447,9 @@ function Index() {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
+    if (!open) setSearchQuery("");
+  }, [open]);
+  useEffect(() => {
     try {
       const saved = localStorage.getItem("tin_lang");
       if (saved && LANGUAGES.some((l) => l.code === saved)) setLang(saved as Lang);
