@@ -503,18 +503,21 @@ function Index() {
             <h1 className="text-xl font-bold tracking-tight">{t.title}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{t.subtitle}</p>
           </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <Languages className="h-4 w-4 text-muted-foreground" aria-label={t.languageLabel} />
-            <Select value={lang} onValueChange={(v) => changeLang(v as Lang)}>
-              <SelectTrigger className="h-9 w-auto min-w-[110px] text-sm" aria-label={t.languageLabel}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {LANGUAGES.map((l) => (
-                  <SelectItem key={l.code} value={l.code}>{l.native}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex items-center gap-2 shrink-0">
+            <InstallButton />
+            <div className="flex items-center gap-1.5">
+              <Languages className="h-4 w-4 text-muted-foreground" aria-label={t.languageLabel} />
+              <Select value={lang} onValueChange={(v) => changeLang(v as Lang)}>
+                <SelectTrigger className="h-9 w-auto min-w-[110px] text-sm" aria-label={t.languageLabel}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LANGUAGES.map((l) => (
+                    <SelectItem key={l.code} value={l.code}>{l.native}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </header>
