@@ -403,6 +403,27 @@ ${block(t.entity, country.entity)}
   }, 400);
 }
 
+function sendViaGmail(country: CountryTin, lang: Lang, t: Strings) {
+  try {
+    const cName = lang === "he" ? country.nameHe : country.nameEn;
+    const subject = `${t.title} — ${country.flag} ${cName}`;
+    const body = buildExportText(country, lang, t);
+    const url =
+      "https://mail.google.com/mail/?view=cm&fs=1" +
+      "&su=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+    const win = window.open(url, "_blank", "noopener,noreferrer");
+    if (!win) {
+      // Fallback: mailto
+      window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    }
+    toast.success(t.gmailOpened);
+  } catch (e) {
+    console.error(e);
+    toast.error(t.copyErr);
+  }
+}
+
 export const Route = createFileRoute("/")({
   head: () => {
     const url = "https://tin-navigator.netlify.app/";
