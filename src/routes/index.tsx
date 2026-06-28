@@ -866,6 +866,18 @@ function Index() {
                 <Printer className="h-4 w-4" />
                 {t.pdf}
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  trackEvent("export", { format: "gmail", country_code: country.code });
+                  sendViaGmail(country, lang, t);
+                }}
+                className="gap-1.5"
+              >
+                <Mail className="h-4 w-4" />
+                {t.sendGmail}
+              </Button>
             </section>
           </>
         )}
