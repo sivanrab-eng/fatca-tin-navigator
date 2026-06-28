@@ -429,7 +429,7 @@ async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Pro
   const target = document.createElement("div");
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   target.setAttribute("dir", dir);
-  target.style.cssText = "position:fixed;left:0;top:0;width:760px;background:#fff;color:#111;z-index:-1;pointer-events:none;opacity:0;";
+  target.style.cssText = "position:fixed;left:-10000px;top:0;width:760px;background:#fff;color:#111;pointer-events:none;";
   target.innerHTML = body ? body.innerHTML : html;
   // Inline the styles from the generated HTML
   const styleTag = container.querySelector("style");
