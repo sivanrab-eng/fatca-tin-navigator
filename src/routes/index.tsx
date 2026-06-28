@@ -420,7 +420,10 @@ async function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
 }
 
 async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Promise<Blob> {
-  const html2pdf = (await import("html2pdf.js")).default;
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+    import("html2canvas"),
+    import("jspdf"),
+  ]);
   const html = buildExportHtml(country, lang, t);
   const container = document.createElement("div");
   container.innerHTML = html;
@@ -428,36 +431,71 @@ async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Pro
   const body = container.querySelector("body");
   const target = document.createElement("div");
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  const width = Math.min(760, Math.max(320, window.innerWidth - 24));
   target.setAttribute("dir", dir);
-  target.style.cssText = "position:fixed;left:-10000px;top:0;width:760px;background:#fff;color:#111;pointer-events:none;";
+  target.style.cssText = [
+    "position:fixed",
+    "left:0",
+    "top:0",
+    `width:${width}px`,
+    "background:#fff",
+    "color:#111",
+    "pointer-events:none",
+    "z-index:-1",
+    "overflow:visible",
+  ].join(";");
   target.innerHTML = body ? body.innerHTML : html;
   // Inline the styles from the generated HTML
   const styleTag = container.querySelector("style");
   if (styleTag) target.prepend(styleTag.cloneNode(true));
   document.body.appendChild(target);
   try {
-    const worker = html2pdf()
-      .from(target)
-      .set({
-        margin: 10,
-        filename: `TIN-${country.code}-${lang}.pdf`,
-        image: { type: "jpeg", quality: 0.95 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: "#ffffff",
-          onclone: (doc: Document) => {
-            doc.querySelectorAll('style:not([data-tin-export-style]), link[rel="stylesheet"]').forEach((el) => el.remove());
-            const body = doc.body;
-            if (body) {
-              body.style.background = "#ffffff";
-              body.style.color = "#111111";
-            }
-          },
-        },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      });
-    const blob: Blob = await worker.outputPdf("blob");
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    const canvas = await html2canvas(target, {
+      scale: Math.min(2, window.devicePixelRatio || 1.5),
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+      windowWidth: width,
+      onclone: (doc: Document) => {
+        doc.querySelectorAll('style:not([data-tin-export-style]), link[rel="stylesheet"]').forEach((el) => el.remove());
+        const clonedBody = doc.body;
+        if (clonedBody) {
+          clonedBody.style.background = "#ffffff";
+          clonedBody.style.color = "#111111";
+        }
+      },
+    });
+
+    if (!canvas.width || !canvas.height) {
+      throw new Error("PDF canvas is empty");
+    }
+
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10;
+    const contentWidth = pageWidth - margin * 2;
+    const contentHeight = (canvas.height * contentWidth) / canvas.width;
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+    let y = margin;
+    let remainingHeight = contentHeight;
+    pdf.addImage(imgData, "JPEG", margin, y, contentWidth, contentHeight);
+    remainingHeight -= pageHeight - margin * 2;
+
+    while (remainingHeight > 0) {
+      pdf.addPage();
+      y = margin - (contentHeight - remainingHeight);
+      pdf.addImage(imgData, "JPEG", margin, y, contentWidth, contentHeight);
+      remainingHeight -= pageHeight - margin * 2;
+    }
+
+    const blob = pdf.output("blob");
+    if (!blob.size) {
+      throw new Error("PDF blob is empty");
+    }
     return blob;
   } finally {
     target.remove();
