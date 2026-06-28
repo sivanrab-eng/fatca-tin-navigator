@@ -306,7 +306,7 @@ async function copyToClipboard(country: CountryTin, lang: Lang, t: Strings) {
   }
 }
 
-function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
+function buildExportHtml(country: CountryTin, lang: Lang, t: Strings) {
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   const cName = lang === "he" ? country.nameHe : country.nameEn;
   const cNameAlt = lang === "he" ? country.nameEn : "";
@@ -338,7 +338,7 @@ function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
   if (country.oecdSource) sources.push(`<li><strong>${esc(t.oecdLabel)}:</strong> ${link(country.oecdSource)}</li>`);
   if (country.euTinSource) sources.push(`<li><strong>${esc(t.euLabel)}:</strong> ${link(country.euTinSource)}</li>`);
 
-  const html = `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN — ${esc(cName)}</title>
+  return `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN — ${esc(cName)}</title>
 <style>
   *{box-sizing:border-box}
   body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.55;color:#111;max-width:760px;margin:0 auto;background:#fff}
@@ -382,7 +382,10 @@ ${block(t.entity, country.entity)}
 
 <footer>${esc(t.exportDisclaimer)}</footer>
 </body></html>`;
+}
 
+function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
+  const html = buildExportHtml(country, lang, t);
   const blob = new Blob([html], { type: "text/html;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const win = window.open(url, "_blank");
@@ -403,24 +406,85 @@ ${block(t.entity, country.entity)}
   }, 400);
 }
 
-function sendViaGmail(country: CountryTin, lang: Lang, t: Strings) {
+async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Promise<Blob> {
+  const html2pdf = (await import("html2pdf.js")).default;
+  const html = buildExportHtml(country, lang, t);
+  const container = document.createElement("div");
+  container.innerHTML = html;
+  // Strip the <html><head><body> wrapper — html2pdf works on the inner element
+  const body = container.querySelector("body");
+  const target = document.createElement("div");
+  const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
+  target.setAttribute("dir", dir);
+  target.style.cssText = "position:fixed;left:-10000px;top:0;width:760px;background:#fff;";
+  target.innerHTML = body ? body.innerHTML : html;
+  // Inline the styles from the generated HTML
+  const styleTag = container.querySelector("style");
+  if (styleTag) target.prepend(styleTag.cloneNode(true));
+  document.body.appendChild(target);
   try {
-    const cName = lang === "he" ? country.nameHe : country.nameEn;
-    const subject = `${t.title} — ${country.flag} ${cName}`;
-    const body = buildExportText(country, lang, t);
-    const url =
+    const worker = html2pdf()
+      .from(target)
+      .set({
+        margin: 10,
+        filename: `TIN-${country.code}-${lang}.pdf`,
+        image: { type: "jpeg", quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      });
+    const blob: Blob = await worker.outputPdf("blob");
+    return blob;
+  } finally {
+    target.remove();
+  }
+}
+
+async function sendViaGmail(country: CountryTin, lang: Lang, t: Strings) {
+  const cName = lang === "he" ? country.nameHe : country.nameEn;
+  const subject = `${t.title} — ${country.flag} ${cName}`;
+  const bodyText = buildExportText(country, lang, t);
+  const filename = `TIN-${country.code}-${lang}.pdf`;
+
+  try {
+    const pdfBlob = await generatePdfBlob(country, lang, t);
+    const file = new File([pdfBlob], filename, { type: "application/pdf" });
+
+    // Mobile/PWA: use Web Share with file attachment (Gmail appears in share sheet)
+    const nav = navigator as Navigator & {
+      canShare?: (data: { files?: File[] }) => boolean;
+      share?: (data: { files?: File[]; title?: string; text?: string }) => Promise<void>;
+    };
+    if (nav.canShare && nav.share && nav.canShare({ files: [file] })) {
+      try {
+        await nav.share({ files: [file], title: subject, text: bodyText });
+        toast.success(t.gmailOpened);
+        return;
+      } catch (err: unknown) {
+        // User canceled — don't fall through
+        if (err && typeof err === "object" && "name" in err && (err as { name: string }).name === "AbortError") return;
+        console.warn("share failed, falling back", err);
+      }
+    }
+
+    // Desktop fallback: download the PDF + open Gmail compose with body
+    const dlUrl = URL.createObjectURL(pdfBlob);
+    const a = document.createElement("a");
+    a.href = dlUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(dlUrl), 30000);
+
+    const gmailUrl =
       "https://mail.google.com/mail/?view=cm&fs=1" +
       "&su=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(body);
-    const win = window.open(url, "_blank", "noopener,noreferrer");
-    if (!win) {
-      // Fallback: mailto
-      window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    }
+      "&body=" + encodeURIComponent(bodyText);
+    window.open(gmailUrl, "_blank", "noopener,noreferrer");
     toast.success(t.gmailOpened);
   } catch (e) {
     console.error(e);
-    toast.error(t.copyErr);
+    toast.error(t.pdfErr);
   }
 }
 
