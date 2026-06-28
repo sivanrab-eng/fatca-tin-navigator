@@ -384,26 +384,39 @@ ${block(t.entity, country.entity)}
 </body></html>`;
 }
 
-function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
-  const html = buildExportHtml(country, lang, t);
-  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const win = window.open(url, "_blank");
-  if (!win) {
-    toast.error(t.pdfErr);
-    URL.revokeObjectURL(url);
-    return;
-  }
-  setTimeout(() => {
-    try {
-      win.focus();
-      win.print();
-      toast.success(t.pdfOpened);
-    } catch (e) {
-      console.error(e);
-    }
+async function exportPdf(country: CountryTin, lang: Lang, t: Strings) {
+  const filename = `TIN-${country.code}-${lang}.pdf`;
+  try {
+    const blob = await generatePdfBlob(country, lang, t);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 30000);
-  }, 400);
+    toast.success(t.pdfOpened);
+  } catch (e) {
+    console.error("PDF export failed", e);
+    // Fallback: open printable HTML in a new tab
+    try {
+      const html = buildExportHtml(country, lang, t);
+      const htmlBlob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(htmlBlob);
+      const win = window.open(url, "_blank");
+      if (!win) {
+        toast.error(t.pdfErr);
+        URL.revokeObjectURL(url);
+        return;
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      toast.success(t.pdfOpened);
+    } catch (e2) {
+      console.error(e2);
+      toast.error(t.pdfErr);
+    }
+  }
 }
 
 async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Promise<Blob> {
