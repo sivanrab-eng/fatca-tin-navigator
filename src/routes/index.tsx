@@ -42,9 +42,9 @@ type Strings = {
   whereTitle: (tin: string, country: string) => string;
   sourcesTitle: string; sourcesIntro: string;
   localAuthLabel: string; oecdLabel: string; euLabel: string; lastUpdatedLabel: string;
-  copy: string; download: string; pdf: string;
+  copy: string; download: string; pdf: string; sendGmail: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
-  pdfOpened: string; pdfErr: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
+  pdfOpened: string; pdfErr: string; gmailOpened: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
   exportCountry: string; exportNote: string;
   exportWhere: (tin: string) => string;
   exportSources: string; exportDisclaimer: string;
