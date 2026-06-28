@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/command";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check, Mail } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -42,9 +42,9 @@ type Strings = {
   whereTitle: (tin: string, country: string) => string;
   sourcesTitle: string; sourcesIntro: string;
   localAuthLabel: string; oecdLabel: string; euLabel: string; lastUpdatedLabel: string;
-  copy: string; download: string; pdf: string;
+  copy: string; download: string; pdf: string; sendGmail: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
-  pdfOpened: string; pdfErr: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
+  pdfOpened: string; pdfErr: string; gmailOpened: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
   exportCountry: string; exportNote: string;
   exportWhere: (tin: string) => string;
   exportSources: string; exportDisclaimer: string;
@@ -63,10 +63,10 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "מקורות ועדכון אחרון", sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
     localAuthLabel: "רשות המס המקומית", oecdLabel: "OECD — מאגר TIN לצורכי CRS",
     euLabel: "נציבות האיחוד האירופי — TIN on Europa", lastUpdatedLabel: "עודכן לאחרונה",
-    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)",
+    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)", sendGmail: "שלח בג'ימייל",
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
-    pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF",
+    pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF", gmailOpened: "נפתח Gmail עם התוצאות — צרף את ה-PDF במידת הצורך",
     legal: "הבהרה משפטית",
     legalText: "אתר זה אינו גורם רשמי, אינו מסונף ל-OECD, ל-IRS או לכל רשות מס, ואינו מהווה ייעוץ מס, ייעוץ משפטי או חוות דעת מקצועית. המידע מוצג \"AS IS\" למטרות התמצאות בלבד, עשוי להיות חלקי או לא מעודכן, ואין להסתמך עליו לצורך דיווח FATCA/CRS או כל החלטה אחרת. יש לאמת כל פרט מול הרשות המוסמכת במדינה הרלוונטית ולהתייעץ עם איש מקצוע מוסמך. השימוש באתר הוא באחריות המשתמש בלבד.",
     sourcesFooter: "מקורות עיקריים:",
@@ -88,10 +88,10 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Sources & last updated", sourcesIntro: "Data was compiled from the following official sources:",
     localAuthLabel: "Local tax authority", oecdLabel: "OECD — TIN portal (CRS)",
     euLabel: "European Commission — TIN on Europa", lastUpdatedLabel: "Last updated",
-    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)",
+    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)", sendGmail: "Send via Gmail",
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
-    pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error",
+    pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error", gmailOpened: "Gmail opened with the results — attach the PDF if needed",
     legal: "Legal disclaimer",
     legalText: "This website is not an official body, is not affiliated with the OECD, the IRS, or any tax authority, and does not constitute tax advice, legal advice, or a professional opinion. The information is provided \"AS IS\" for informational purposes only, may be partial or outdated, and should not be relied upon for FATCA/CRS reporting or any other decision. Please verify every detail with the competent authority in the relevant country and consult a qualified professional. Use of this website is at the user's sole responsibility.",
     sourcesFooter: "Primary sources:",
@@ -113,10 +113,10 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Fuentes y última actualización", sourcesIntro: "Datos recopilados de las siguientes fuentes oficiales:",
     localAuthLabel: "Autoridad fiscal local", oecdLabel: "OCDE — Portal TIN (CRS)",
     euLabel: "Comisión Europea — TIN on Europa", lastUpdatedLabel: "Última actualización",
-    copy: "Copiar al portapapeles", download: "Descargar como texto", pdf: "Exportar a PDF (imprimir)",
+    copy: "Copiar al portapapeles", download: "Descargar como texto", pdf: "Exportar a PDF (imprimir)", sendGmail: "Enviar por Gmail",
     copied: "Resultados copiados", copyErr: "No se puede copiar — seleccione manualmente",
     downloaded: "Archivo descargado", dlErr: "Error de descarga",
-    pdfOpened: "Diálogo de impresión abierto — elija 'Guardar como PDF'", pdfErr: "Error al exportar PDF",
+    pdfOpened: "Diálogo de impresión abierto — elija 'Guardar como PDF'", pdfErr: "Error al exportar PDF", gmailOpened: "Gmail abierto con los resultados — adjunte el PDF si es necesario",
     legal: "Aviso legal",
     legalText: "Este sitio web no es un organismo oficial, no está afiliado a la OCDE, al IRS ni a ninguna autoridad fiscal, y no constituye asesoramiento fiscal, asesoramiento legal ni una opinión profesional. La información se proporciona \"TAL CUAL\" solo con fines informativos, puede ser parcial o estar desactualizada, y no debe utilizarse para la declaración FATCA/CRS ni para ninguna otra decisión. Verifique cada detalle con la autoridad competente del país correspondiente y consulte a un profesional cualificado. El uso de este sitio web es responsabilidad exclusiva del usuario.",
     sourcesFooter: "Fuentes principales:",
@@ -138,10 +138,10 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Sources et dernière mise à jour", sourcesIntro: "Données compilées à partir des sources officielles suivantes :",
     localAuthLabel: "Administration fiscale locale", oecdLabel: "OCDE — Portail TIN (CRS)",
     euLabel: "Commission européenne — TIN on Europa", lastUpdatedLabel: "Dernière mise à jour",
-    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)",
+    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)", sendGmail: "Envoyer via Gmail",
     copied: "Résultats copiés", copyErr: "Impossible de copier — sélectionnez manuellement",
     downloaded: "Fichier téléchargé", dlErr: "Erreur de téléchargement",
-    pdfOpened: "Boîte d'impression ouverte — choisissez 'Enregistrer en PDF'", pdfErr: "Erreur d'export PDF",
+    pdfOpened: "Boîte d'impression ouverte — choisissez 'Enregistrer en PDF'", pdfErr: "Erreur d'export PDF", gmailOpened: "Gmail ouvert avec les résultats — joignez le PDF si nécessaire",
     legal: "Mentions légales",
     legalText: "Ce site web n'est pas un organisme officiel, n'est pas affilié à l'OCDE, à l'IRS ou à aucune autorité fiscale, et ne constitue pas un conseil fiscal, un conseil juridique ou une opinion professionnelle. Les informations sont fournies \"EN L'ÉTAT\" à titre informatif uniquement, peuvent être partielles ou obsolètes, et ne doivent pas être utilisées pour la déclaration FATCA/CRS ou toute autre décision. Veuillez vérifier chaque détail auprès de l'autorité compétente du pays concerné et consulter un professionnel qualifié. L'utilisation de ce site web est sous la seule responsabilité de l'utilisateur.",
     sourcesFooter: "Sources principales :",
@@ -163,10 +163,10 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Источники и последнее обновление", sourcesIntro: "Данные собраны из следующих официальных источников:",
     localAuthLabel: "Местный налоговый орган", oecdLabel: "ОЭСР — портал TIN (CRS)",
     euLabel: "Европейская комиссия — TIN on Europa", lastUpdatedLabel: "Последнее обновление",
-    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)",
+    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)", sendGmail: "Отправить через Gmail",
     copied: "Результаты скопированы", copyErr: "Не удалось скопировать — выделите вручную",
     downloaded: "Файл загружен", dlErr: "Ошибка загрузки",
-    pdfOpened: "Открыт диалог печати — выберите 'Сохранить как PDF'", pdfErr: "Ошибка экспорта PDF",
+    pdfOpened: "Открыт диалог печати — выберите 'Сохранить как PDF'", pdfErr: "Ошибка экспорта PDF", gmailOpened: "Gmail открыт с результатами — при необходимости прикрепите PDF",
     legal: "Юридическая оговорка",
     legalText: "Этот веб-сайт не является официальным органом, не аффилирован с ОЭСР, Налоговым управлением США (IRS) или каким-либо налоговым органом, и не является налоговой консультацией, юридической консультацией или профессиональным мнением. Информация предоставляется \"КАК ЕСТЬ\" только в информационных целях, может быть неполной или устаревшей, и не должна использоваться для отчетности FATCA/CRS или любых других решений. Пожалуйста, проверьте каждую деталь у компетентного органа в соответствующей стране и проконсультируйтесь с квалифицированным специалистом. Использование этого веб-сайта осуществляется исключительно на ответственность пользователя.",
     sourcesFooter: "Основные источники:",
@@ -188,10 +188,10 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "来源与最后更新", sourcesIntro: "数据来自以下官方来源:",
     localAuthLabel: "当地税务机关", oecdLabel: "OECD — TIN 门户(CRS)",
     euLabel: "欧盟委员会 — TIN on Europa", lastUpdatedLabel: "最后更新",
-    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)",
+    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)", sendGmail: "通过 Gmail 发送",
     copied: "结果已复制", copyErr: "无法复制 — 请手动选择",
     downloaded: "文件已下载", dlErr: "下载错误",
-    pdfOpened: "打印对话框已打开 — 选择'另存为 PDF'", pdfErr: "PDF 导出错误",
+    pdfOpened: "打印对话框已打开 — 选择'另存为 PDF'", pdfErr: "PDF 导出错误", gmailOpened: "已打开 Gmail 并填入结果 — 如需附上 PDF 请手动附加",
     legal: "法律声明",
     legalText: "本网站并非官方机构，不隶属于经合组织(OECD)、美国国税局(IRS)或任何税务机关，也不构成税务建议、法律建议或专业意见。信息仅以\"现状\"提供，仅供参考，可能不完整或过时，且不应依赖其进行FATCA/CRS申报或任何其他决策。请向相关国家的主管部门核实每个细节，并咨询合格的专业人士。使用本网站的风险由用户自行承担。",
     sourcesFooter: "主要来源：",
@@ -401,6 +401,27 @@ ${block(t.entity, country.entity)}
     }
     setTimeout(() => URL.revokeObjectURL(url), 30000);
   }, 400);
+}
+
+function sendViaGmail(country: CountryTin, lang: Lang, t: Strings) {
+  try {
+    const cName = lang === "he" ? country.nameHe : country.nameEn;
+    const subject = `${t.title} — ${country.flag} ${cName}`;
+    const body = buildExportText(country, lang, t);
+    const url =
+      "https://mail.google.com/mail/?view=cm&fs=1" +
+      "&su=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+    const win = window.open(url, "_blank", "noopener,noreferrer");
+    if (!win) {
+      // Fallback: mailto
+      window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    }
+    toast.success(t.gmailOpened);
+  } catch (e) {
+    console.error(e);
+    toast.error(t.copyErr);
+  }
 }
 
 export const Route = createFileRoute("/")({
@@ -844,6 +865,18 @@ function Index() {
               >
                 <Printer className="h-4 w-4" />
                 {t.pdf}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  trackEvent("export", { format: "gmail", country_code: country.code });
+                  sendViaGmail(country, lang, t);
+                }}
+                className="gap-1.5"
+              >
+                <Mail className="h-4 w-4" />
+                {t.sendGmail}
               </Button>
             </section>
           </>
