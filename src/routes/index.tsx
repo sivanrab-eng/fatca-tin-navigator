@@ -339,7 +339,7 @@ function buildExportHtml(country: CountryTin, lang: Lang, t: Strings) {
   if (country.euTinSource) sources.push(`<li><strong>${esc(t.euLabel)}:</strong> ${link(country.euTinSource)}</li>`);
 
   return `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8"><title>TIN — ${esc(cName)}</title>
-<style>
+<style data-tin-export-style="true">
   *{box-sizing:border-box}
   body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px;line-height:1.55;color:#111;max-width:760px;margin:0 auto;background:#fff}
   header{border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:18px}
@@ -429,7 +429,7 @@ async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Pro
   const target = document.createElement("div");
   const dir = LANGUAGES.find((l) => l.code === lang)?.dir ?? "ltr";
   target.setAttribute("dir", dir);
-  target.style.cssText = "position:fixed;left:-10000px;top:0;width:760px;background:#fff;";
+  target.style.cssText = "position:fixed;left:-10000px;top:0;width:760px;background:#fff;color:#111;pointer-events:none;";
   target.innerHTML = body ? body.innerHTML : html;
   // Inline the styles from the generated HTML
   const styleTag = container.querySelector("style");
@@ -442,7 +442,19 @@ async function generatePdfBlob(country: CountryTin, lang: Lang, t: Strings): Pro
         margin: 10,
         filename: `TIN-${country.code}-${lang}.pdf`,
         image: { type: "jpeg", quality: 0.95 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          onclone: (doc: Document) => {
+            doc.querySelectorAll('style:not([data-tin-export-style]), link[rel="stylesheet"]').forEach((el) => el.remove());
+            const body = doc.body;
+            if (body) {
+              body.style.background = "#ffffff";
+              body.style.color = "#111111";
+            }
+          },
+        },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       });
     const blob: Blob = await worker.outputPdf("blob");
