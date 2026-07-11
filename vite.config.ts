@@ -5,12 +5,14 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/tanstack/vite";
 
 const base = process.env.VITE_BASE || "/";
 
 export default defineConfig({
   vite: {
     base,
+    plugins: [mcpPlugin()],
   },
   tanstackStart: {
     router: {
