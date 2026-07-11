@@ -138,7 +138,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Sources et dernière mise à jour", sourcesIntro: "Données compilées à partir des sources officielles suivantes :",
     localAuthLabel: "Administration fiscale locale", oecdLabel: "OCDE — Portail TIN (CRS)",
     euLabel: "Commission européenne — TIN on Europa", lastUpdatedLabel: "Dernière mise à jour",
-    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)", sendGmail: "Envoyer via Gmail",
+    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)", previewPdf: "Télécharger le PDF pour vérifier", sendGmail: "Envoyer via Gmail",
     copied: "Résultats copiés", copyErr: "Impossible de copier — sélectionnez manuellement",
     downloaded: "Fichier téléchargé", dlErr: "Erreur de téléchargement",
     pdfOpened: "Boîte d'impression ouverte — choisissez 'Enregistrer en PDF'", pdfErr: "Erreur d'export PDF", gmailOpened: "Gmail ouvert avec les résultats — joignez le PDF si nécessaire",
