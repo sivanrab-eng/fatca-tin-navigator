@@ -88,7 +88,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Sources & last updated", sourcesIntro: "Data was compiled from the following official sources:",
     localAuthLabel: "Local tax authority", oecdLabel: "OECD — TIN portal (CRS)",
     euLabel: "European Commission — TIN on Europa", lastUpdatedLabel: "Last updated",
-    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)", sendGmail: "Send via Gmail",
+    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)", previewPdf: "Download PDF to verify", sendGmail: "Send via Gmail",
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
     pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error", gmailOpened: "Gmail opened with the results — attach the PDF if needed",
