@@ -6,10 +6,13 @@ export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
       { title: "שאלות נפוצות — מאתר TIN" },
-      { name: "description", content: "תשובות לשאלות נפוצות על TIN, FATCA, CRS ואיך להשתמש במאתר." },
+      { name: "description", content: "תשובות לשאלות נפוצות על TIN, FATCA, CRS ואיך להשתמש במאתר לאיתור מספר זיהוי מס לפי מדינה." },
       { property: "og:title", content: "שאלות נפוצות — מאתר TIN" },
-      { property: "og:description", content: "תשובות לשאלות נפוצות על TIN, FATCA, CRS ואיך להשתמש במאתר." },
+      { property: "og:description", content: "תשובות לשאלות נפוצות על TIN, FATCA, CRS ואיך להשתמש במאתר לאיתור מספר זיהוי מס לפי מדינה." },
+      { property: "og:url", content: "https://www.tinfinder.info/faq" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://www.tinfinder.info/faq" }],
   }),
   component: FaqPage,
 });
