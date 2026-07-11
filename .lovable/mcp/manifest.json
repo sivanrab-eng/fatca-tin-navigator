@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "tinfinder-mcp",
+      "version": "0.1.0",
+      "title": "TIN Finder — FATCA/CRS"
+    },
+    "tools": [
+      {
+        "name": "list_countries",
+        "title": "List countries",
+        "description": "List every country/territory available in the TIN database with its ISO code, English name, Hebrew name, and flag. Use before get_country_tin to discover valid codes.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_country_tin",
+        "title": "Get country TIN details",
+        "description": "Return the full TIN (Tax Identification Number) reference for one country/territory, for FATCA/CRS purposes: the local TIN name, individual and entity formats with examples, where to find the number, and official sources. Accepts an ISO 3166-1 alpha-2 code (e.g. 'IL', 'US', 'GB').",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "ISO 3166-1 alpha-2 country code, case-insensitive. Example: 'IL'."
+            }
+          },
+          "required": [
+            "code"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_countries",
+        "title": "Search countries",
+        "description": "Search the TIN database by name (English or Hebrew) or ISO code substring. Returns matching countries with their codes so the caller can then pass a code to get_country_tin.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Free-text query, case-insensitive. Matches ISO code, English name, or Hebrew name. Example: 'united' or 'ישראל' or 'US'."
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
