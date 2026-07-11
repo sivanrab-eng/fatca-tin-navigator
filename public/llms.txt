@@ -1,0 +1,10 @@
+# TIN Finder — FATCA/CRS
+
+> Free lookup tool for Tax Identification Numbers (TIN) by country — for individuals and entities, for FATCA and CRS reporting.
+
+TIN Finder helps users find the local name, format, examples, and official sources for tax identification numbers across 230+ countries and territories. Content is available in Hebrew, English, Spanish, French, Russian, and Chinese, and results can be exported as TXT or PDF.
+
+## Pages
+
+- [Home](/): Search a country and view its TIN name, format, examples, and where to find it.
+- [FAQ](/faq): Common questions about TIN, FATCA, CRS, and how to use the tool.

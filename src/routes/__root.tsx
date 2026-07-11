@@ -92,10 +92,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "מאתר TIN — FATCA/CRS",
-          url: "https://tin-navigator.netlify.app",
-          inLanguage: "he",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              name: "מאתר TIN — FATCA/CRS",
+              url: "https://www.tinfinder.info",
+              inLanguage: "he",
+              description: "מצא את שם ומבנה מספר זיהוי המס (TIN) בכל מדינה — ליחיד ולחברה, לצורכי FATCA/CRS.",
+            },
+            {
+              "@type": "Organization",
+              name: "TIN Finder",
+              url: "https://www.tinfinder.info",
+              logo: "https://www.tinfinder.info/icon-512.png",
+            },
+          ],
         }),
       },
       ...(analyticsEnabled
