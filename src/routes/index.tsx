@@ -63,7 +63,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "מקורות ועדכון אחרון", sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
     localAuthLabel: "רשות המס המקומית", oecdLabel: "OECD — מאגר TIN לצורכי CRS",
     euLabel: "נציבות האיחוד האירופי — TIN on Europa", lastUpdatedLabel: "עודכן לאחרונה",
-    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)", sendGmail: "שלח בג'ימייל",
+    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)", previewPdf: "הורד PDF לבדיקה", sendGmail: "שלח בג'ימייל",
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
     pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF", gmailOpened: "נפתח Gmail עם התוצאות — צרף את ה-PDF במידת הצורך",
