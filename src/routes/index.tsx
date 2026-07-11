@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/command";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check, Mail } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check, Mail, FileCheck } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -992,6 +992,32 @@ function Index() {
               >
                 <Printer className="h-4 w-4" />
                 {t.pdf}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  trackEvent("export", { format: "pdf_preview", country_code: country.code });
+                  try {
+                    const blob = await generatePdfBlob(country, lang, t);
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `TIN-${country.code}-${lang}-preview.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 30000);
+                    toast.success(t.downloaded);
+                  } catch (e) {
+                    console.error("PDF preview download failed", e);
+                    toast.error(t.pdfErr);
+                  }
+                }}
+                className="gap-1.5"
+              >
+                <FileCheck className="h-4 w-4" />
+                {t.previewPdf}
               </Button>
               <Button
                 variant="outline"
