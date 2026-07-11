@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/command";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check, Mail } from "lucide-react";
+import { ExternalLink, MapPin, FileText, Building2, User, Download, Printer, Copy, Languages, ChevronsUpDown, Check, Mail, FileCheck } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -42,7 +42,7 @@ type Strings = {
   whereTitle: (tin: string, country: string) => string;
   sourcesTitle: string; sourcesIntro: string;
   localAuthLabel: string; oecdLabel: string; euLabel: string; lastUpdatedLabel: string;
-  copy: string; download: string; pdf: string; sendGmail: string;
+  copy: string; download: string; pdf: string; previewPdf: string; sendGmail: string;
   copied: string; copyErr: string; downloaded: string; dlErr: string;
   pdfOpened: string; pdfErr: string; gmailOpened: string; legal: string; legalText: string; sourcesFooter: string; languageLabel: string;
   exportCountry: string; exportNote: string;
@@ -63,7 +63,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "מקורות ועדכון אחרון", sourcesIntro: "המידע נאסף מהמקורות הרשמיים הבאים:",
     localAuthLabel: "רשות המס המקומית", oecdLabel: "OECD — מאגר TIN לצורכי CRS",
     euLabel: "נציבות האיחוד האירופי — TIN on Europa", lastUpdatedLabel: "עודכן לאחרונה",
-    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)", sendGmail: "שלח בג'ימייל",
+    copy: "העתק ללוח", download: "הורד כקובץ טקסט", pdf: "ייצא ל-PDF (הדפסה)", previewPdf: "הורד PDF לבדיקה", sendGmail: "שלח בג'ימייל",
     copied: "התוצאות הועתקו ללוח", copyErr: "לא ניתן להעתיק — בחר ידנית",
     downloaded: "הקובץ הורד", dlErr: "שגיאה בהורדת הקובץ",
     pdfOpened: "נפתח דיאלוג הדפסה — בחר 'שמור כ-PDF'", pdfErr: "שגיאה בייצוא ל-PDF", gmailOpened: "נפתח Gmail עם התוצאות — צרף את ה-PDF במידת הצורך",
@@ -88,7 +88,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Sources & last updated", sourcesIntro: "Data was compiled from the following official sources:",
     localAuthLabel: "Local tax authority", oecdLabel: "OECD — TIN portal (CRS)",
     euLabel: "European Commission — TIN on Europa", lastUpdatedLabel: "Last updated",
-    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)", sendGmail: "Send via Gmail",
+    copy: "Copy to clipboard", download: "Download as text file", pdf: "Export to PDF (print)", previewPdf: "Download PDF to verify", sendGmail: "Send via Gmail",
     copied: "Results copied to clipboard", copyErr: "Cannot copy — select manually",
     downloaded: "File downloaded", dlErr: "Download error",
     pdfOpened: "Print dialog opened — choose 'Save as PDF'", pdfErr: "PDF export error", gmailOpened: "Gmail opened with the results — attach the PDF if needed",
@@ -113,7 +113,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Fuentes y última actualización", sourcesIntro: "Datos recopilados de las siguientes fuentes oficiales:",
     localAuthLabel: "Autoridad fiscal local", oecdLabel: "OCDE — Portal TIN (CRS)",
     euLabel: "Comisión Europea — TIN on Europa", lastUpdatedLabel: "Última actualización",
-    copy: "Copiar al portapapeles", download: "Descargar como texto", pdf: "Exportar a PDF (imprimir)", sendGmail: "Enviar por Gmail",
+    copy: "Copiar al portapapeles", download: "Descargar como texto", pdf: "Exportar a PDF (imprimir)", previewPdf: "Descargar PDF para verificar", sendGmail: "Enviar por Gmail",
     copied: "Resultados copiados", copyErr: "No se puede copiar — seleccione manualmente",
     downloaded: "Archivo descargado", dlErr: "Error de descarga",
     pdfOpened: "Diálogo de impresión abierto — elija 'Guardar como PDF'", pdfErr: "Error al exportar PDF", gmailOpened: "Gmail abierto con los resultados — adjunte el PDF si es necesario",
@@ -138,7 +138,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Sources et dernière mise à jour", sourcesIntro: "Données compilées à partir des sources officielles suivantes :",
     localAuthLabel: "Administration fiscale locale", oecdLabel: "OCDE — Portail TIN (CRS)",
     euLabel: "Commission européenne — TIN on Europa", lastUpdatedLabel: "Dernière mise à jour",
-    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)", sendGmail: "Envoyer via Gmail",
+    copy: "Copier dans le presse-papiers", download: "Télécharger en texte", pdf: "Exporter en PDF (imprimer)", previewPdf: "Télécharger le PDF pour vérifier", sendGmail: "Envoyer via Gmail",
     copied: "Résultats copiés", copyErr: "Impossible de copier — sélectionnez manuellement",
     downloaded: "Fichier téléchargé", dlErr: "Erreur de téléchargement",
     pdfOpened: "Boîte d'impression ouverte — choisissez 'Enregistrer en PDF'", pdfErr: "Erreur d'export PDF", gmailOpened: "Gmail ouvert avec les résultats — joignez le PDF si nécessaire",
@@ -163,7 +163,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Источники и последнее обновление", sourcesIntro: "Данные собраны из следующих официальных источников:",
     localAuthLabel: "Местный налоговый орган", oecdLabel: "ОЭСР — портал TIN (CRS)",
     euLabel: "Европейская комиссия — TIN on Europa", lastUpdatedLabel: "Последнее обновление",
-    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)", sendGmail: "Отправить через Gmail",
+    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)", previewPdf: "Скачать PDF для проверки", sendGmail: "Отправить через Gmail",
     copied: "Результаты скопированы", copyErr: "Не удалось скопировать — выделите вручную",
     downloaded: "Файл загружен", dlErr: "Ошибка загрузки",
     pdfOpened: "Открыт диалог печати — выберите 'Сохранить как PDF'", pdfErr: "Ошибка экспорта PDF", gmailOpened: "Gmail открыт с результатами — при необходимости прикрепите PDF",
@@ -188,7 +188,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "来源与最后更新", sourcesIntro: "数据来自以下官方来源:",
     localAuthLabel: "当地税务机关", oecdLabel: "OECD — TIN 门户(CRS)",
     euLabel: "欧盟委员会 — TIN on Europa", lastUpdatedLabel: "最后更新",
-    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)", sendGmail: "通过 Gmail 发送",
+    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)", previewPdf: "下载 PDF 以验证", sendGmail: "通过 Gmail 发送",
     copied: "结果已复制", copyErr: "无法复制 — 请手动选择",
     downloaded: "文件已下载", dlErr: "下载错误",
     pdfOpened: "打印对话框已打开 — 选择'另存为 PDF'", pdfErr: "PDF 导出错误", gmailOpened: "已打开 Gmail 并填入结果 — 如需附上 PDF 请手动附加",
@@ -992,6 +992,32 @@ function Index() {
               >
                 <Printer className="h-4 w-4" />
                 {t.pdf}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  trackEvent("export", { format: "pdf_preview", country_code: country.code });
+                  try {
+                    const blob = await generatePdfBlob(country, lang, t);
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `TIN-${country.code}-${lang}-preview.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 30000);
+                    toast.success(t.downloaded);
+                  } catch (e) {
+                    console.error("PDF preview download failed", e);
+                    toast.error(t.pdfErr);
+                  }
+                }}
+                className="gap-1.5"
+              >
+                <FileCheck className="h-4 w-4" />
+                {t.previewPdf}
               </Button>
               <Button
                 variant="outline"
