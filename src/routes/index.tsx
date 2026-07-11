@@ -163,7 +163,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "Источники и последнее обновление", sourcesIntro: "Данные собраны из следующих официальных источников:",
     localAuthLabel: "Местный налоговый орган", oecdLabel: "ОЭСР — портал TIN (CRS)",
     euLabel: "Европейская комиссия — TIN on Europa", lastUpdatedLabel: "Последнее обновление",
-    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)", sendGmail: "Отправить через Gmail",
+    copy: "Копировать в буфер", download: "Скачать как текст", pdf: "Экспорт в PDF (печать)", previewPdf: "Скачать PDF для проверки", sendGmail: "Отправить через Gmail",
     copied: "Результаты скопированы", copyErr: "Не удалось скопировать — выделите вручную",
     downloaded: "Файл загружен", dlErr: "Ошибка загрузки",
     pdfOpened: "Открыт диалог печати — выберите 'Сохранить как PDF'", pdfErr: "Ошибка экспорта PDF", gmailOpened: "Gmail открыт с результатами — при необходимости прикрепите PDF",
