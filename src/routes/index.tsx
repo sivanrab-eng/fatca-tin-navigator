@@ -188,7 +188,7 @@ const T: Record<Lang, Strings> = {
     sourcesTitle: "来源与最后更新", sourcesIntro: "数据来自以下官方来源:",
     localAuthLabel: "当地税务机关", oecdLabel: "OECD — TIN 门户(CRS)",
     euLabel: "欧盟委员会 — TIN on Europa", lastUpdatedLabel: "最后更新",
-    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)", sendGmail: "通过 Gmail 发送",
+    copy: "复制到剪贴板", download: "下载为文本", pdf: "导出 PDF(打印)", previewPdf: "下载 PDF 以验证", sendGmail: "通过 Gmail 发送",
     copied: "结果已复制", copyErr: "无法复制 — 请手动选择",
     downloaded: "文件已下载", dlErr: "下载错误",
     pdfOpened: "打印对话框已打开 — 选择'另存为 PDF'", pdfErr: "PDF 导出错误", gmailOpened: "已打开 Gmail 并填入结果 — 如需附上 PDF 请手动附加",
