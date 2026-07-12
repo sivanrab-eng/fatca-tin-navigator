@@ -726,8 +726,23 @@ function Index() {
             <p className="mt-1 text-sm text-muted-foreground">{t.subtitle}</p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setCode("");
+                setOpen(false);
+                setDemoOpen(true);
+                trackEvent("demo_start", { lang });
+              }}
+              className="gap-1.5 h-9"
+              aria-label={DEMO_T[lang].button}
+            >
+              <Play className="h-4 w-4" />
+              <span className="hidden sm:inline">{DEMO_T[lang].button}</span>
+            </Button>
             <InstallButton />
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5" data-tour="lang">
               <Languages className="h-4 w-4 text-muted-foreground" aria-label={t.languageLabel} />
               <Select value={lang} onValueChange={(v) => changeLang(v as Lang)}>
                 <SelectTrigger className="h-9 w-auto min-w-[110px] text-sm" aria-label={t.languageLabel}>
