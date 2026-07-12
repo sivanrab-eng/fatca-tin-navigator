@@ -21,6 +21,73 @@ import { tr } from "@/lib/tin-i18n";
 import { cn } from "@/lib/utils";
 import { InstallButton } from "@/components/InstallButton";
 import { useOverflowCheck } from "@/lib/use-overflow-check";
+import { DemoTour, type DemoStep } from "@/components/DemoTour";
+import { Play } from "lucide-react";
+
+const DEMO_T: Record<Lang, {
+  button: string; next: string; prev: string; exit: string; finish: string;
+  stepOf: (i: number, n: number) => string;
+  s1t: string; s1b: string;
+  s2t: string; s2b: string;
+  s3t: string; s3b: string;
+  s4t: string; s4b: string;
+  s5t: string; s5b: string;
+}> = {
+  he: {
+    button: "הדגמה", next: "הבא", prev: "הקודם", exit: "סיים", finish: "סיום",
+    stepOf: (i, n) => `שלב ${i} מתוך ${n}`,
+    s1t: "בחר שפה", s1b: "האתר תומך ב-6 שפות. כאן מחליפים בין עברית, אנגלית, ספרדית, צרפתית, רוסית וסינית.",
+    s2t: "בחר מדינה", s2b: "לוחצים כאן כדי לפתוח רשימת 238 מדינות. אפשר להקליד כדי לחפש. לצורך ההדגמה בחרנו את גרמניה.",
+    s3t: "צפייה בפרטי ה-TIN", s3b: "מקבלים את שם המזהה המקומי, המבנה שלו, דוגמה, איפה מוצאים אותו וקישורים למקורות רשמיים.",
+    s4t: "ייצוא ושליחה", s4b: "אפשר להעתיק, להוריד כקובץ טקסט או PDF, ואפילו לשלוח את הפרטים ישירות ב-Gmail.",
+    s5t: "זהו!", s5b: "כלי חינמי ופתוח לכל מי שצריך לזהות פורמט TIN לצורכי FATCA/CRS. שתפו הלאה 🙌",
+  },
+  en: {
+    button: "Demo", next: "Next", prev: "Back", exit: "Skip", finish: "Done",
+    stepOf: (i, n) => `Step ${i} of ${n}`,
+    s1t: "Pick a language", s1b: "The site supports 6 languages. Switch between English, Hebrew, Spanish, French, Russian and Chinese here.",
+    s2t: "Select a country", s2b: "Click to open the list of 238 countries. You can type to search. For the demo we picked Germany.",
+    s3t: "See the TIN details", s3b: "You get the local identifier name, format, example, where to find it, and links to the official sources.",
+    s4t: "Export & share", s4b: "Copy the results, download as text or PDF, or send them straight through Gmail.",
+    s5t: "That's it!", s5b: "A free open tool for anyone who needs to identify a TIN format for FATCA/CRS. Share it forward 🙌",
+  },
+  es: {
+    button: "Demo", next: "Siguiente", prev: "Atrás", exit: "Omitir", finish: "Listo",
+    stepOf: (i, n) => `Paso ${i} de ${n}`,
+    s1t: "Elige un idioma", s1b: "El sitio admite 6 idiomas. Cambia aquí entre español, inglés, hebreo, francés, ruso y chino.",
+    s2t: "Selecciona un país", s2b: "Haz clic para abrir la lista de 238 países. Puedes escribir para buscar. Para la demo elegimos Alemania.",
+    s3t: "Ver los detalles del TIN", s3b: "Obtienes el nombre del identificador local, el formato, un ejemplo, dónde encontrarlo y enlaces a las fuentes oficiales.",
+    s4t: "Exportar y compartir", s4b: "Copia los resultados, descárgalos como texto o PDF, o envíalos directamente por Gmail.",
+    s5t: "¡Eso es todo!", s5b: "Una herramienta gratuita y abierta para quien necesite identificar un formato TIN para FATCA/CRS 🙌",
+  },
+  fr: {
+    button: "Démo", next: "Suivant", prev: "Retour", exit: "Passer", finish: "Terminé",
+    stepOf: (i, n) => `Étape ${i} sur ${n}`,
+    s1t: "Choisissez une langue", s1b: "Le site prend en charge 6 langues. Basculez ici entre français, anglais, hébreu, espagnol, russe et chinois.",
+    s2t: "Sélectionnez un pays", s2b: "Cliquez pour ouvrir la liste des 238 pays. Vous pouvez taper pour rechercher. Pour la démo nous avons choisi l'Allemagne.",
+    s3t: "Voir les détails du TIN", s3b: "Vous obtenez le nom local, le format, un exemple, où le trouver, et des liens vers les sources officielles.",
+    s4t: "Exporter et partager", s4b: "Copiez les résultats, téléchargez-les en texte ou PDF, ou envoyez-les directement via Gmail.",
+    s5t: "C'est tout !", s5b: "Un outil gratuit et ouvert pour quiconque doit identifier un format TIN pour FATCA/CRS 🙌",
+  },
+  ru: {
+    button: "Демо", next: "Далее", prev: "Назад", exit: "Пропустить", finish: "Готово",
+    stepOf: (i, n) => `Шаг ${i} из ${n}`,
+    s1t: "Выберите язык", s1b: "Сайт поддерживает 6 языков. Здесь можно переключаться между русским, английским, ивритом, испанским, французским и китайским.",
+    s2t: "Выберите страну", s2b: "Нажмите, чтобы открыть список из 238 стран. Можно вводить для поиска. Для демо мы выбрали Германию.",
+    s3t: "Информация о TIN", s3b: "Вы получите название местного идентификатора, формат, пример, где его найти и ссылки на официальные источники.",
+    s4t: "Экспорт и отправка", s4b: "Скопируйте результаты, скачайте как текст или PDF, или отправьте прямо через Gmail.",
+    s5t: "Готово!", s5b: "Бесплатный открытый инструмент для всех, кому нужен формат TIN для FATCA/CRS 🙌",
+  },
+  zh: {
+    button: "演示", next: "下一步", prev: "上一步", exit: "跳过", finish: "完成",
+    stepOf: (i, n) => `第 ${i} 步，共 ${n} 步`,
+    s1t: "选择语言", s1b: "本站支持6种语言。在此切换中文、英语、希伯来语、西班牙语、法语和俄语。",
+    s2t: "选择国家", s2b: "点击此处打开238个国家的列表，可以键入进行搜索。演示中我们选择了德国。",
+    s3t: "查看 TIN 详情", s3b: "获取本地标识符名称、格式、示例、在哪里查找以及官方来源的链接。",
+    s4t: "导出与分享", s4b: "复制结果、下载为文本或 PDF，或直接通过 Gmail 发送。",
+    s5t: "就是这样！", s5b: "面向所有需要识别 FATCA/CRS TIN 格式的用户的免费开源工具 🙌",
+  },
+};
 
 type Lang = "he" | "en" | "es" | "fr" | "ru" | "zh";
 
