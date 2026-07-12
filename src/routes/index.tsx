@@ -1039,7 +1039,7 @@ function Index() {
 
 
             {/* Export buttons */}
-            <section className="flex flex-wrap gap-2 animate-in fade-in duration-700">
+            <section data-tour="export" className="flex flex-wrap gap-2 animate-in fade-in duration-700">
               <Button
                 variant="outline"
                 size="sm"
