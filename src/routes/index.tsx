@@ -1162,10 +1162,23 @@ function Index() {
 
       {demoOpen && (() => {
         const d = DEMO_T[lang];
+        const chosenName = country ? cName(country) : "";
         const steps: DemoStep[] = [
           { target: "lang", title: d.s1t, body: d.s1b },
-          { target: "country", title: d.s2t, body: d.s2b, action: () => { setOpen(false); setCode("DE"); } },
-          { target: "info", title: d.s3t, body: d.s3b, action: () => { if (!code) setCode("DE"); } },
+          {
+            target: "country",
+            title: d.s2t,
+            body: d.s2b,
+            hint: d.s2hint,
+            waitFor: !code,
+            action: () => { setOpen(true); },
+          },
+          {
+            target: "info",
+            title: d.s3t,
+            body: d.s3b(chosenName || "—"),
+            waitFor: !country,
+          },
           { target: "export", title: d.s4t, body: d.s4b },
           { target: "export", title: d.s5t, body: d.s5b },
         ];
@@ -1173,11 +1186,12 @@ function Index() {
           <DemoTour
             steps={steps}
             dir={dir}
-            labels={{ next: d.next, prev: d.prev, exit: d.exit, finish: d.finish, stepOf: d.stepOf }}
-            onClose={() => setDemoOpen(false)}
+            labels={{ next: d.next, prev: d.prev, exit: d.exit, finish: d.finish, waiting: d.waiting, stepOf: d.stepOf }}
+            onClose={() => { setDemoOpen(false); setOpen(false); }}
           />
         );
       })()}
+
     </div>
   );
 }
