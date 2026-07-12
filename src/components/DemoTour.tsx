@@ -8,6 +8,8 @@ export type DemoStep = {
   title: string;
   body: string;
   action?: () => void; // optional side-effect when step activates (e.g., set country)
+  waitFor?: boolean; // if true, hide Next until it becomes false (then auto-advance)
+  hint?: string; // shown instead of Next while waiting
 };
 
 export type DemoLabels = {
