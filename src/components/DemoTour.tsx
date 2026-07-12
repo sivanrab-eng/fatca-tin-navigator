@@ -15,6 +15,7 @@ export type DemoLabels = {
   prev: string;
   exit: string;
   finish: string;
+  waiting?: string;
   stepOf: (i: number, n: number) => string;
 };
 
