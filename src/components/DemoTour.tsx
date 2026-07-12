@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, ChevronRight, ChevronLeft, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
