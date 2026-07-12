@@ -93,15 +93,35 @@ export function DemoTour({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") {
+        if (steps[i]?.waitFor) return;
         e.preventDefault();
         setI((v) => Math.min(v + 1, steps.length));
       } else if (e.key === "ArrowLeft") setI((v) => Math.max(0, v - 1));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, steps.length]);
+  }, [onClose, steps, i]);
+
+  // Auto-advance when a waitFor step's condition is satisfied
+  useEffect(() => {
+    if (step && step.waitFor === false) {
+      // no-op: false means "not currently waiting" — advancement is triggered
+      // only on the transition from true→false below
+    }
+  }, [step]);
+
+  const prevWait = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    const now = steps[i]?.waitFor;
+    if (prevWait.current === true && now === false) {
+      setI((v) => Math.min(v + 1, steps.length - 1));
+    }
+    prevWait.current = now;
+  }, [steps, i]);
 
   const isLast = i === steps.length - 1;
+
+
 
   // Tooltip position — place below the target when there's room, else above.
   const tipStyle = useMemo(() => {
