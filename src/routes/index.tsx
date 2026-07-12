@@ -769,6 +769,7 @@ function Index() {
             <PopoverTrigger asChild>
               <Button
                 id="country"
+                data-tour="country"
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
