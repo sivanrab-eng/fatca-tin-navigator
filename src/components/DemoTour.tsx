@@ -205,6 +205,9 @@ export function DemoTour({
         </div>
         <h3 className="mt-1 text-base font-bold">{step.title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{step.body}</p>
+        {step.waitFor && step.hint && (
+          <p className="mt-2 text-xs font-medium text-primary">{step.hint}</p>
+        )}
         <div className="mt-3 flex items-center justify-between gap-2">
           <Button variant="ghost" size="sm" onClick={onClose}>
             {labels.exit}
@@ -225,13 +228,19 @@ export function DemoTour({
                 {labels.finish}
               </Button>
             ) : (
-              <Button size="sm" onClick={() => setI((v) => v + 1)} className="gap-1">
-                {labels.next}
-                {dir === "rtl" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              <Button
+                size="sm"
+                onClick={() => setI((v) => v + 1)}
+                disabled={!!step.waitFor}
+                className="gap-1"
+              >
+                {step.waitFor ? (labels.waiting ?? "…") : labels.next}
+                {!step.waitFor && (dir === "rtl" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />)}
               </Button>
             )}
           </div>
         </div>
+
       </div>
     </div>
   );
