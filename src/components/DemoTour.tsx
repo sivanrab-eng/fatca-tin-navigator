@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, ChevronRight, ChevronLeft, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,8 @@ export type DemoStep = {
   title: string;
   body: string;
   action?: () => void; // optional side-effect when step activates (e.g., set country)
+  waitFor?: boolean; // if true, hide Next until it becomes false (then auto-advance)
+  hint?: string; // shown instead of Next while waiting
 };
 
 export type DemoLabels = {
@@ -15,6 +17,7 @@ export type DemoLabels = {
   prev: string;
   exit: string;
   finish: string;
+  waiting?: string;
   stepOf: (i: number, n: number) => string;
 };
 
@@ -90,15 +93,35 @@ export function DemoTour({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") {
+        if (steps[i]?.waitFor) return;
         e.preventDefault();
         setI((v) => Math.min(v + 1, steps.length));
       } else if (e.key === "ArrowLeft") setI((v) => Math.max(0, v - 1));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, steps.length]);
+  }, [onClose, steps, i]);
+
+  // Auto-advance when a waitFor step's condition is satisfied
+  useEffect(() => {
+    if (step && step.waitFor === false) {
+      // no-op: false means "not currently waiting" — advancement is triggered
+      // only on the transition from true→false below
+    }
+  }, [step]);
+
+  const prevWait = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    const now = steps[i]?.waitFor;
+    if (prevWait.current === true && now === false) {
+      setI((v) => Math.min(v + 1, steps.length - 1));
+    }
+    prevWait.current = now;
+  }, [steps, i]);
 
   const isLast = i === steps.length - 1;
+
+
 
   // Tooltip position — place below the target when there's room, else above.
   const tipStyle = useMemo(() => {
@@ -182,6 +205,9 @@ export function DemoTour({
         </div>
         <h3 className="mt-1 text-base font-bold">{step.title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{step.body}</p>
+        {step.waitFor && step.hint && (
+          <p className="mt-2 text-xs font-medium text-primary">{step.hint}</p>
+        )}
         <div className="mt-3 flex items-center justify-between gap-2">
           <Button variant="ghost" size="sm" onClick={onClose}>
             {labels.exit}
@@ -202,13 +228,19 @@ export function DemoTour({
                 {labels.finish}
               </Button>
             ) : (
-              <Button size="sm" onClick={() => setI((v) => v + 1)} className="gap-1">
-                {labels.next}
-                {dir === "rtl" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              <Button
+                size="sm"
+                onClick={() => setI((v) => v + 1)}
+                disabled={!!step.waitFor}
+                className="gap-1"
+              >
+                {step.waitFor ? (labels.waiting ?? "…") : labels.next}
+                {!step.waitFor && (dir === "rtl" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />)}
               </Button>
             )}
           </div>
         </div>
+
       </div>
     </div>
   );
