@@ -911,7 +911,7 @@ function Index() {
             </section>
 
             {/* Step 3: Individual / Entity toggle */}
-            <section className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <section data-tour="info" className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <h3 className="text-sm font-semibold">{t.step2}</h3>
               <Tabs defaultValue="individual">
                 <TabsList className="grid w-full grid-cols-2">
