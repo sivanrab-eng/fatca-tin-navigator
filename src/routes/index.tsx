@@ -663,6 +663,7 @@ function Index() {
   const [lang, setLang] = useState<Lang>("he");
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [demoOpen, setDemoOpen] = useState(false);
   useEffect(() => {
     if (!open) setSearchQuery("");
   }, [open]);
